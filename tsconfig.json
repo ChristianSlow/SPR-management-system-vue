@@ -1,5 +1,14 @@
 {
   "files": [],
+  "compilerOptions": {
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "Node"
+  },
   "references": [
     {
       "path": "./tsconfig.node.json"
