@@ -1,4 +1,4 @@
-interface Student {
+export interface Student {
   uid?: string
   firstName?: string
   middleName?: string

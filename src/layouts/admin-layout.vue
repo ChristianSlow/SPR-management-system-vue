@@ -86,6 +86,15 @@
           </li>
           <li>
             <RouterLink
+              to="/admin/curriculum"
+              class="flex items-center p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
+            >
+              <i class="pi pi-server mr-2"></i>
+              <span>Curriculum</span>
+            </RouterLink>
+          </li>
+          <li>
+            <RouterLink
               to="/admin/approval-queue"
               class="flex items-center p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
             >

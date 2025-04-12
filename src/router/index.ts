@@ -40,6 +40,11 @@ const router = createRouter({
           component: () => import('@/pages/admin/account/index.vue'),
         },
         {
+          path: 'curriculum',
+          name: 'admin-curriculum',
+          component: () => import('@/pages/admin/curriculum/index.vue'),
+        },
+        {
           path: 'approval-queue',
           name: 'admin-approval-queue',
           component: () => import('@/pages/admin/approval-queue/index.vue'),

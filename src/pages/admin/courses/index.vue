@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useCourseStore } from '@/stores/course'
 import { useDialog } from 'primevue'
 import { defineAsyncComponent } from 'vue'
 
@@ -6,7 +7,16 @@ const addCourse = defineAsyncComponent(
   () => import('@/pages/admin/courses/_components/add-course-modal.vue'),
 )
 
+const deleteCourse = defineAsyncComponent(
+  () => import('@/pages/admin/courses/_components/delete-course-modal.vue'),
+)
+
+const editCourse = defineAsyncComponent(
+  () => import('@/pages/admin/courses/_components/edit-course-modal.vue'),
+)
+
 const dialog = useDialog()
+const store = useCourseStore()
 </script>
 
 <template>
@@ -61,6 +71,7 @@ const dialog = useDialog()
 
       <!-- 🔹 Data Table -->
       <DataTable
+        :value="store.courses"
         ref="dt"
         :rows="10"
         paginator
@@ -70,7 +81,7 @@ const dialog = useDialog()
         responsiveLayout="scroll"
       >
         <!-- Course Name -->
-        <Column field="course" header="Course" sortable style="min-width: 12rem"></Column>
+        <Column field="name" header="Course" sortable style="min-width: 12rem"></Column>
 
         <!-- Majors List -->
         <Column header="Majors" style="min-width: 14rem">
@@ -91,13 +102,45 @@ const dialog = useDialog()
         <!-- Actions Column -->
         <Column :exportable="false" style="min-width: 8rem; text-align: center">
           <template #body="slotProps">
-            <Button icon="pi pi-pencil" outlined rounded class="mr-2 p-button-md p-button-text" />
+            <Button
+              icon="pi pi-pencil"
+              @click="
+                () => {
+                  dialog.open(editCourse, {
+                    props: {
+                      header: 'Confirm',
+                      style: {
+                        width: '50vw',
+                      },
+                      breakpoints: {
+                        '960px': '75vw',
+                        '640px': '90vw',
+                      },
+                      modal: true,
+                    },
+                  })
+                }
+              "
+            />
             <Button
               icon="pi pi-trash"
-              outlined
-              rounded
-              severity="danger"
-              class="p-button-md p-button-text"
+              @click="
+                () => {
+                  dialog.open(deleteCourse, {
+                    props: {
+                      header: 'Confirm',
+                      style: {
+                        width: '50vw',
+                      },
+                      breakpoints: {
+                        '960px': '75vw',
+                        '640px': '90vw',
+                      },
+                      modal: true,
+                    },
+                  })
+                }
+              "
             />
           </template>
         </Column>
