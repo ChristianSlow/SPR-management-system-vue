@@ -1,5 +1,5 @@
 import type { Subject } from '@/types/subject'
-import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore } from 'firebase/firestore'
+import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore, updateDoc } from 'firebase/firestore'
 
 const db = getFirestore()
 const subjectsRef = collection(db, 'subjects')
@@ -30,6 +30,18 @@ export const SubjectRepository = {
       return { message: 'Successfully added subjects!', data: snapshot.id }
     } catch {
       return { message: 'Error adding subjects' }
+    }
+  },
+
+  async editSubject(uid: string, payload: Partial<Subject>) {
+    try {
+      const subjectDoc = doc(db, 'subjects', uid)
+      await updateDoc(subjectDoc, payload)
+
+      return { message: 'Successfully updated subject!' }
+    } catch (error) {
+      console.error('Error updating subject:', error)
+      return { message: 'Error updating subject' }
     }
   },
 
