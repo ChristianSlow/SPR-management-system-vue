@@ -50,6 +50,8 @@ import {
   Badge,
   OverlayBadge,
 } from 'primevue'
+import { VueFire, VueFireAuth } from 'vuefire'
+import { firebaseApp } from './firebase/config'
 
 const app = createApp(App)
 
@@ -58,6 +60,11 @@ app.use(PrimeVue, {
   options: {
     darkModeSelector: '.my-app-dark',
   },
+})
+
+app.use(VueFire, {
+  firebaseApp,
+  modules: [VueFireAuth()],
 })
 
 // component here:
@@ -106,3 +113,6 @@ app.use(ToastService)
 app.use(DialogService)
 
 app.mount('#app')
+function createFirebaseApp(): any {
+  throw new Error('Function not implemented.')
+}
