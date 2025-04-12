@@ -4,9 +4,9 @@ import { defineStore } from 'pinia'
 export const useSubjectStore = defineStore('subject', () => {
   const subject = ref()
 
-  function fetchSubjects() {
+  function getSubjects() {
     // code here
   }
 
-  return { subject, fetchSubjects }
+  return { subject, getSubjects }
 })
