@@ -8,7 +8,7 @@
               <AcademicCapIcon class="h-14 w-14 text-blue-500" />
               <div>
                   <h3 class="text-xl font-semibold text-gray-700 dark:text-white">Total Courses</h3>
-                  <p class="text-gray-500 dark:text-gray-300 text-2xl font-medium">{{}}</p>
+                  <p class="text-gray-500 dark:text-gray-300 text-2xl font-medium">{{0}}</p>
               </div>
           </div>
 
@@ -16,7 +16,7 @@
               <UserGroupIcon class="h-14 w-14 text-green-500" />
               <div>
                   <h3 class="text-xl font-semibold text-gray-700 dark:text-white">Registered Students</h3>
-                  <p class="text-gray-500 dark:text-gray-300 text-2xl font-medium">{{}}</p>
+                  <p class="text-gray-500 dark:text-gray-300 text-2xl font-medium">{{0}}</p>
               </div>
           </div>
 
@@ -24,7 +24,7 @@
               <XCircleIcon class="h-14 w-14 text-red-500" />
               <div>
                   <h3 class="text-xl font-semibold text-gray-700 dark:text-white">Denied Students</h3>
-                  <p class="text-gray-500 dark:text-gray-300 text-2xl font-medium">{{}}</p>
+                  <p class="text-gray-500 dark:text-gray-300 text-2xl font-medium">{{0}}</p>
               </div>
           </div>
 
@@ -32,7 +32,7 @@
               <UserGroupIcon class="h-14 w-14 text-black" />
               <div>
                   <h3 class="text-xl font-semibold text-gray-700 dark:text-white">Total Students</h3>
-                  <p class="text-gray-500 dark:text-gray-300 text-2xl font-medium">{{}}</p>
+                  <p class="text-gray-500 dark:text-gray-300 text-2xl font-medium">{{0}}</p>
               </div>
           </div>
       </div>
@@ -44,9 +44,9 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div class="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6 border-t-4 border-black">
                   <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">Student Statistics</h3>
-                  <p class="text-gray-500 dark:text-gray-300 mt-3 text-lg">Total Students: <span class="font-semibold text-gray-900 dark:text-white">{{}}</span></p>
-                  <p class="text-gray-500 dark:text-gray-300 text-lg">Acceptance Rate: <span class="font-semibold text-green-600">{{}}%</span></p>
-                  <p class="text-gray-500 dark:text-gray-300 text-lg">Denial Rate: <span class="font-semibold text-red-600">{{}}%</span></p>
+                  <p class="text-gray-500 dark:text-gray-300 mt-3 text-lg">Total Students: <span class="font-semibold text-gray-900 dark:text-white">{{0}}</span></p>
+                  <p class="text-gray-500 dark:text-gray-300 text-lg">Acceptance Rate: <span class="font-semibold text-green-600">{{0}}%</span></p>
+                  <p class="text-gray-500 dark:text-gray-300 text-lg">Denial Rate: <span class="font-semibold text-red-600">{{0}}%</span></p>
               </div>
 
               <div class="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6 border-t-4 border-black">

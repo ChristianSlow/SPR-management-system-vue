@@ -10,7 +10,7 @@
 
           <!-- Centered Content -->
           <div class="relative z-10 flex flex-col justify-center items-center text-white text-center animate-fade-in">
-              <img src="" alt="Tañon College Logo" class="w-32 h-32 md:w-40 md:h-40 mb-4 drop-shadow-lg">
+              <img src="/tlogow.png" alt="Tañon College Logo" class="w-32 h-32 md:w-40 md:h-40 mb-4 drop-shadow-lg">
               <h1 class="text-3xl md:text-5xl font-extrabold tracking-wide drop-shadow-md">
                   Welcome to Tañon College
               </h1>
@@ -19,7 +19,7 @@
 
       <!-- About Section -->
       <div class="w-full max-w-lg mx-auto bg-white shadow-lg rounded-2xl p-6 text-center mt-10">
-          <img src="" class="mx-auto w-20 h-20 md:w-24 md:h-24 drop-shadow-md" alt="Tañon College Logo">
+          <img src="/tlogow.png" class="mx-auto w-20 h-20 md:w-24 md:h-24 drop-shadow-md" alt="Tañon College Logo">
           <h1 class="text-xl md:text-3xl font-bold text-red-800">Tañon College</h1>
           <h4 class="text-xl md:text-xl pt-4 font-bold text-black" >About Our Institution</h4>
 
@@ -38,14 +38,14 @@
 
           <!-- Left Section: Course Image (Fully Responsive) -->
           <div class="w-full md:w-1/2 min-h-[400px] md:min-h-screen flex items-center justify-center">
-              <img src="" class="w-full h-full object-cover rounded-xl shadow-lg">
+              <img src="/courses.png" class="w-full h-full object-cover rounded-xl shadow-lg">
           </div>
 
           <!-- Right Section: Login Form -->
           <div class="w-full md:w-1/2 flex justify-center items-center py-12 px-6">
               <div class="w-full max-w-md bg-white shadow-2xl rounded-2xl p-6 md:p-8 transition transform hover:scale-105">
                   <div class="text-center">
-                      <img src="" class="mx-auto w-20 h-20 md:w-24 md:h-24 drop-shadow-md" alt="Tañon College Logo">
+                      <img src="/tlogow.jpg" class="mx-auto w-20 h-20 md:w-24 md:h-24 drop-shadow-md" alt="Tañon College Logo">
                       <h1 class="text-xl md:text-2xl font-bold text-red-800">Tañon College</h1>
                   </div>
 
@@ -83,8 +83,8 @@
                       </div>
 
                       <button type="submit"
-                          class="w-full bg-red-800 text-white py-3 rounded-lg hover:bg-red-900 transition-transform transform hover:scale-105 shadow-md flex justify-center items-center gap-2">
-                          <template >
+                          class="w-full bg-red-800 text-white py-3 rounded-lg hover:bg-red-900 transition-transform transform hover:scale-105 shadow-md flex justify-center items-center gap-2">Login
+                          <!-- <template >
                               <i class="pi pi-spin pi-spinner"></i> Logging in...
                           </template>
                           <template >
@@ -92,11 +92,8 @@
                           </template>
                           <template>
                               Login
-                          </template>
+                          </template> -->
                       </button>
-                      <!-- <p v-if="loginSuccess" class="text-green-600 text-center mt-3 font-medium">
-                          Login successful! Redirecting...
-                      </p> -->
                   </form>
 
                   <!-- Create Account -->

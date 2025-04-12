@@ -52,37 +52,29 @@
 						<tbody>
 							<tr
 								class="border-b hover:bg-gray-50 dark:hover:bg-gray-600">
+								<td class="px-4 py-3"></td>
+								<td class="px-4 py-3"></td>
+								<td class="px-4 py-3"></td>
 								<td class="px-4 py-3">
-									{{ 0 }} {{ 0 }} {{ 0 }}
-								</td>
-								<td class="px-4 py-3">{{ 0 }}</td>
-								<td class="px-4 py-3">{{ 0 }}</td>
-								<!-- <td class="px-4 py-3">
 									<span
 										class="px-2 py-1 rounded text-xs font-bold"
 										:class="{
-											'bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-200':
-												student.status === 'Accepted',
-											'bg-red-200 text-red-800 dark:bg-red-700 dark:text-red-200':
-												student.status === 'Denied',
-											'bg-yellow-200 text-yellow-800 dark:bg-yellow-700 dark:text-yellow-200':
-												!student.status || student.status === 'Pending',
-										}">
-										{{ student.status || 'Pending' }}
+											'bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-200': 'Accepted',
+											'bg-red-200 text-red-800 dark:bg-red-700 dark:text-red-200': 'Denied',
+											'bg-yellow-200 text-yellow-800 dark:bg-yellow-700 dark:text-yellow-200': 'Pending',
+                            }">
+										{{ 'Pending' }}
 									</span>
-								</td> -->
+								</td>
 								<td class="px-4 py-3">
 									<div class="flex gap-2">
-										<template
-											>
+										<template>
 											<button
-												class="p-2 bg-green-500 text-white rounded-md shadow hover:bg-green-600 focus:outline-none"
-												>
+												class="p-2 bg-green-500 text-white rounded-md shadow hover:bg-green-600 focus:outline-none">
 												<i class="pi pi-check mr-1"></i> Accept
 											</button>
 											<button
-												class="p-2 bg-red-500 text-white rounded-md shadow hover:bg-red-600 focus:outline-none"
-												>
+												class="p-2 bg-red-500 text-white rounded-md shadow hover:bg-red-600 focus:outline-none">
 												<i class="pi pi-times mr-1"></i> Deny
 											</button>
 										</template>
@@ -117,9 +109,9 @@
 			<div
 				class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md w-11/12 max-w-md">
 				<h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
-					{{ 0 }} Student
+					{{ 'accept' ? 'Accept' : 'Deny' }} Student
 				</h2>
-				<input  />
+				<input />
 				<textarea
 					rows="4"
 					class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
@@ -131,13 +123,12 @@
 					</button>
 					<button
 						:class="[
-							'px-4 py-2 text-white rounded',
-							modalType === 'accept'
+							'px-4 py-2 text-white rounded', 'accept'
 								? 'bg-green-500 hover:bg-green-600'
 								: 'bg-red-500 hover:bg-red-600',
 						]">
-						{{ modalType === 'accept' ? 'Accept' : 'Deny' }}
-					</button>	
+						{{ 'accept' ? 'Accept' : 'Deny' }}
+					</button>
 				</div>
 			</div>
 		</div> -->

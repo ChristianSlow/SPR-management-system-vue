@@ -15,7 +15,7 @@ const router = createRouter({
       component: () => import('@/pages/admin/index.vue'),
       children: [
         {
-          path: 'dashboard',
+          path: '',
           name: 'admin-dashboard',
           component: () => import('@/pages/admin/dashboard/index.vue'),
         },
@@ -29,6 +29,21 @@ const router = createRouter({
           name: 'admin-students',
           component: () => import('@/pages/admin/students/index.vue'),
         },
+        {
+          path: 'courses',
+          name: 'admin-courses',
+          component: () => import('@/pages/admin/courses/index.vue'),
+        },
+        {
+          path: 'account',
+          name: 'admin-account',
+          component: () => import('@/pages/admin/account/index.vue'),
+        },
+        {
+          path: 'approval-queue',
+          name: 'admin-approval-queue',
+          component: () => import('@/pages/admin/approval-queue/index.vue'),
+        }
       ],
     },
     {

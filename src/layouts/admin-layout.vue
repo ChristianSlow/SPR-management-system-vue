@@ -28,7 +28,7 @@
             ></i>
           </div>
 
-          <!-- PrimeVue Overlay Panel for Logout -->
+          <!-- PrimeVue Overlay Panel for Logout
           <OverlayPanel ref="op" class="w-56 p-4 shadow-lg bg-white dark:bg-gray-800">
             <div class="flex items-center gap-3 border-b pb-3 border-gray-300 dark:border-gray-600">
               <i
@@ -46,7 +46,7 @@
                 class="w-full bg-red-600 hover:bg-red-600 text-white"
               />
             </div>
-          </OverlayPanel>
+          </OverlayPanel> -->
         </div>
       </div>
     </nav>
@@ -86,25 +86,25 @@
           </li>
           <li>
             <RouterLink
+              to="/admin/approval-queue"
+              class="flex items-center p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
+            >
+              <i class="pi pi-id-card mr-2"></i>
+              <span>Approval Queue</span>
+            </RouterLink>
+          </li>
+          <li>
+            <RouterLink
               to="/admin/students"
               class="flex items-center p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
             >
               <i class="pi pi-users mr-2"></i>
-              <span>Students List</span>
+              <span>Students</span>
             </RouterLink>
           </li>
           <li>
             <RouterLink
-              to="/admin/studentsinfo"
-              class="flex items-center p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-            >
-              <i class="pi pi-id-card mr-2"></i>
-              <span>Students Info</span>
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink
-              to="/admin/users"
+              to="/admin/account"
               class="flex items-center p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
             >
               <i class="pi pi-user mr-2"></i>
