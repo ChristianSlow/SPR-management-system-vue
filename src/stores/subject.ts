@@ -27,12 +27,12 @@ export const useSubjectStore = defineStore('subject', () => {
 
   async function editSubject(subject: Subject) {
     isLoading.value = true
-    await SubjectRepository.editSubject(subject.uid, {
+    await SubjectRepository.updateSubject(subject.uid as string, {
       name: subject.name?.toLowerCase(),
       code: subject.code?.toLowerCase(),
       unit: subject.unit,
     })
-    await getSubjects()
+    getSubjects()
     isLoading.value = false
   }
 
@@ -42,5 +42,12 @@ export const useSubjectStore = defineStore('subject', () => {
     isLoading.value = false
   }
 
-  return { subjects, isLoading, getSubjects, addSubject, deleteSubject, editSubject }
+  return {
+    subjects,
+    isLoading,
+    getSubjects,
+    addSubject,
+    deleteSubject,
+    editSubject,
+  }
 })
