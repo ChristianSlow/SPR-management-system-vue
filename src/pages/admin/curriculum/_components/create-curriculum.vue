@@ -1,16 +1,35 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue'
 import Dropdown from 'primevue/dropdown'
 import Card from 'primevue/card'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 
-const courses = [
+interface Course {
+  id: string
+  name: string
+}
+
+interface Major {
+  id: string
+  name: string
+}
+
+interface Subject {
+  code: string
+  name: string
+  units: number
+}
+
+type Year = '1st Year' | '2nd Year' | '3rd Year' | '4th Year'
+type Semester = '1st Semester' | '2nd Semester'
+
+const courses: Course[] = [
   { id: 'bsit', name: 'BSIT' },
   { id: 'bsba', name: 'BSBA' },
 ]
 
-const majorsData = {
+const majorsData: Record<string, Major[]> = {
   bsit: [
     { id: 'sd', name: 'Software Development' },
     { id: 'net', name: 'Networking' },
@@ -21,20 +40,20 @@ const majorsData = {
   ],
 }
 
-const years = ['1st Year', '2nd Year', '3rd Year', '4th Year']
-const semesters = ['1st Semester', '2nd Semester']
+const years: Year[] = ['1st Year', '2nd Year', '3rd Year', '4th Year']
+const semesters: Semester[] = ['1st Semester', '2nd Semester']
 
-const selectedCourse = ref(null)
-const selectedMajor = ref(null)
-const selectedYear = ref(null)
-const selectedSemester = ref(null)
-const selectedSubjects = ref([])
+const selectedCourse = ref<string | null>(null)
+const selectedMajor = ref<string | null>(null)
+const selectedYear = ref<Year | null>(null)
+const selectedSemester = ref<Semester | null>(null)
+const selectedSubjects = ref<Subject[]>([])
 
-const filteredMajors = computed(() => {
+const filteredMajors = computed<Major[]>(() => {
   return selectedCourse.value ? majorsData[selectedCourse.value] || [] : []
 })
 
-const subjectsData = {
+const subjectsData: Record<string, Record<string, Record<Year, Record<Semester, Subject[]>>>> = {
   bsit: {
     sd: {
       '1st Year': {
@@ -50,12 +69,13 @@ const subjectsData = {
     mm: {
       '1st Year': {
         '1st Semester': [{ code: 'BA101', name: 'Intro to Marketing', units: 3 }],
+        '2nd Semester': [],
       },
     },
   },
 }
 
-const filteredSubjects = computed(() => {
+const filteredSubjects = computed<Subject[]>(() => {
   if (
     selectedCourse.value &&
     selectedMajor.value &&
@@ -138,7 +158,6 @@ const filteredSubjects = computed(() => {
                 v-model="selectedSubjects"
                 :options="filteredSubjects"
                 option-label="name"
-                option-value="code"
                 placeholder="Select Subjects"
                 class="w-full"
                 :disabled="filteredSubjects.length === 0"
@@ -180,9 +199,9 @@ const filteredSubjects = computed(() => {
           scrollable
           scrollHeight="200px"
         >
-          <Column field="code" header="Subject Code"></Column>
-          <Column field="name" header="Subject Name"></Column>
-          <Column field="units" header="Units"></Column>
+          <Column field="code" header="Subject Code" />
+          <Column field="name" header="Subject Name" />
+          <Column field="units" header="Units" />
         </DataTable>
       </div>
     </div>
