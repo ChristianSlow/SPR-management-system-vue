@@ -43,10 +43,10 @@ const items = [
     icon: 'pi pi-users mr-2',
   },
   {
-    label: 'Users Account',
+    label: 'Settings',
     path: '/admin/account',
     name: 'admin-account',
-    icon: 'pi pi-user mr-2',
+    icon: 'pi pi-cog mr-2',
   },
 ]
 

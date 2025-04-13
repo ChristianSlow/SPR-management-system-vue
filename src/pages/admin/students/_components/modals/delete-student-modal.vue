@@ -30,13 +30,15 @@ function onSubmit() {
 <template>
   <div class="p-4">
     <p>
-      Are you sure you want to delete the student ?
-      <span>{{ student.firstName }} {{ student.middleName }} {{ student.lastName }}</span>
+      Are you sure you want to delete the student
+      <span class="font-semibold capitalize"
+        >{{ student.firstName }} {{ student.middleName }} {{ student.lastName }}</span
+      >?
     </p>
 
     <div class="flex justify-end gap-2 mt-4">
       <Button label="Cancel" class="p-button-text" @click="onClose" />
-      <Button label="Delete" severity="danger" @click="onSubmit" :loading="store.isLoading"/>
+      <Button label="Delete" severity="danger" @click="onSubmit" :loading="store.isLoading" />
     </div>
   </div>
 </template>

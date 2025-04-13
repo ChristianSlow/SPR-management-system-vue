@@ -31,17 +31,20 @@ function onSubmit(payload: Subject) {
 
 <template>
   <form class="flex flex-col gap-4" @submit.prevent="onSubmit(subject)">
-    <div class="flex flex-col gap-2">
-      <label>Subject Code</label>
-      <InputText required v-model="subject.code" />
+    <div class="flex gap-4">
+      <div class="flex flex-1 flex-col gap-2">
+        <label>Subject Code</label>
+        <InputText required v-model="subject.code" />
+      </div>
+      <div class="flex flex-1 flex-col gap-2">
+        <label>Units</label>
+        <InputText required v-model="subject.unit" />
+      </div>
     </div>
+
     <div class="flex flex-col gap-2">
       <label>Descriptive Title</label>
       <InputText required v-model="subject.name" />
-    </div>
-    <div class="flex flex-col gap-2">
-      <label>Units</label>
-      <InputText required v-model="subject.unit" />
     </div>
 
     <div class="flex w-full gap-2 justify-end mt-4">
