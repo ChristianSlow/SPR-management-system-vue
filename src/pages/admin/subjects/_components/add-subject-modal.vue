@@ -52,13 +52,10 @@ onMounted(() => courseStore.getCourses())
       <label>Subject Code</label>
       <InputText required v-model="subject.code" />
     </div>
+
     <div class="flex flex-col gap-2">
       <label>Descriptive Title</label>
       <InputText required v-model="subject.name" />
-    </div>
-    <div class="flex flex-col gap-2">
-      <label>Units</label>
-      <InputText required v-model="subject.unit" />
     </div>
 
     <div class="flex w-full gap-2 justify-end mt-4">

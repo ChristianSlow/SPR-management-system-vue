@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { useStudentStore } from '@/stores/student'
-import type { Subject } from '@/types/subject'
+import type { Student } from '@/types/student'
 import { useToast } from 'primevue/usetoast'
 import { inject, ref } from 'vue'
 
 const dialogRef = inject<any>('dialogRef')
-const student = ref<Subject>(dialogRef.value.data)
+const student = ref<Student>(dialogRef.value.data)
 const store = useStudentStore()
 const toast = useToast()
 
@@ -29,11 +29,16 @@ function onSubmit() {
 
 <template>
   <div class="p-4">
-    <p>Are you sure you want to delete the student ?</p>
+    <p>
+      Are you sure you want to delete the student
+      <span class="font-semibold capitalize"
+        >{{ student.firstName }} {{ student.middleName }} {{ student.lastName }}</span
+      >?
+    </p>
 
     <div class="flex justify-end gap-2 mt-4">
       <Button label="Cancel" class="p-button-text" @click="onClose" />
-      <Button label="Delete" severity="danger" @click="onSubmit" />
+      <Button label="Delete" severity="danger" @click="onSubmit" :loading="store.isLoading" />
     </div>
   </div>
 </template>

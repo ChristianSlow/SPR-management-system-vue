@@ -43,10 +43,10 @@ const items = [
     icon: 'pi pi-users mr-2',
   },
   {
-    label: 'Users Account',
+    label: 'Settings',
     path: '/admin/account',
     name: 'admin-account',
-    icon: 'pi pi-user mr-2',
+    icon: 'pi pi-cog mr-2',
   },
 ]
 
@@ -106,7 +106,7 @@ const toggle = (event: any) => {
     </nav>
 
     <div class="flex">
-      <div class="h-[calc(100vh-76px)] p-4 w-72 border-r">
+      <div class="h-[calc(100vh-76px)] w-72 border-r flex flex-col items-center py-4">
         <ul class="space-y-2 font-medium">
           <li v-for="item in items" :key="item.name">
             <RouterLink

@@ -7,9 +7,13 @@ export interface Student {
   civilStatus?: string
   studentMobileNumber?: string
   birthPlace?: string
+  birthDate?: any
   parentName?: string
   parentMobileNumber?: string
   address?: string
   course?: string
+  semester?: string
+  year?: string
+  major?: string
   createdAt?: any
 }

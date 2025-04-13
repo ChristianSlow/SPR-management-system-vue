@@ -11,6 +11,7 @@ const props = dialogRef.value.data
 const major = ref('')
 const course = reactive<Course>({
   ...props,
+  majors: props.majors ?? [],
 })
 
 function onClose() {
@@ -18,8 +19,9 @@ function onClose() {
 }
 
 function addMajor() {
-  course.majors?.push(major.value.trim().toLowerCase())
+  course.majors?.push(major.value.toLowerCase().trim())
   major.value = ''
+  console.log(course.majors)
 }
 
 function removeMajor(index: number) {
@@ -34,41 +36,45 @@ function onSave() {
 
 <template>
   <div class="grid gap-4 text-base md:text-lg">
-    <div>
-      <label for="course" class="block font-semibold text-gray-700 dark:text-white">
-        Course Name
-      </label>
-      <InputText
-        id="course"
-        v-model="course.name"
-        required
-        autofocus
-        class="w-full rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
-      />
+    <!-- Course Name -->
+    <div class="flex gap-4">
+      <div class="flex-1">
+        <label for="course" class="block text-gray-700 dark:text-white"> Course name </label>
+        <InputText
+          placeholder="Enter course"
+          id="course"
+          v-model="course.name"
+          required
+          autofocus
+          class="w-full rounded-md text-gray-900 dark:text-white"
+        />
+      </div>
+      <div class="flex-1">
+        <label for="abbreviation" class="block text-gray-700 dark:text-white"> Abbreviation </label>
+        <InputText
+          placeholder="Enter abbreviation"
+          id="abbreviation"
+          v-model="course.abbreviation"
+          required
+          autofocus
+          class="w-full rounded-md text-gray-900 dark:text-white"
+        />
+      </div>
     </div>
 
+    <!-- Majors List -->
     <div>
-      <label for="course" class="block font-semibold text-gray-700 dark:text-white">
-        Abbreviation
-      </label>
-      <InputText
-        id="course"
-        v-model="course.abbreviation"
-        required
-        autofocus
-        class="w-full rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
-      />
-    </div>
-
-    <div>
-      <label class="block font-semibold text-gray-700 dark:text-white">Majors</label>
-      <ul class="bg-gray-100 dark:bg-gray-700 p-2 rounded-md">
+      <label class="block font-semibold bg-red-800 px-2 text-white">Majors</label>
+      <ul
+        class="bg-gray-100 dark:bg-gray-700 p-2 rounded-md"
+        v-if="(course.majors?.length ?? 0) > 0"
+      >
         <li
           v-for="(major, index) in course.majors"
           :key="index"
-          class="flex items-center justify-between bg-white dark:bg-gray-800 p-3 rounded-md shadow-sm mb-2"
+          class="flex items-center justify-between bg-white px-3 rounded-md shadow-sm mb-2"
         >
-          <span class="flex-1">{{ major }}</span>
+          <span>{{ major }}</span>
           <Button
             icon="pi pi-trash"
             severity="danger"
@@ -78,13 +84,14 @@ function onSave() {
           />
         </li>
       </ul>
+      <div v-else>No majors found.</div>
     </div>
 
     <div class="flex items-center gap-2">
       <InputText
         v-model="major"
         placeholder="Add new major..."
-        class="flex-1 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
+        class="flex-1 rounded-md text-gray-900 dark:text-white"
       />
       <Button
         label="Add"
