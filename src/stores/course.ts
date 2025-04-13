@@ -19,6 +19,7 @@ export const useCourseStore = defineStore('course', () => {
     await CourseRepository.createCourse({
       name: course.name?.toLowerCase(),
       abbreviation: course.abbreviation?.toLowerCase(),
+      majors: course.majors,
     })
     await getCourses()
     isLoading.value = false
@@ -37,6 +38,7 @@ export const useCourseStore = defineStore('course', () => {
     isLoading.value = true
     await CourseRepository.destroyCourse(uid)
     isLoading.value = false
+    getCourses()
   }
 
   return {
