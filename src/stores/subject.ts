@@ -21,7 +21,7 @@ export const useSubjectStore = defineStore('subject', () => {
       code: subject.code?.toLowerCase(),
       unit: subject.unit,
     })
-    getSubjects()
+    await getSubjects()
     isLoading.value = false
   }
 

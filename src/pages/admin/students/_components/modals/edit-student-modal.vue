@@ -17,7 +17,7 @@ function onClose() {
 }
 
 function onSubmit(payload: Student) {
-  studentStore.editStudent(payload)
+  studentStore.editStudent(payload.uid as string, payload)
   toast.add({
     severity: 'success',
     summary: 'Success',
