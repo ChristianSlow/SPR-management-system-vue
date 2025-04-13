@@ -23,100 +23,14 @@ onMounted(() => store.getSubjects())
 
 <template>
   <!-- Subjects Table -->
-  <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
-    <div class="flex justify-between items-center mb-4">
-      <h4 class="text-xl font-semibold text-gray-800 dark:text-white">Subjects</h4>
-      <Button
-        label="Add Subject"
-        @click="
-          () => {
-            dialog.open(addSubject, {
-              props: {
-                header: 'Add Subject',
-                style: {
-                  width: '50vw',
-                },
-                breakpoints: {
-                  '960px': '75vw',
-                  '640px': '90vw',
-                },
-                modal: true,
-                closeOnEscape: true,
-                draggable: false,
-                dismissableMask: true,
-              },
-            })
-          }
-        "
-      />
-    </div>
-
-    <DataTable
-      dataKey="id"
-      class="shadow-sm rounded-lg overflow-hidden"
-      :value="store.subjects"
-      :loading="store.isLoading"
+  <div class="bg-white border p-4 rounded-md">
+    <h1
+      class="text-center text-2xl font-bold bg-red-500 text-white dark:text-white px-5 py-2 border-b border-gray-300 dark:border-gray-600"
     >
-      <template #empty><div class="text-center p-8">No subjects found.</div></template>
-      <Column field="code" header="Subject Code">
-        <template #body="slotProps">
-          {{ slotProps.data.code.toUppercase }}
-        </template>
-      </Column>
-      <Column field="name" header="Descriptive Title">
-        <template #body="slotProps">
-          <div class="capitalize">
-            {{ slotProps.data.name }}
-          </div>
-        </template>
-      </Column>
-      <Column field="unit" header="Units" />
-      <Column :exportable="false" class="text-right">
-        <template #body="slotProps">
-          <Button
-            icon="pi pi-pencil"
-            class="p-button-text p-button-rounded p-button-info"
-            @click="
-              () => {
-                dialog.open(editSubject, {
-                  props: {
-                    header: 'Confirm',
-                    style: {
-                      width: '50vw',
-                    },
-                    breakpoints: {
-                      '960px': '75vw',
-                      '640px': '90vw',
-                    },
-                    modal: true,
-                  },
-                })
-              }
-            "
-          />
-          <Button
-            icon="pi pi-trash"
-            class="p-button-text p-button-rounded p-button-danger ml-2"
-            @click="
-              () => {
-                dialog.open(deleteSubject, {
-                  props: {
-                    header: 'Confirm',
-                    style: {
-                      width: '50vw',
-                    },
-                    breakpoints: {
-                      '960px': '75vw',
-                      '640px': '90vw',
-                    },
-                    modal: true,
-                  },
-                })
-              }
-            "
-          />
-        </template>
-      </Column>
-    </DataTable>
+      Subjects
+    </h1>
+    <div class="pt-2">
+      <SubjectTable />
+    </div>
   </div>
 </template>
