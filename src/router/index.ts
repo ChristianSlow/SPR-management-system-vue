@@ -48,13 +48,18 @@ const router = createRouter({
           path: 'approval-queue',
           name: 'admin-approval-queue',
           component: () => import('@/pages/admin/approval-queue/index.vue'),
-        }
+        },
       ],
     },
     {
       path: '/student',
       name: 'student-page',
       component: () => import('@/pages/student/index.vue'),
+    },
+    {
+      path: '/student/info',
+      name: 'student-info',
+      component: () => import('@/pages/student/info.vue'),
     },
   ],
 })
