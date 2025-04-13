@@ -114,7 +114,7 @@ const items = [
         </ul>
       </div>
 
-      <div class="w-full p-4">
+      <div class="w-full p-4 bg-gray-50">
         <slot></slot>
       </div>
     </div>

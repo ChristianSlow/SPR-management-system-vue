@@ -1,7 +1,7 @@
 <template>
-  <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
+  <div class="bg-white ">
     <div>
-      <div class="card bg-white dark:bg-gray-800 shadow-md p-4">
+      <div class="card bg-white border rounded-md p-4">
         <!-- Toolbar
         <Toolbar class="mb-4">
           <template #start>

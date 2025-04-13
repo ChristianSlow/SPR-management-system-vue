@@ -20,8 +20,8 @@ const store = useCourseStore()
 </script>
 
 <template>
-  <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
-    <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
+  <div class="bg-white">
+    <div class="bg-white border rounded-md p-4">
       <div
         class="card bg-white dark:bg-gray-800 p-2 md:p-3 shadow-md border border-gray-200 dark:border-gray-700"
       >

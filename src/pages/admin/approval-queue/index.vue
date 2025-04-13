@@ -10,10 +10,10 @@ const dialog = useDialog()
 </script>
 
 <template>
-  <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
-    <div class="bg-white dark:bg-gray-800 shadow-lg overflow-hidden">
+  <div class="bg-white">
+    <div class="bg-white border rounded-md p-4 overflow-hidden">
       <h1
-        class="text-center text-4xl font-bold bg-gray-200 dark:bg-gray-700 text-black dark:text-white p-5 border-b border-gray-300 dark:border-gray-600"
+        class="text-center text-4xl font-bold bg-red-500 text-white dark:text-white p-5 border-b border-gray-300 dark:border-gray-600"
       >
         Students Approval
       </h1>
@@ -23,27 +23,15 @@ const dialog = useDialog()
         <div class="mb-4 flex flex-col md:flex-row justify-between items-center gap-4">
           <!-- Search Input -->
           <div class="relative w-full md:w-2/3">
-            <i
-              class="pi pi-search text-gray-500 dark:text-gray-300 absolute left-3 top-1/2 transform -translate-y-1/2"
-            ></i>
-            <input
-              class="w-full p-3 pl-10 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-              placeholder="Search by name, course, or major"
-            />
+            <InputText type="text" placeholder="Search..." />
           </div>
 
           <!-- Status Filter Dropdown -->
-          <Dropdown
-            :options="['', 'Pending', 'Accepted', 'Denied']"
-            placeholder="Filter by Status"
-            class="w-full md:w-1/3 p-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md"
+          <Select
+            :options="['Pending', 'Accepted', 'Denied']"
+            placeholder="Select status"
+            class="w-full md:w-56"
           />
-        </div>
-
-        <!-- Loading Indicator -->
-        <div class="text-center text-gray-600 dark:text-gray-300 py-5">
-          <i class="pi pi-spin pi-spinner text-3xl"></i>
-          <p>Loading students...</p>
         </div>
 
         <!-- Students Table -->
