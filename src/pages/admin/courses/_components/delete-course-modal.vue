@@ -12,7 +12,6 @@ function onClose() {
 }
 
 function onDelete() {
-  courseStore.courses = courseStore.courses.filter((c) => c.name !== course.name)
   onClose()
 }
 </script>

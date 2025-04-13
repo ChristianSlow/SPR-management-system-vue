@@ -74,10 +74,23 @@ onMounted(() => store.getCourses())
               {{ slotProps.data.name.toUpperCase() }}
             </template>
           </Column>
-          <Column field="majors" header="Majors" style="min-width: 16rem"></Column>
+          <Column header="Majors" style="min-width: 16rem">
+            <template #body="sloProps">
+              <OrderList
+                v-model="sloProps.data"
+                breakpoint="575px"
+                pt:pcListbox:root="w-full sm:w-56"
+              >
+                <template #option="{ option }">
+                  {{ option.name }}
+                </template>
+              </OrderList>
+            </template></Column
+          >
           <Column :exportable="false" header="Actions" style="min-width: 12rem">
             <template #body="slotProps">
               <Button
+                size="small"
                 label="Edit"
                 icon="pi pi-pencil"
                 class="mr-2"
@@ -96,6 +109,9 @@ onMounted(() => store.getCourses())
                 "
               />
               <Button
+                size="small"
+                outlined
+                severity="danger"
                 label="Delete"
                 icon="pi pi-trash"
                 class="mr-2"
@@ -113,7 +129,6 @@ onMounted(() => store.getCourses())
                   }
                 "
               />
-              <Button icon="pi pi-trash" outlined rounded severity="danger" />
             </template>
           </Column>
         </DataTable>

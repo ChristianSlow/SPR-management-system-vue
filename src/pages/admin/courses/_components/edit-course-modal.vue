@@ -8,7 +8,7 @@ const courseStore = useCourseStore()
 const originalCourse = dialogRef.value.data
 
 const courseName = ref(originalCourse.name)
-const majors = ref([...originalCourse.majors])
+const majors = ref(originalCourse.majors ?? [])
 const newMajor = ref('')
 
 function onClose() {

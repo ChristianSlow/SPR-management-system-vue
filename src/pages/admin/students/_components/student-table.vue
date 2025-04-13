@@ -57,13 +57,13 @@ onMounted(() => {
           <template #empty>
             <div class="flex items-center justify-center p-4">No subject found.</div>
           </template>
-          <Column header="Fullname">
+          <Column header="Fullname" style="min-width: 16rem">
             <template #body="slotProps">
               <span>{{ slotProps.data.firstName }} {{ slotProps.data.lastName }}</span>
             </template>
           </Column>
-          <Column field="sex" header="Gender"></Column>
-          <Column field="address" header="Address"></Column>
+          <Column field="sex" header="Gender" style="min-width: 10rem"></Column>
+          <Column field="address" header="Address" style="min-width: 10rem"></Column>
           <Column :exportable="false" header="Actions">
             <template #body="slotProps">
               <Button
