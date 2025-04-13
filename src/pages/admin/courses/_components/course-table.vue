@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useToast } from 'primevue/usetoast'
+import { useCourseStore } from '@/stores/course'
 import { useDialog } from 'primevue'
-import { defineAsyncComponent } from 'vue'
+import { defineAsyncComponent, onMounted } from 'vue'
 
 const addCourse = defineAsyncComponent(
   () => import('@/pages/admin/courses/_components/add-course-modal.vue'),
@@ -17,9 +16,9 @@ const editCourse = defineAsyncComponent(
 )
 
 const dialog = useDialog()
-const toast = useToast()
-const dt = ref()
-const products = ref()
+const store = useCourseStore()
+
+onMounted(() => store.getCourses())
 </script>
 
 <template>
@@ -50,17 +49,7 @@ const products = ref()
         </template>
       </Toolbar>
       <div class="border rounded-sm">
-        <DataTable
-          ref="dt"
-          size="small"
-          :value="products"
-          dataKey="id"
-          :paginator="true"
-          :rows="10"
-          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-          :rowsPerPageOptions="[5, 10, 25]"
-          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-        >
+        <DataTable size="small" :value="store.courses" :loading="store.isLoading">
           <!-- <template #header>
               <div class="flex flex-wrap gap-2 items-center justify-between">
                 <h4 class="m-0">Manage Products</h4>
@@ -75,9 +64,17 @@ const products = ref()
           <template #empty>
             <div class="flex items-center justify-center p-4">No course found.</div>
           </template>
-          <Column field="name" header="Abbreviation" style="min-width: 16rem"></Column>
-          <Column field="code" header="Name" style="min-width: 12rem"></Column>
-          <Column field="name" header="Majors" style="min-width: 16rem"></Column>
+          <Column field="abbreviation" header="Abbreviation" style="min-width: 16rem">
+            <template #body="slotProps">
+              {{ slotProps.data.abbreviation.toUpperCase() }}
+            </template>
+          </Column>
+          <Column field="name" header="Name" style="min-width: 12rem">
+            <template #body="slotProps">
+              {{ slotProps.data.name.toUpperCase() }}
+            </template>
+          </Column>
+          <Column field="majors" header="Majors" style="min-width: 16rem"></Column>
           <Column :exportable="false" header="Actions" style="min-width: 12rem">
             <template #body="slotProps">
               <Button

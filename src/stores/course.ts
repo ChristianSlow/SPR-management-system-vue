@@ -5,18 +5,7 @@ import { CourseRepository } from '@/repositories/courseRepository'
 
 export const useCourseStore = defineStore('course', () => {
   const isLoading = ref(false)
-  const courses = ref<Course[]>([
-    {
-      name: 'BACHELOR OF ELEMENTARY EDUCATION',
-      abbreviation: 'BEED',
-      majors: [],
-    },
-    {
-      name: 'BACHELOR OF SECONDARY EDUCATION',
-      abbreviation: 'BSED',
-      majors: ['MATHEMATICS', 'ENGLISH', 'FILIPINO'],
-    },
-  ])
+  const courses = ref<Course[]>([])
 
   async function getCourses() {
     isLoading.value = true
@@ -29,8 +18,9 @@ export const useCourseStore = defineStore('course', () => {
     isLoading.value = true
     await CourseRepository.createCourse({
       name: course.name?.toLowerCase(),
+      abbreviation: course.abbreviation?.toLowerCase(),
     })
-    getCourses()
+    await getCourses()
     isLoading.value = false
   }
 
@@ -51,6 +41,7 @@ export const useCourseStore = defineStore('course', () => {
 
   return {
     courses,
+    isLoading,
     getCourses,
     addCourse,
     deleteCourse,

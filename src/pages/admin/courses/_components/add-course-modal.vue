@@ -4,16 +4,32 @@ import { useCourseStore } from '@/stores/course'
 import type { Course } from '@/types/course'
 
 const dialogRef = inject<any>('dialogRef')
-const courseStore = useCourseStore()
+const store = useCourseStore()
 
+const majorInput = ref('')
 const course = reactive<Course>({
   name: '',
   abbreviation: '',
   majors: [],
 })
 
+function addMajor() {
+  course.majors?.push(majorInput.value.toLowerCase().trim())
+  majorInput.value = ''
+}
+
+function removeMajor(index: number) {
+  course.majors?.splice(index, 1)
+}
+
 function onClose() {
   dialogRef.value.close()
+}
+
+function onSave() {
+  if (!course.name?.trim()) return
+  store.addCourse(course)
+  onClose()
 }
 </script>
 
@@ -32,13 +48,25 @@ function onClose() {
         class="w-full rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
       />
     </div>
+    <div>
+      <label for="course" class="block font-semibold text-gray-700 dark:text-white">
+        Abbreviation
+      </label>
+      <InputText
+        id="course"
+        v-model="course.abbreviation"
+        required
+        autofocus
+        class="w-full rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
+      />
+    </div>
 
     <!-- Majors List -->
     <div>
       <label class="block font-semibold text-gray-700 dark:text-white">Majors</label>
       <ul class="bg-gray-100 dark:bg-gray-700 p-2 rounded-md">
         <li
-          v-for="(major, index) in majors"
+          v-for="(major, index) in course.majors"
           :key="index"
           class="flex items-center justify-between bg-white dark:bg-gray-800 p-3 rounded-md shadow-sm mb-2"
         >
@@ -68,6 +96,12 @@ function onClose() {
   <!-- Buttons -->
   <div class="flex justify-end mt-4 gap-2">
     <Button label="Cancel" icon="pi pi-times" text @click="onClose" />
-    <Button label="Save" icon="pi pi-check" severity="success" @click="onSave" />
+    <Button
+      label="Save"
+      icon="pi pi-check"
+      severity="success"
+      @click="onSave"
+      :loading="store.isLoading"
+    />
   </div>
 </template>
