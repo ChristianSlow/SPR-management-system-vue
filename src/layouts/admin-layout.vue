@@ -104,7 +104,7 @@ const items = [
           <li v-for="item in items" :key="item.name">
             <RouterLink
               :to="item.path"
-              class="flex items-center p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
+              class="flex items-center p-2 rounded-lg hover:bg-red-200 text-gray-500"
               :class="route.name === item.name ? 'bg-red-600 text-white' : ''"
             >
               <i :class="item.icon"></i>

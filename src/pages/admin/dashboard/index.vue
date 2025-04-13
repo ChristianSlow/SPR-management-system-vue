@@ -1,58 +1,48 @@
 <template>
-  <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
-    <h1 class="text-4xl font-bold text-center text-gray-800 dark:text-white mb-5">Dashboard</h1>
+  <div>
+    <h1 class="text-xl text-gray-800 dark:text-white mb-5">Dashboard</h1>
 
     <!-- Grid Section for Stats -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-7">
-      <div
-        class="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6 flex items-center space-x-4 border-t-4 border-black transition-all hover:shadow-lg hover:-translate-y-1"
-      >
-        <AcademicCapIcon class="h-14 w-14 text-blue-500" />
+      <div class="bg-white border rounded-xl p-6 flex items-center space-x-4 transition-all">
+        <i class="pi pi-book text-4xl text-blue-500" />
         <div>
-          <h3 class="text-xl font-semibold text-gray-700 dark:text-white">Total Courses</h3>
+          <h3 class="text-lg text-gray-700 dark:text-white">Total Courses</h3>
           <p class="text-gray-500 dark:text-gray-300 text-2xl font-medium">{{ 0 }}</p>
         </div>
       </div>
 
-      <div
-        class="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6 flex items-center space-x-4 border-t-4 border-black transition-all hover:shadow-lg hover:-translate-y-1"
-      >
-        <UserGroupIcon class="h-14 w-14 text-green-500" />
+      <div class="bg-white border rounded-xl p-6 flex items-center space-x-4 transition-all">
+        <i class="pi pi-bookmark text-4xl text-green-500" />
         <div>
-          <h3 class="text-xl font-semibold text-gray-700 dark:text-white">Registered Students</h3>
+          <h3 class="text-lg text-gray-700 dark:text-white">Total Subjects</h3>
           <p class="text-gray-500 dark:text-gray-300 text-2xl font-medium">{{ 0 }}</p>
         </div>
       </div>
 
-      <div
-        class="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6 flex items-center space-x-4 border-t-4 border-black transition-all hover:shadow-lg hover:-translate-y-1"
-      >
-        <XCircleIcon class="h-14 w-14 text-red-500" />
+      <div class="bg-white border rounded-xl p-6 flex items-center space-x-4 transition-all">
+        <i class="pi pi-server text-4xl text-red-500" />
         <div>
-          <h3 class="text-xl font-semibold text-gray-700 dark:text-white">Denied Students</h3>
+          <h3 class="text-lg text-gray-700 dark:text-white">Total Curriculum</h3>
           <p class="text-gray-500 dark:text-gray-300 text-2xl font-medium">{{ 0 }}</p>
         </div>
       </div>
 
-      <div
-        class="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6 flex items-center space-x-4 border-t-4 border-black transition-all hover:shadow-lg hover:-translate-y-1"
-      >
-        <UserGroupIcon class="h-14 w-14 text-black" />
+      <div class="bg-white border rounded-xl p-6 flex items-center space-x-4 transition-all">
+        <i class="pi pi-users text-4xl text-black" />
         <div>
-          <h3 class="text-xl font-semibold text-gray-700 dark:text-white">Total Students</h3>
+          <h3 class="text-lg text-gray-700 dark:text-white">Total Students</h3>
           <p class="text-gray-500 dark:text-gray-300 text-2xl font-medium">{{ 0 }}</p>
         </div>
       </div>
     </div>
 
     <!-- Insights Section -->
-    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-4 border-t-4 border-black">
-      <h2 class="text-3xl font-semibold text-center text-gray-900 dark:text-white mb-6">
-        Detailed Insights
-      </h2>
+    <div class="bg-white shadow-lg rounded-xl p-4">
+      <h2 class="text-xl text-gray-900 dark:text-white mb-6">Detailed Insights</h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div class="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6 border-t-4 border-black">
+        <div class="bg-white border rounded-xl p-6">
           <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">Student Statistics</h3>
           <p class="text-gray-500 dark:text-gray-300 mt-3 text-lg">
             Total Students: <span class="font-semibold text-gray-900 dark:text-white">{{ 0 }}</span>
@@ -65,7 +55,7 @@
           </p>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6 border-t-4 border-black">
+        <div class="bg-white border rounded-xl p-6">
           <h3 class="text-2xl font-semibold text-gray-900 dark:text-white mb-3">
             Enrollment Trends
           </h3>
