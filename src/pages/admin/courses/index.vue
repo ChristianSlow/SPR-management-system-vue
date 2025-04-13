@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { useCourseStore } from '@/stores/course'
 import courseTable from './_components/course-table.vue'
-
-const store = useCourseStore()
 </script>
 
 <template>

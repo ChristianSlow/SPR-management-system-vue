@@ -11,6 +11,7 @@ export const useCourseStore = defineStore('course', () => {
     isLoading.value = true
     const response = await CourseRepository.fetchCourses()
     courses.value = response.data
+    console.log(courses.value)
     isLoading.value = false
   }
 
@@ -27,10 +28,13 @@ export const useCourseStore = defineStore('course', () => {
 
   async function editCourse(course: Course) {
     isLoading.value = true
+    console.log(course)
     await CourseRepository.updateCourse(course.uid as string, {
       name: course.name?.toLowerCase(),
+      abbreviation: course.abbreviation,
+      majors: course.majors,
     })
-    getCourses()
+    await getCourses()
     isLoading.value = false
   }
 

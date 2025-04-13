@@ -22,35 +22,34 @@ onMounted(() => store.getCourses())
 </script>
 
 <template>
-  <div>
-    <div class="card">
-      <Toolbar class="mb-6">
-        <template #start>
-          <InputText type="text" placeholder="Search..." />
-        </template>
-        <template #end>
-          <Button
-            label="New"
-            icon="pi pi-plus"
-            class="mr-2"
-            @click="
-              () => {
-                dialog.open(addCourse, {
-                  props: {
-                    header: 'Add Course',
-                    style: { width: '50vw' },
-                    breakpoints: { '960px': '75vw', '640px': '90vw' },
-                    modal: true,
-                  },
-                })
-              }
-            "
-          />
-        </template>
-      </Toolbar>
-      <div class="border rounded-sm">
-        <DataTable size="small" :value="store.courses" :loading="store.isLoading">
-          <!-- <template #header>
+  <div class="card">
+    <Toolbar class="mb-6">
+      <template #start>
+        <InputText type="text" placeholder="Search..." />
+      </template>
+      <template #end>
+        <Button
+          label="New"
+          icon="pi pi-plus"
+          class="mr-2"
+          @click="
+            () => {
+              dialog.open(addCourse, {
+                props: {
+                  header: 'Add Course',
+                  style: { width: '50vw' },
+                  breakpoints: { '960px': '75vw', '640px': '90vw' },
+                  modal: true,
+                },
+              })
+            }
+          "
+        />
+      </template>
+    </Toolbar>
+    <div class="border rounded-sm">
+      <DataTable size="small" :value="store.courses" :loading="store.isLoading">
+        <!-- <template #header>
               <div class="flex flex-wrap gap-2 items-center justify-between">
                 <h4 class="m-0">Manage Products</h4>
                 <IconField>
@@ -61,78 +60,73 @@ onMounted(() => store.getCourses())
                 </IconField>
               </div>
             </template> -->
-          <template #empty>
-            <div class="flex items-center justify-center p-4">No course found.</div>
+        <template #empty>
+          <div class="flex items-center justify-center p-4">No course found.</div>
+        </template>
+        <Column field="abbreviation" header="Abbreviation">
+          <template #body="slotProps">
+            {{ slotProps.data.abbreviation.toUpperCase() }}
           </template>
-          <Column field="abbreviation" header="Abbreviation">
-            <template #body="slotProps">
-              {{ slotProps.data.abbreviation.toUpperCase() }}
-            </template>
-          </Column>
-          <Column field="name" header="Name" style="min-width: 12rem">
-            <template #body="slotProps">
-              {{ slotProps.data.name.toUpperCase() }}
-            </template>
-          </Column>
-          <Column header="Majors">
-            <template #body="sloProps">
-              <OrderList
-                v-model="sloProps.data"
-                breakpoint="575px"
-                pt:pcListbox:root="w-full sm:w-56"
-              >
-                <template #option="{ option }">
-                  {{ option.name }}
-                </template>
-              </OrderList>
-            </template></Column
-          >
-          <Column :exportable="false" header="Actions" style="min-width: 12rem">
-            <template #body="slotProps">
-              <Button
-                size="small"
-                label="Edit"
-                icon="pi pi-pencil"
-                class="mr-2"
-                @click="
-                  () => {
-                    dialog.open(editCourse, {
-                      props: {
-                        header: 'Edit Course',
-                        style: { width: '50vw' },
-                        breakpoints: { '960px': '75vw', '640px': '90vw' },
-                        modal: true,
-                      },
-                      data: slotProps.data,
-                    })
-                  }
-                "
-              />
-              <Button
-                size="small"
-                outlined
-                severity="danger"
-                label="Delete"
-                icon="pi pi-trash"
-                class="mr-2"
-                @click="
-                  () => {
-                    dialog.open(deleteCourse, {
-                      props: {
-                        header: 'Confirm Delete',
-                        style: { width: '50vw' },
-                        breakpoints: { '960px': '75vw', '640px': '90vw' },
-                        modal: true,
-                      },
-                      data: slotProps.data,
-                    })
-                  }
-                "
-              />
-            </template>
-          </Column>
-        </DataTable>
-      </div>
+        </Column>
+        <Column field="name" header="Name" style="min-width: 12rem">
+          <template #body="slotProps">
+            {{ slotProps.data.name.toUpperCase() }}
+          </template>
+        </Column>
+        <Column header="Majors">
+          <template #body="sloProps">
+            <ul>
+              <li v-for="major in sloProps.data.majors" :key="major">
+                {{ major }}
+              </li>
+            </ul>
+          </template></Column
+        >
+        <Column :exportable="false" header="Actions" style="min-width: 12rem">
+          <template #body="slotProps">
+            <Button
+              size="small"
+              label="Edit"
+              icon="pi pi-pencil"
+              class="mr-2"
+              @click="
+                () => {
+                  dialog.open(editCourse, {
+                    props: {
+                      header: 'Edit Course',
+                      style: { width: '50vw' },
+                      breakpoints: { '960px': '75vw', '640px': '90vw' },
+                      modal: true,
+                    },
+                    data: slotProps.data,
+                  })
+                }
+              "
+            />
+            <Button
+              size="small"
+              outlined
+              severity="danger"
+              label="Delete"
+              icon="pi pi-trash"
+              class="mr-2"
+              @click="
+                () => {
+                  dialog.open(deleteCourse, {
+                    props: {
+                      header: 'Confirm Delete',
+                      style: { width: '50vw' },
+                      breakpoints: { '960px': '75vw', '640px': '90vw' },
+                      modal: true,
+                    },
+                    data: slotProps.data,
+                  })
+                }
+              "
+            />
+          </template>
+        </Column>
+      </DataTable>
     </div>
   </div>
 </template>

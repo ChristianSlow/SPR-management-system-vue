@@ -53,10 +53,9 @@ export const CourseRepository = {
     }
   },
 
-  async updateCourse(uid: string, payload: Partial<Course>) {
+  async updateCourse(uid: string, payload: Course) {
     try {
-      const courseDoc = doc(db, 'courses', uid)
-      await updateDoc(courseDoc, payload)
+      await updateDoc(doc(db, 'courses', uid), { ...payload })
 
       return { message: 'Successfully updated course!' }
     } catch (error) {
