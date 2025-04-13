@@ -64,7 +64,7 @@ onMounted(() => store.getCourses())
           <template #empty>
             <div class="flex items-center justify-center p-4">No course found.</div>
           </template>
-          <Column field="abbreviation" header="Abbreviation" style="min-width: 16rem">
+          <Column field="abbreviation" header="Abbreviation">
             <template #body="slotProps">
               {{ slotProps.data.abbreviation.toUpperCase() }}
             </template>
@@ -74,7 +74,7 @@ onMounted(() => store.getCourses())
               {{ slotProps.data.name.toUpperCase() }}
             </template>
           </Column>
-          <Column header="Majors" style="min-width: 16rem">
+          <Column header="Majors">
             <template #body="sloProps">
               <OrderList
                 v-model="sloProps.data"
