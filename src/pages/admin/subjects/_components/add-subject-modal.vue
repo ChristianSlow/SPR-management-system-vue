@@ -1,16 +1,19 @@
 <script setup lang="ts">
+import { useCourseStore } from '@/stores/course'
 import { useSubjectStore } from '@/stores/subject'
 import type { Subject } from '@/types/subject'
-import { Message, useToast } from 'primevue'
-import { inject, reactive } from 'vue'
+import { useToast } from 'primevue'
+import { inject, onMounted, reactive } from 'vue'
 
 const dialogRef = inject<any>('dialogRef')
 const subject = reactive<Subject>({
+  courseIds: [],
   name: '',
   code: '',
   unit: '',
 })
 const store = useSubjectStore()
+const courseStore = useCourseStore()
 const toast = useToast()
 
 function onClose() {
@@ -27,10 +30,24 @@ function onSubmit(payload: Subject) {
   })
   onClose()
 }
+
+onMounted(() => courseStore.getCourses())
 </script>
 
 <template>
   <form class="flex flex-col gap-4" @submit.prevent="onSubmit(subject)">
+    <div class="flex flex-col gap-2">
+      <label>Course</label>
+      <MultiSelect
+        v-model="subject.courseIds"
+        :options="courseStore.courses"
+        optionLabel="abbreviation"
+        optionValue="abbreviation"
+        placeholder="Select course"
+        class="w-full"
+      />
+    </div>
+
     <div class="flex gap-4">
       <div class="flex flex-1 flex-col gap-2">
         <label>Subject Code</label>

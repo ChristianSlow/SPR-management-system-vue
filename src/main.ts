@@ -50,6 +50,7 @@ import {
   Badge,
   OverlayBadge,
   OrderList,
+  MultiSelect,
 } from 'primevue'
 import { VueFire, VueFireAuth } from 'vuefire'
 import { firebaseApp } from './firebase/config'
@@ -107,6 +108,7 @@ app.component('InputGroupAddon', InputGroupAddon)
 app.component('Badge', Badge)
 app.component('OverlayBadge', OverlayBadge)
 app.component('OrderList', OrderList)
+app.component('MultiSelect', MultiSelect)
 
 app.use(createPinia())
 app.use(router)

@@ -6,12 +6,19 @@ import { CourseRepository } from '@/repositories/courseRepository'
 export const useCourseStore = defineStore('course', () => {
   const isLoading = ref(false)
   const courses = ref<Course[]>([])
+  const course = ref<Course>()
 
   async function getCourses() {
     isLoading.value = true
     const response = await CourseRepository.fetchCourses()
     courses.value = response.data
-    console.log(courses.value)
+    isLoading.value = false
+  }
+
+  async function getCourse(uid: string) {
+    isLoading.value = true
+    const response = await CourseRepository.fetchCourse(uid)
+    course.value = response.data
     isLoading.value = false
   }
 
@@ -48,6 +55,7 @@ export const useCourseStore = defineStore('course', () => {
   return {
     courses,
     isLoading,
+    getCourse,
     getCourses,
     addCourse,
     deleteCourse,
