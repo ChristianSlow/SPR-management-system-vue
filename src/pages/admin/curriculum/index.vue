@@ -56,14 +56,11 @@ const subjectsData = {
 }
 
 const filteredSubjects = computed(() => {
-  if (
-    selectedCourse.value &&
-    selectedMajor.value &&
-    selectedYear.value &&
-    selectedSemester.value
-  ) {
+  if (selectedCourse.value && selectedMajor.value && selectedYear.value && selectedSemester.value) {
     return (
-      subjectsData[selectedCourse.value]?.[selectedMajor.value]?.[selectedYear.value]?.[selectedSemester.value] || []
+      subjectsData[selectedCourse.value]?.[selectedMajor.value]?.[selectedYear.value]?.[
+        selectedSemester.value
+      ] || []
     )
   }
   return []
@@ -71,7 +68,7 @@ const filteredSubjects = computed(() => {
 </script>
 
 <template>
-  <main class="md:ml-64 h-auto pt-14 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen">
+  <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
     <div class="w-full max-w-6xl mx-auto">
       <Card class="rounded-2xl shadow-lg dark:bg-gray-800 border-0">
         <template #title>
@@ -186,5 +183,5 @@ const filteredSubjects = computed(() => {
         </DataTable>
       </div>
     </div>
-  </main>
+  </div>
 </template>

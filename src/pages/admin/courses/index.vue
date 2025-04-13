@@ -20,36 +20,48 @@ const store = useCourseStore()
 </script>
 
 <template>
-  <main class="md:ml-64 h-auto pt-14 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white text-base md:text-lg">
+  <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
     <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
-      <div class="card bg-white dark:bg-gray-800 p-2 md:p-3 shadow-md border border-gray-200 dark:border-gray-700">
-        
+      <div
+        class="card bg-white dark:bg-gray-800 p-2 md:p-3 shadow-md border border-gray-200 dark:border-gray-700"
+      >
         <!-- 🔹 Toolbar Section -->
-        <Toolbar class="mb-4 md:mb-6 flex flex-col md:flex-row gap-4 md:gap-0 items-start md:items-center">
+        <Toolbar
+          class="mb-4 md:mb-6 flex flex-col md:flex-row gap-4 md:gap-0 items-start md:items-center"
+        >
           <template #start>
             <Button
               label="Add Course"
-              @click="() => {
-                dialog.open(addCourse, {
-                  props: {
-                    header: 'Add Course',
-                    style: { width: '50vw' },
-                    breakpoints: { '960px': '75vw', '640px': '90vw' },
-                    modal: true,
-                  },
-                })
-              }"
+              @click="
+                () => {
+                  dialog.open(addCourse, {
+                    props: {
+                      header: 'Add Course',
+                      style: { width: '50vw' },
+                      breakpoints: { '960px': '75vw', '640px': '90vw' },
+                      modal: true,
+                    },
+                  })
+                }
+              "
             />
           </template>
 
           <template #center>
-            <h1 class="m-0 text-lg md:text-xl font-semibold text-gray-700 dark:text-white tracking-wide text-center md:text-left">
+            <h1
+              class="m-0 text-lg md:text-xl font-semibold text-gray-700 dark:text-white tracking-wide text-center md:text-left"
+            >
               Courses Management
             </h1>
           </template>
 
           <template #end>
-            <Button label="Export" icon="pi pi-upload" class="w-full md:w-auto" severity="secondary" />
+            <Button
+              label="Export"
+              icon="pi pi-upload"
+              class="w-full md:w-auto"
+              severity="secondary"
+            />
           </template>
         </Toolbar>
 
@@ -82,37 +94,41 @@ const store = useCourseStore()
               <Button
                 icon="pi pi-pencil"
                 class="mr-2"
-                @click="() => {
-                  dialog.open(editCourse, {
-                    data: { course: slotProps.data },
-                    props: {
-                      header: 'Edit Course',
-                      style: { width: '50vw' },
-                      breakpoints: { '960px': '75vw', '640px': '90vw' },
-                      modal: true,
-                    },
-                  })
-                }"
+                @click="
+                  () => {
+                    dialog.open(editCourse, {
+                      data: { course: slotProps.data },
+                      props: {
+                        header: 'Edit Course',
+                        style: { width: '50vw' },
+                        breakpoints: { '960px': '75vw', '640px': '90vw' },
+                        modal: true,
+                      },
+                    })
+                  }
+                "
               />
               <Button
                 icon="pi pi-trash"
                 severity="danger"
-                @click="() => {
-                  dialog.open(deleteCourse, {
-                    data: { course: slotProps.data },
-                    props: {
-                      header: 'Delete Course',
-                      style: { width: '40vw' },
-                      breakpoints: { '960px': '75vw', '640px': '90vw' },
-                      modal: true,
-                    },
-                  })
-                }"
+                @click="
+                  () => {
+                    dialog.open(deleteCourse, {
+                      data: { course: slotProps.data },
+                      props: {
+                        header: 'Delete Course',
+                        style: { width: '40vw' },
+                        breakpoints: { '960px': '75vw', '640px': '90vw' },
+                        modal: true,
+                      },
+                    })
+                  }
+                "
               />
             </template>
           </Column>
         </DataTable>
       </div>
     </div>
-  </main>
+  </div>
 </template>

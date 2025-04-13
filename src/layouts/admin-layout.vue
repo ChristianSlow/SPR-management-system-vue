@@ -1,3 +1,53 @@
+<script setup lang="ts">
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+
+const items = [
+  {
+    label: 'Dashboard',
+    path: '/admin',
+    name: 'admin-dashboard',
+    icon: 'pi pi-home mr-2',
+  },
+  {
+    label: 'Courses',
+    path: '/admin/courses',
+    name: 'admin-courses',
+    icon: 'pi pi-book mr-2',
+  },
+  {
+    label: 'Subjects',
+    path: '/admin/subjects',
+    name: 'admin-subjects',
+    icon: 'pi pi-bookmark mr-2',
+  },
+  {
+    label: 'Curriculum',
+    path: '/admin/curriculum',
+    name: 'admin-curriculum',
+    icon: 'pi pi-server mr-2',
+  },
+  {
+    label: 'Approval Queue',
+    path: '/admin/approval-queue',
+    name: 'admin-approval-queue',
+    icon: 'pi pi-id-card mr-2',
+  },
+  {
+    label: 'Students',
+    path: '/admin/students',
+    name: 'admin-students',
+    icon: 'pi pi-users mr-2',
+  },
+  {
+    label: 'Users Account',
+    path: '/admin/account',
+    name: 'admin-account',
+    icon: 'pi pi-user mr-2',
+  },
+]
+</script>
 <template>
   <main class="h-full flex flex-col">
     <nav class="p-4 border-b">
@@ -51,67 +101,14 @@
     <div class="flex">
       <div class="h-[calc(100vh-76px)] p-4 w-72 border-r">
         <ul class="space-y-2 font-medium">
-          <li>
+          <li v-for="item in items" :key="item.name">
             <RouterLink
-              to="/admin"
+              :to="item.path"
               class="flex items-center p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
+              :class="route.name === item.name ? 'bg-red-600 text-white' : ''"
             >
-              <i class="pi pi-home mr-2"></i>
-              <span>Dashboard</span>
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink
-              to="/admin/courses"
-              class="flex items-center p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-            >
-              <i class="pi pi-book mr-2"></i>
-              <span>Courses</span>
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink
-              to="/admin/subjects"
-              class="flex items-center p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-            >
-              <i class="pi pi-bookmark mr-2"></i>
-              <span>Subjects</span>
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink
-              to="/admin/curriculum"
-              class="flex items-center p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-            >
-              <i class="pi pi-server mr-2"></i>
-              <span>Curriculum</span>
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink
-              to="/admin/approval-queue"
-              class="flex items-center p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-            >
-              <i class="pi pi-id-card mr-2"></i>
-              <span>Approval Queue</span>
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink
-              to="/admin/students"
-              class="flex items-center p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-            >
-              <i class="pi pi-users mr-2"></i>
-              <span>Students</span>
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink
-              to="/admin/account"
-              class="flex items-center p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-            >
-              <i class="pi pi-user mr-2"></i>
-              <span>Users Account</span>
+              <i :class="item.icon"></i>
+              <span>{{ item.label }}</span>
             </RouterLink>
           </li>
         </ul>
