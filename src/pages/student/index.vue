@@ -47,7 +47,7 @@
           </table>
 
           <div class="text-right font-semibold text-md mt-6 p-4 bg-gray-200 rounded-lg">
-            Total Units: <span class="text-blue-600">total units</span>
+            Total Units: <span class="text-blue-600">Total Units</span>
           </div>
         </div>
       </div>
