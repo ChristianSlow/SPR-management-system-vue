@@ -85,9 +85,9 @@ onMounted(() => store.getCurriculums())
                 class="mr-2"
                 @click="
                   () => {
-                    dialog.open(editCurriculum, {
+                    dialog.open(viewCurriculum, {
                       props: {
-                        header: 'Edit Curriculum',
+                        header: 'View Curriculum',
                         style: { width: '50vw' },
                         breakpoints: { '960px': '75vw', '640px': '90vw' },
                         modal: true,

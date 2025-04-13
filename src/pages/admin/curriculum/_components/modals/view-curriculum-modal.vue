@@ -10,60 +10,100 @@ const course = courseStore.courses.find((c) => c.abbreviation === curriculum.cou
 </script>
 
 <template>
-  <div class="grid gap-4 text-base md:text-lg">
-    <!-- Curriculum Name -->
-    <div class="flex flex-col gap-4">
-      <div>
-        <label class="block text-gray-700 dark:text-white font-bold">Name:</label>
-        <p class="text-gray-900 dark:text-white">{{ curriculum.name }}</p>
-      </div>
+  <div class="p-4 bg-white rounded shadow-md space-y-4">
+    <h2 class="text-xl font-semibold mb-2">Curriculum Details</h2>
 
-      <!-- Course and Major -->
-      <div class="flex gap-4 w-full">
-        <div class="flex-1">
-          <label class="block text-gray-700 dark:text-white font-bold">Course:</label>
-          <p class="text-gray-900 dark:text-white">{{ course?.name || curriculum.course }}</p>
-        </div>
-        <div class="flex-1">
-          <label class="block text-gray-700 dark:text-white font-bold">Major:</label>
-          <p class="text-gray-900 dark:text-white">{{ curriculum.major || '—' }}</p>
-        </div>
-      </div>
-
-      <!-- Yearly Breakdown -->
-      <template
-        v-for="(yearData, index) in ['firstYear', 'secondYear', 'thirdYear', 'fourthYear']"
-        :key="index"
-      >
-        <div>
-          <label class="block bg-red-800 text-white px-2 capitalize">
-            {{ yearData.replace('Year', ' year') }}
-          </label>
-          <div class="flex gap-4">
-            <div class="flex-1">
-              <label class="block text-gray-700 dark:text-white font-bold">First semester:</label>
-              <ul class="list-disc list-inside text-gray-900 dark:text-white">
-                <li v-for="uid in curriculum[yearData]?.first || []" :key="uid">
-                  {{ uid }}
-                </li>
-              </ul>
-            </div>
-            <div class="flex-1">
-              <label class="block text-gray-700 dark:text-white font-bold">Second semester:</label>
-              <ul class="list-disc list-inside text-gray-900 dark:text-white">
-                <li v-for="uid in curriculum[yearData]?.second || []" :key="uid">
-                  {{ uid }}
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </template>
+    <div v-if="curriculum.uid"><strong>UID:</strong> {{ curriculum.uid }}</div>
+    <div v-if="curriculum.name"><strong>Name:</strong> {{ curriculum.name }}</div>
+    <div v-if="curriculum.course">
+      <strong>Course:</strong> {{ course?.name || curriculum.course }}
     </div>
-  </div>
+    <div v-if="curriculum.major"><strong>Major:</strong> {{ curriculum.major }}</div>
 
-  <!-- Buttons -->
-  <div class="flex justify-end mt-4 gap-2">
-    <Button label="Close" icon="pi pi-times" text @click="dialogRef.value.close()" />
+    <div v-if="curriculum.firstYear">
+      <h3 class="font-semibold mt-3">First Year</h3>
+      <div class="p-4 border rounded-md">
+        <label>First</label>
+        <pre
+          class="bg-gray-100 p-2 rounded"
+          v-for="item in curriculum.firstYear.first"
+          :key="item"
+          >{{ item }}</pre
+        >
+        <label>Second</label>
+        <pre
+          class="bg-gray-100 p-2 rounded"
+          v-for="item in curriculum.firstYear.second"
+          :key="item"
+          >{{ item }}</pre
+        >
+      </div>
+    </div>
+    <div v-if="curriculum.secondYear">
+      <h3 class="font-semibold mt-3">Second Year</h3>
+      <div class="p-4 border rounded-md">
+        <label>First</label>
+        <pre
+          class="bg-gray-100 p-2 rounded"
+          v-for="item in curriculum.secondYear.first"
+          :key="item"
+          >{{ item }}</pre
+        >
+        <label>Second</label>
+        <pre
+          class="bg-gray-100 p-2 rounded"
+          v-for="item in curriculum.secondYear.second"
+          :key="item"
+          >{{ item }}</pre
+        >
+      </div>
+    </div>
+    <div v-if="curriculum.thirdYear">
+      <h3 class="font-semibold mt-3">Third Year</h3>
+      <div class="p-4 border rounded-md">
+        <label>First</label>
+        <pre
+          class="bg-gray-100 p-2 rounded"
+          v-for="item in curriculum.thirdYear.first"
+          :key="item"
+          >{{ item }}</pre
+        >
+        <label>Second</label>
+        <pre
+          class="bg-gray-100 p-2 rounded"
+          v-for="item in curriculum.thirdYear.second"
+          :key="item"
+          >{{ item }}</pre
+        >
+      </div>
+    </div>
+    <div v-if="curriculum.fourthYear">
+      <h3 class="font-semibold mt-3">Fourth Year</h3>
+      <div class="p-4 border rounded-md">
+        <label>First</label>
+        <pre
+          class="bg-gray-100 p-2 rounded"
+          v-for="item in curriculum.fourthYear.first"
+          :key="item"
+          >{{ item }}</pre
+        >
+        <label>Second</label>
+        <pre
+          class="bg-gray-100 p-2 rounded"
+          v-for="item in curriculum.fourthYear.second"
+          :key="item"
+          >{{ item }}</pre
+        >
+      </div>
+    </div>
+
+    <div v-if="curriculum.createdAt">
+      <strong>Created At:</strong> {{ new Date(curriculum.createdAt).toLocaleString() }}
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex justify-end mt-4 gap-2">
+      <Button label="Close" icon="pi pi-times" text @click="dialogRef.value.close()" />
+    </div>
   </div>
 </template>
