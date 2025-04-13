@@ -93,6 +93,7 @@ const products = ref()
                         breakpoints: { '960px': '75vw', '640px': '90vw' },
                         modal: true,
                       },
+                      data: slotProps.data,
                     })
                   }
                 "
@@ -110,6 +111,7 @@ const products = ref()
                         breakpoints: { '960px': '75vw', '640px': '90vw' },
                         modal: true,
                       },
+                      data: slotProps.data,
                     })
                   }
                 "

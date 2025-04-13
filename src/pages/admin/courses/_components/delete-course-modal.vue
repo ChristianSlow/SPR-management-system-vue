@@ -5,14 +5,14 @@ import { useCourseStore } from '@/stores/course'
 const dialogRef = inject<any>('dialogRef')
 const courseStore = useCourseStore()
 
-const course = dialogRef.value.data.course
+const course = dialogRef.value.data
 
 function onClose() {
   dialogRef.value.close()
 }
 
 function onDelete() {
-  courseStore.courses = courseStore.courses.filter(c => c.name !== course.name)
+  courseStore.courses = courseStore.courses.filter((c) => c.name !== course.name)
   onClose()
 }
 </script>
@@ -21,7 +21,8 @@ function onDelete() {
   <div class="confirmation-content text-center text-lg">
     <i class="pi pi-exclamation-triangle mr-3 text-3xl text-red-500" />
     <span>
-      Are you sure you want to delete <strong>{{ course.name }}</strong>?
+      Are you sure you want to delete <strong>{{ course.name }}</strong
+      >?
     </span>
   </div>
 

@@ -83,6 +83,7 @@ onMounted(() => store.getSubjects())
           <Column :exportable="false" header="Actions" style="min-width: 12rem">
             <template #body="slotProps">
               <Button
+                size="small"
                 label="Edit"
                 icon="pi pi-pencil"
                 class="mr-2"
@@ -95,14 +96,18 @@ onMounted(() => store.getSubjects())
                         breakpoints: { '960px': '75vw', '640px': '90vw' },
                         modal: true,
                       },
+                      data: slotProps.data,
                     })
                   }
                 "
               />
               <Button
+                size="small"
                 label="Delete"
                 icon="pi pi-trash"
                 class="mr-2"
+                severity="danger"
+                outlined
                 @click="
                   () => {
                     dialog.open(deleteSubject, {
@@ -112,11 +117,11 @@ onMounted(() => store.getSubjects())
                         breakpoints: { '960px': '75vw', '640px': '90vw' },
                         modal: true,
                       },
+                      data: slotProps.data,
                     })
                   }
                 "
               />
-              <Button icon="pi pi-trash" outlined rounded severity="danger" />
             </template>
           </Column>
         </DataTable>

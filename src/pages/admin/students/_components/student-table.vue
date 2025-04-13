@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useDialog } from 'primevue'
 import { defineAsyncComponent } from 'vue'
+import { useStudentStore } from '@/stores/student'
 
 const addStudent = defineAsyncComponent(
   () => import('@/pages/admin/students/_components/modals/add-student-modal.vue'),
@@ -16,44 +17,25 @@ const editStudent = defineAsyncComponent(
   () => import('@/pages/admin/students/_components/modals/edit-student-modal.vue'),
 )
 
+const store = useStudentStore()
 const dialog = useDialog()
 const toast = useToast()
 const dt = ref()
 const products = ref()
+
+onMounted(() => {
+  store.getStudents()
+})
 </script>
 
 <template>
   <div>
     <div class="card">
-      <Toolbar class="mb-6">
-        <template #start>
-          <InputText type="text" placeholder="Search..." />
-        </template>
-        <template #end>
-          <Button
-            label="New"
-            icon="pi pi-plus"
-            class="mr-2"
-            @click="
-              () => {
-                dialog.open(addStudent, {
-                  props: {
-                    header: 'Add Student',
-                    style: { width: '50vw' },
-                    breakpoints: { '960px': '75vw', '640px': '90vw' },
-                    modal: true,
-                  },
-                })
-              }
-            "
-          />
-        </template>
-      </Toolbar>
-      <div class="border rounded-sm">
+      <div class="rounded-sm">
         <DataTable
           ref="dt"
           size="small"
-          :value="products"
+          :value="store.students"
           dataKey="id"
           :paginator="true"
           :rows="10"
@@ -61,26 +43,31 @@ const products = ref()
           :rowsPerPageOptions="[5, 10, 25]"
           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
         >
-          <!-- <template #header>
-              <div class="flex flex-wrap gap-2 items-center justify-between">
-                <h4 class="m-0">Manage Products</h4>
-                <IconField>
-                  <InputIcon>
-                    <i class="pi pi-search" />
-                  </InputIcon>
-                  <InputText v-model="filters['global'].value" placeholder="Search..." />
-                </IconField>
-              </div>
-            </template> -->
+          <template #header>
+            <div class="flex flex-wrap gap-2 items-center justify-between">
+              <h4 class="m-0">Total students: 100</h4>
+              <IconField>
+                <InputIcon>
+                  <i class="pi pi-search" />
+                </InputIcon>
+                <InputText placeholder="Search..." />
+              </IconField>
+            </div>
+          </template>
           <template #empty>
             <div class="flex items-center justify-center p-4">No subject found.</div>
           </template>
-          <Column field="name" header="Code" style="min-width: 16rem"></Column>
-          <Column field="code" header="Name" style="min-width: 12rem"></Column>
-          <Column field="name" header="Unit" style="min-width: 16rem"></Column>
-          <Column :exportable="false" header="Actions" style="min-width: 12rem">
+          <Column header="Fullname">
+            <template #body="slotProps">
+              <span>{{ slotProps.data.firstName }} {{ slotProps.data.lastName }}</span>
+            </template>
+          </Column>
+          <Column field="sex" header="Gender"></Column>
+          <Column field="address" header="Address"></Column>
+          <Column :exportable="false" header="Actions">
             <template #body="slotProps">
               <Button
+                size="small"
                 label="Edit"
                 icon="pi pi-pencil"
                 class="mr-2"
@@ -93,11 +80,15 @@ const products = ref()
                         breakpoints: { '960px': '75vw', '640px': '90vw' },
                         modal: true,
                       },
+                      data: slotProps.data,
                     })
                   }
                 "
               />
               <Button
+                size="small"
+                outlined
+                severity="danger"
                 label="Delete"
                 icon="pi pi-trash"
                 class="mr-2"
@@ -110,11 +101,11 @@ const products = ref()
                         breakpoints: { '960px': '75vw', '640px': '90vw' },
                         modal: true,
                       },
+                      data: slotProps.data,
                     })
                   }
                 "
               />
-              <Button icon="pi pi-trash" outlined rounded severity="danger" />
             </template>
           </Column>
         </DataTable>

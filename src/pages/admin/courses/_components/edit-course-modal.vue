@@ -5,7 +5,7 @@ import { useCourseStore } from '@/stores/course'
 const dialogRef = inject<any>('dialogRef')
 const courseStore = useCourseStore()
 
-const originalCourse = dialogRef.value.data.course
+const originalCourse = dialogRef.value.data
 
 const courseName = ref(originalCourse.name)
 const majors = ref([...originalCourse.majors])
