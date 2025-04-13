@@ -113,6 +113,3 @@ app.use(ToastService)
 app.use(DialogService)
 
 app.mount('#app')
-function createFirebaseApp(): any {
-  throw new Error('Function not implemented.')
-}

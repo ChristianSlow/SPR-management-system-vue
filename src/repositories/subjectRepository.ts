@@ -6,23 +6,23 @@ import {
   doc,
   getDoc,
   getDocs,
-  getFirestore,
+  Timestamp,
   updateDoc,
 } from 'firebase/firestore'
+import { useFirestore } from 'vuefire'
 
-const db = getFirestore()
+const db = useFirestore()
 const subjectsRef = collection(db, 'subjects')
 
 export const SubjectRepository = {
   async fetchSubjects() {
     try {
       const querySnapshot = await getDocs(subjectsRef)
-
+      console.log(querySnapshot)
       const subjects = querySnapshot.docs.map<Subject>((doc) => ({
         ...doc.data(),
         uid: doc.id,
       }))
-
       return { data: subjects, total: 0 }
     } catch (error) {
       console.error('Error fetching subjects:', error)
@@ -43,12 +43,13 @@ export const SubjectRepository = {
 
   async createSubject(payload: Subject) {
     try {
-      const snapshot = await addDoc(subjectsRef, {
+      const subjectDoc = await addDoc(collection(db, 'subjects'), {
         ...payload,
+        createdAt: Timestamp.now(),
       })
-
-      return { message: 'Successfully added subjects!', data: snapshot.id }
-    } catch {
+      return { message: 'Successfully added subjects!', data: subjectDoc.id }
+    } catch (error) {
+      console.log(error)
       return { message: 'Error adding subjects' }
     }
   },
