@@ -16,13 +16,15 @@ export const useCurriculumStore = defineStore('curriculum', () => {
   }
 
   async function addCurriculum(curriculum: Curriculum) {
+    console.log(curriculum)
     isLoading.value = true
     await CurriculumRepository.createCurriculum({
       course: curriculum.course?.toLowerCase(),
       name: curriculum.name?.toLowerCase(),
       major: curriculum.major?.toLowerCase(),
+      ...curriculum,
     })
-    getCurriculums()
+    await getCurriculums()
     isLoading.value = false
   }
 

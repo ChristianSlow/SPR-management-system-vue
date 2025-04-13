@@ -1,19 +1,44 @@
 <script setup lang="ts">
 import { useCourseStore } from '@/stores/course'
+import { useCurriculumStore } from '@/stores/curriculum'
 import { useSubjectStore } from '@/stores/subject'
-import type { Curriculum } from '@/types/curriculum'
-import { computed, inject, onMounted, ref, watch } from 'vue'
+import type { Curriculum, Year } from '@/types/curriculum'
+import { computed, inject, onMounted, reactive, ref, watch, watchEffect } from 'vue'
 
 const courseStore = useCourseStore()
 const subjectStore = useSubjectStore()
+const curriculumStore = useCurriculumStore()
 const dialogRef = inject<any>('dialogRef')
-const curriculum = ref<Curriculum>({})
+const firstYear = reactive<Year>({
+  first: [],
+  second: [],
+})
+const secondYear = reactive<Year>({
+  first: [],
+  second: [],
+})
+const thirdYear = reactive<Year>({
+  first: [],
+  second: [],
+})
+const fourthYear = reactive<Year>({
+  first: [],
+  second: [],
+})
+
+const curriculum = ref<Curriculum>({
+  firstYear,
+  secondYear,
+  thirdYear,
+  fourthYear,
+})
 
 function onClose() {
   dialogRef.value.close()
 }
 
 function onSave() {
+  curriculumStore.addCurriculum(curriculum.value)
   onClose()
 }
 
@@ -33,6 +58,8 @@ watch(
     subjectStore.getFilteredSubject(val as string)
   },
 )
+
+watchEffect(() => console.log(firstYear.first, firstYear.second))
 </script>
 
 <template>
@@ -63,9 +90,8 @@ watch(
         </div>
         <div class="flex-1">
           <label for="course" class="block text-gray-700 dark:text-white"> Major </label>
-          <MultiSelect
-            option-label="name"
-            v-model="(curriculum.firstYear ?? {}).first"
+          <Select
+            v-model="curriculum.major"
             editable
             :options="filteredMajor?.majors"
             placeholder="Select a major"
@@ -80,11 +106,11 @@ watch(
           <div class="flex-1">
             <label class="block text-gray-700 dark:text-white"> First semester </label>
             <MultiSelect
-              v-model="(curriculum.firstYear ?? {}).first"
+              v-model="firstYear.first"
               editable
               :options="subjectStore.filteredSubjects"
-              option-label="code"
-              option-value="uid"
+              optionLabel="code"
+              optionValue="uid"
               placeholder="Select a subjects"
               class="w-full"
             />
@@ -92,8 +118,9 @@ watch(
           <div class="flex-1">
             <label class="block text-gray-700 dark:text-white"> Second semester </label>
             <MultiSelect
-              option-label="code"
-              v-model="(curriculum.firstYear ?? {}).second"
+              v-model="firstYear.second"
+              optionLabel="code"
+              optionValue="uid"
               editable
               :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
@@ -109,7 +136,7 @@ watch(
             <label class="block text-gray-700 dark:text-white"> First semester </label>
             <MultiSelect
               option-label="code"
-              v-model="(curriculum.firstYear ?? {}).first"
+              v-model="secondYear.first"
               editable
               :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
@@ -120,7 +147,7 @@ watch(
             <label class="block text-gray-700 dark:text-white"> Second semester </label>
             <MultiSelect
               option-label="code"
-              v-model="(curriculum.firstYear ?? {}).second"
+              v-model="secondYear.second"
               editable
               :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
@@ -136,7 +163,7 @@ watch(
             <label class="block text-gray-700 dark:text-white"> First semester </label>
             <MultiSelect
               option-label="code"
-              v-model="(curriculum.firstYear ?? {}).first"
+              v-model="thirdYear.first"
               editable
               :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
@@ -147,7 +174,7 @@ watch(
             <label class="block text-gray-700 dark:text-white"> Second semester </label>
             <MultiSelect
               option-label="code"
-              v-model="(curriculum.firstYear ?? {}).second"
+              v-model="thirdYear.second"
               editable
               :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
@@ -163,7 +190,7 @@ watch(
             <label class="block text-gray-700 dark:text-white"> First semester </label>
             <MultiSelect
               option-label="code"
-              v-model="(curriculum.firstYear ?? {}).first"
+              v-model="fourthYear.first"
               editable
               :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
@@ -174,7 +201,7 @@ watch(
             <label class="block text-gray-700 dark:text-white"> Second semester </label>
             <MultiSelect
               option-label="code"
-              v-model="(curriculum.firstYear ?? {}).second"
+              v-model="fourthYear.second"
               editable
               :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
@@ -189,6 +216,12 @@ watch(
   <!-- Buttons -->
   <div class="flex justify-end mt-4 gap-2">
     <Button label="Cancel" icon="pi pi-times" text @click="onClose" />
-    <Button label="Save" icon="pi pi-check" severity="success" @click="onSave" />
+    <Button
+      label="Save"
+      icon="pi pi-check"
+      severity="success"
+      @click="onSave"
+      :loading="curriculumStore.isLoading"
+    />
   </div>
 </template>
