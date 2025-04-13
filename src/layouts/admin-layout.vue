@@ -1,9 +1,62 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+const op = ref()
+
+const items = [
+  {
+    label: 'Dashboard',
+    path: '/admin',
+    name: 'admin-dashboard',
+    icon: 'pi pi-home mr-2',
+  },
+  {
+    label: 'Courses',
+    path: '/admin/courses',
+    name: 'admin-courses',
+    icon: 'pi pi-book mr-2',
+  },
+  {
+    label: 'Subjects',
+    path: '/admin/subjects',
+    name: 'admin-subjects',
+    icon: 'pi pi-bookmark mr-2',
+  },
+  {
+    label: 'Curriculum',
+    path: '/admin/curriculum',
+    name: 'admin-curriculum',
+    icon: 'pi pi-server mr-2',
+  },
+  {
+    label: 'Approval Queue',
+    path: '/admin/approval-queue',
+    name: 'admin-approval-queue',
+    icon: 'pi pi-id-card mr-2',
+  },
+  {
+    label: 'Students',
+    path: '/admin/students',
+    name: 'admin-students',
+    icon: 'pi pi-users mr-2',
+  },
+  {
+    label: 'Settings',
+    path: '/admin/account',
+    name: 'admin-account',
+    icon: 'pi pi-cog mr-2',
+  },
+]
+
+const toggle = (event: any) => {
+  op.value.toggle(event)
+}
+</script>
 <template>
-  <div class="antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
-    <!-- Navbar -->
-    <nav
-      class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-2.5 fixed left-0 right-0 top-0 z-50"
-    >
+  <main class="h-full flex flex-col">
+    <nav class="p-4 border-b">
       <div class="max-w-screen-xl flex items-center justify-between mx-auto">
         <a href="#" class="flex items-center space-x-3">
           <img src="/tlogow.png" class="h-10 w-10" alt="Logo" />
@@ -24,98 +77,60 @@
             class="cursor-pointer border-2 border-white hover:border-gray-300 dark:hover:border-gray-500 rounded-full"
           >
             <i
-              class="pi pi-user text-gray-800 dark:text-white text-2xl rounded-full bg-gray-300 dark:bg-gray-600 p-2"
+              class="pi pi-user text-gray-800 dark:text-white text-2xl rounded-full bg-gray-300 dark:bg-gray-600 p-2 cursor-pointer"
+              @click="toggle"
             ></i>
           </div>
 
-          <!-- PrimeVue Overlay Panel for Logout -->
-          <OverlayPanel ref="op" class="w-56 p-4 shadow-lg bg-white dark:bg-gray-800">
-            <div class="flex items-center gap-3 border-b pb-3 border-gray-300 dark:border-gray-600">
-              <i
-                class="pi pi-user text-gray-800 dark:text-white text-3xl rounded-full bg-gray-300 dark:bg-gray-600 p-2"
-              ></i>
-              <div>
-                <span class="font-semibold block text-gray-800 dark:text-white">test</span>
-                <span class="text-sm text-gray-500 dark:text-gray-300">test</span>
+          <!-- PrimeVue Overlay Panel for Logout
+            <OverlayPanel ref="op" class="w-56 p-4 shadow-lg bg-white dark:bg-gray-800">
+              <div class="flex items-center gap-3 border-b pb-3 border-gray-300 dark:border-gray-600">
+                <i
+                  class="pi pi-user text-gray-800 dark:text-white text-3xl rounded-full bg-gray-300 dark:bg-gray-600 p-2"
+                ></i>
+                <div>
+                  <span class="font-semibold block text-gray-800 dark:text-white">test</span>
+                  <span class="text-sm text-gray-500 dark:text-gray-300">test</span>
+                </div>
               </div>
-            </div>
-            <div class="mt-3">
-              <Button
-                label="Logout"
-                icon="pi pi-sign-out"
-                class="w-full bg-red-600 hover:bg-red-600 text-white"
-              />
-            </div>
-          </OverlayPanel>
+              <div class="mt-3">
+                <Button
+                  label="Logout"
+                  icon="pi pi-sign-out"
+                  class="w-full bg-red-600 hover:bg-red-600 text-white"
+                />
+              </div>
+            </OverlayPanel> -->
         </div>
       </div>
     </nav>
 
-    <!-- Sidebar -->
-    <aside
-      class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 bg-white dark:bg-gray-800 border-r dark:border-gray-700 transition-transform duration-300 ease-in-out md:translate-x-0"
-    >
-      <div class="h-full px-3 py-4 overflow-y-auto">
+    <div class="flex">
+      <div class="h-[calc(100vh-76px)] w-72 border-r flex flex-col items-center py-4">
         <ul class="space-y-2 font-medium">
-          <li>
+          <li v-for="item in items" :key="item.name">
             <RouterLink
-              to="/admin"
-              class="flex items-center p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
+              :to="item.path"
+              class="flex items-center p-2 rounded-lg hover:bg-red-200 text-gray-500"
+              :class="route.name === item.name ? 'bg-red-600 text-white' : ''"
             >
-              <i class="pi pi-home mr-2"></i>
-              <span>Dashboard</span>
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink
-              to="/admin/courses"
-              class="flex items-center p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-            >
-              <i class="pi pi-book mr-2"></i>
-              <span>Courses</span>
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink
-              to="/admin/subjects"
-              class="flex items-center p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-            >
-              <i class="pi pi-bookmark mr-2"></i>
-              <span>Subjects</span>
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink
-              to="/admin/students"
-              class="flex items-center p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-            >
-              <i class="pi pi-users mr-2"></i>
-              <span>Students List</span>
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink
-              to="/admin/studentsinfo"
-              class="flex items-center p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-            >
-              <i class="pi pi-id-card mr-2"></i>
-              <span>Students Info</span>
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink
-              to="/admin/users"
-              class="flex items-center p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-            >
-              <i class="pi pi-user mr-2"></i>
-              <span>Users Account</span>
+              <i :class="item.icon"></i>
+              <span>{{ item.label }}</span>
             </RouterLink>
           </li>
         </ul>
       </div>
-    </aside>
 
-    <!-- Main Content -->
-    <slot></slot>
-  </div>
+      <div class="w-full p-4 bg-gray-50">
+        <slot></slot>
+      </div>
+    </div>
+  </main>
+  <Popover ref="op">
+    <div class="flex flex-col gap-4">
+      <div>
+        <Button label="Log out" severity="secondary" icon="pi pi-sign-out" text />
+      </div>
+    </div>
+  </Popover>
 </template>

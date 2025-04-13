@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import courseTable from './_components/course-table.vue'
+import { useCourseStore } from '@/stores/course'
+import QueueTable from './_components/queue-table.vue'
+
+const store = useCourseStore()
 </script>
 
 <template>
@@ -8,10 +11,10 @@ import courseTable from './_components/course-table.vue'
       <h1
         class="text-center text-2xl font-bold bg-red-500 text-white dark:text-white px-5 py-2 border-b border-gray-300 dark:border-gray-600"
       >
-        Course Management
+        Approval Queue
       </h1>
       <div class="pt-2">
-        <courseTable />
+        <QueueTable />
       </div>
     </div>
   </div>

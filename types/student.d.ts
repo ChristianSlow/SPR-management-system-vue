@@ -1,3 +1,0 @@
-interface Student {
-  uid?: string
-}

@@ -49,7 +49,11 @@ import {
   InputGroupAddon,
   Badge,
   OverlayBadge,
+  OrderList,
+  MultiSelect,
 } from 'primevue'
+import { VueFire, VueFireAuth } from 'vuefire'
+import { firebaseApp } from './firebase/config'
 
 const app = createApp(App)
 
@@ -58,6 +62,11 @@ app.use(PrimeVue, {
   options: {
     darkModeSelector: '.my-app-dark',
   },
+})
+
+app.use(VueFire, {
+  firebaseApp,
+  modules: [VueFireAuth()],
 })
 
 // component here:
@@ -98,6 +107,8 @@ app.component('InputGroup', InputGroup)
 app.component('InputGroupAddon', InputGroupAddon)
 app.component('Badge', Badge)
 app.component('OverlayBadge', OverlayBadge)
+app.component('OrderList', OrderList)
+app.component('MultiSelect', MultiSelect)
 
 app.use(createPinia())
 app.use(router)
