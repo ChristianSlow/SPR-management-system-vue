@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
+const op = ref()
 
 const items = [
   {
@@ -47,6 +49,10 @@ const items = [
     icon: 'pi pi-user mr-2',
   },
 ]
+
+const toggle = (event: any) => {
+  op.value.toggle(event)
+}
 </script>
 <template>
   <main class="h-full flex flex-col">
@@ -71,7 +77,8 @@ const items = [
             class="cursor-pointer border-2 border-white hover:border-gray-300 dark:hover:border-gray-500 rounded-full"
           >
             <i
-              class="pi pi-user text-gray-800 dark:text-white text-2xl rounded-full bg-gray-300 dark:bg-gray-600 p-2"
+              class="pi pi-user text-gray-800 dark:text-white text-2xl rounded-full bg-gray-300 dark:bg-gray-600 p-2 cursor-pointer"
+              @click="toggle"
             ></i>
           </div>
 
@@ -119,4 +126,11 @@ const items = [
       </div>
     </div>
   </main>
+  <Popover ref="op">
+    <div class="flex flex-col gap-4">
+      <div>
+        <Button label="Log out" severity="secondary" icon="pi pi-sign-out" text />
+      </div>
+    </div>
+  </Popover>
 </template>
