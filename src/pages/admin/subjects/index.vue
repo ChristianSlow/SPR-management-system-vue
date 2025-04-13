@@ -1,24 +1,5 @@
 <script setup lang="ts">
-import { useSubjectStore } from '@/stores/subject'
-import { useDialog } from 'primevue'
-import { defineAsyncComponent, onMounted } from 'vue'
-
-const addSubject = defineAsyncComponent(
-  () => import('@/pages/admin/subjects/_components/add-subject-modal.vue'),
-)
-
-const editSubject = defineAsyncComponent(
-  () => import('@/pages/admin/subjects/_components/edit-subject-modal.vue'),
-)
-
-const deleteSubject = defineAsyncComponent(
-  () => import('@/pages/admin/subjects/_components/delete-subject-modal.vue'),
-)
-
-const dialog = useDialog()
-const store = useSubjectStore()
-
-onMounted(() => store.getSubjects())
+import SubjectTable from './_components/subject-table.vue'
 </script>
 
 <template>
