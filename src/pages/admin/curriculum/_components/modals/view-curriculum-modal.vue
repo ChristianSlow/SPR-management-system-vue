@@ -24,14 +24,14 @@ const course = courseStore.courses.find((c) => c.abbreviation === curriculum.cou
     <div v-if="curriculum.firstYear">
       <h3 class="font-semibold mt-3">First Year</h3>
       <div class="p-4 border rounded-md">
-        <label>First</label>
+        <label>First Semester</label>
         <pre
           class="bg-gray-100 p-2 rounded"
           v-for="item in curriculum.firstYear.first"
           :key="item"
           >{{ item }}</pre
         >
-        <label>Second</label>
+        <label>Second Semester</label>
         <pre
           class="bg-gray-100 p-2 rounded"
           v-for="item in curriculum.firstYear.second"
@@ -43,14 +43,14 @@ const course = courseStore.courses.find((c) => c.abbreviation === curriculum.cou
     <div v-if="curriculum.secondYear">
       <h3 class="font-semibold mt-3">Second Year</h3>
       <div class="p-4 border rounded-md">
-        <label>First</label>
+        <label>First Semester</label>
         <pre
           class="bg-gray-100 p-2 rounded"
           v-for="item in curriculum.secondYear.first"
           :key="item"
           >{{ item }}</pre
         >
-        <label>Second</label>
+        <label>Second Semester</label>
         <pre
           class="bg-gray-100 p-2 rounded"
           v-for="item in curriculum.secondYear.second"
@@ -62,14 +62,14 @@ const course = courseStore.courses.find((c) => c.abbreviation === curriculum.cou
     <div v-if="curriculum.thirdYear">
       <h3 class="font-semibold mt-3">Third Year</h3>
       <div class="p-4 border rounded-md">
-        <label>First</label>
+        <label>First Semester</label>
         <pre
           class="bg-gray-100 p-2 rounded"
           v-for="item in curriculum.thirdYear.first"
           :key="item"
           >{{ item }}</pre
         >
-        <label>Second</label>
+        <label>Second Semester</label>
         <pre
           class="bg-gray-100 p-2 rounded"
           v-for="item in curriculum.thirdYear.second"
@@ -81,14 +81,14 @@ const course = courseStore.courses.find((c) => c.abbreviation === curriculum.cou
     <div v-if="curriculum.fourthYear">
       <h3 class="font-semibold mt-3">Fourth Year</h3>
       <div class="p-4 border rounded-md">
-        <label>First</label>
+        <label>First Semester</label>
         <pre
           class="bg-gray-100 p-2 rounded"
           v-for="item in curriculum.fourthYear.first"
           :key="item"
           >{{ item }}</pre
         >
-        <label>Second</label>
+        <label>Second Semester</label>
         <pre
           class="bg-gray-100 p-2 rounded"
           v-for="item in curriculum.fourthYear.second"
