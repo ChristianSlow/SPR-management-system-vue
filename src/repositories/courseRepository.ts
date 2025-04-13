@@ -7,6 +7,7 @@ import {
   getDoc,
   getDocs,
   getFirestore,
+  setDoc,
   updateDoc,
 } from 'firebase/firestore'
 
@@ -43,11 +44,11 @@ export const CourseRepository = {
 
   async createCourse(payload: Course) {
     try {
-      const snapshot = await addDoc(coursesRef, {
+      await setDoc(doc(db, 'courses', payload.abbreviation as string), {
         ...payload,
       })
 
-      return { message: 'Successfully added courses!', data: snapshot.id }
+      return { message: 'Successfully added courses!' }
     } catch {
       return { message: 'Error adding courses' }
     }

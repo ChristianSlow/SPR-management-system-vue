@@ -6,8 +6,10 @@ import {
   doc,
   getDoc,
   getDocs,
+  query,
   Timestamp,
   updateDoc,
+  where,
 } from 'firebase/firestore'
 import { useFirestore } from 'vuefire'
 
@@ -27,6 +29,22 @@ export const SubjectRepository = {
     } catch (error) {
       console.error('Error fetching subjects:', error)
       return { data: [], total: 0 }
+    }
+  },
+
+  async fetchFilteredSubject(key: string) {
+    try {
+      const querySnapshot = await getDocs(
+        query(collection(db, 'subjects'), where('abbreviation', '==', key)),
+      )
+      const subjects = querySnapshot.docs.map<Subject>((doc) => ({
+        ...doc.data(),
+        uid: doc.id,
+      }))
+      return { data: subjects, total: 0 }
+    } catch (error) {
+      console.error('Error fetching subjects:', error)
+      return { data: {} }
     }
   },
 
