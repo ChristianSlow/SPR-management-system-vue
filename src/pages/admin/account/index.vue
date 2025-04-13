@@ -1,5 +1,5 @@
 <template>
-  <main class="md:ml-64 h-auto pt-14 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen">
+  <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
     <div>
       <div class="card bg-white dark:bg-gray-800 shadow-md p-4">
         <!-- Toolbar
@@ -34,7 +34,10 @@
                 <InputIcon>
                   <i class="pi pi-search" />
                 </InputIcon>
-                <InputText placeholder="Search..." class="bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600" />
+                <InputText
+                  placeholder="Search..."
+                  class="bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
+                />
               </IconField>
             </div>
           </template>
@@ -101,5 +104,5 @@
         </template>
       </Dialog>
     </div>
-  </main>
+  </div>
 </template>

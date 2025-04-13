@@ -10,7 +10,7 @@ const dialog = useDialog()
 </script>
 
 <template>
-  <main class="md:ml-64 h-auto pt-14 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white">
+  <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
     <div class="bg-white dark:bg-gray-800 shadow-lg overflow-hidden">
       <h1
         class="text-center text-4xl font-bold bg-gray-200 dark:bg-gray-700 text-black dark:text-white p-5 border-b border-gray-300 dark:border-gray-600"
@@ -127,7 +127,7 @@ const dialog = useDialog()
     </div>
     <!-- Modal -->
     <AcceptModal />
-  </main>
+  </div>
 </template>
 
 <style scoped>
