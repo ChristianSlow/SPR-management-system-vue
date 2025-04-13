@@ -47,36 +47,37 @@ watch(
         autofocus
         class="w-full rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
       />
-      <div class="flex flex-col gap-4 w-full">
+      <div class="flex gap-4 w-full">
         <div class="flex-1">
           <label for="course" class="block text-gray-700 dark:text-white"> Course </label>
           <Select
+            option-label="name"
             v-model="curriculum.course"
             editable
             :options="courseStore.courses"
-            optionLabel="name"
             optionValue="abbreviation"
             placeholder="Select a course"
-            class="w-full md:w-56"
+            class="w-full"
             :loading="courseStore.isLoading"
           />
         </div>
         <div class="flex-1">
           <label for="course" class="block text-gray-700 dark:text-white"> Major </label>
-          <Select
-            v-model="curriculum.major"
+          <MultiSelect
+            option-label="name"
+            v-model="(curriculum.firstYear ?? {}).first"
             editable
             :options="filteredMajor?.majors"
             placeholder="Select a major"
-            class="w-full md:w-56"
+            class="w-full"
             :loading="courseStore.isLoading"
           />
         </div>
       </div>
       <div>
-        <label class="block text-gray-700 dark:text-white"> First year </label>
+        <label class="block bg-red-800 text-white px-2"> First year </label>
         <div class="flex gap-4">
-          <div>
+          <div class="flex-1">
             <label class="block text-gray-700 dark:text-white"> First semester </label>
             <MultiSelect
               v-model="(curriculum.firstYear ?? {}).first"
@@ -85,92 +86,99 @@ watch(
               option-label="code"
               option-value="uid"
               placeholder="Select a subjects"
-              class="w-full md:w-56"
+              class="w-full"
             />
           </div>
-          <div>
+          <div class="flex-1">
             <label class="block text-gray-700 dark:text-white"> Second semester </label>
-            <Select
-              v-model="curriculum.major"
+            <MultiSelect
+              option-label="code"
+              v-model="(curriculum.firstYear ?? {}).second"
               editable
-              :options="[]"
+              :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
-              class="w-full md:w-56"
+              class="w-full"
             />
           </div>
         </div>
       </div>
       <div>
-        <label class="block text-gray-700 dark:text-white"> Second year </label>
+        <label class="block bg-red-800 text-white px-2"> Second year </label>
         <div class="flex gap-4">
-          <div>
+          <div class="flex-1">
             <label class="block text-gray-700 dark:text-white"> First semester </label>
-            <Select
-              v-model="curriculum.major"
+            <MultiSelect
+              option-label="code"
+              v-model="(curriculum.firstYear ?? {}).first"
               editable
-              :options="[]"
+              :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
-              class="w-full md:w-56"
+              class="w-full"
             />
           </div>
-          <div>
+          <div class="flex-1">
             <label class="block text-gray-700 dark:text-white"> Second semester </label>
-            <Select
-              v-model="curriculum.major"
+            <MultiSelect
+              option-label="code"
+              v-model="(curriculum.firstYear ?? {}).second"
               editable
-              :options="[]"
+              :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
-              class="w-full md:w-56"
+              class="w-full"
             />
           </div>
         </div>
       </div>
       <div>
-        <label class="block text-gray-700 dark:text-white"> Third year </label>
+        <label class="block bg-red-800 text-white px-2"> Third year </label>
         <div class="flex gap-4">
-          <div>
+          <div class="flex-1">
             <label class="block text-gray-700 dark:text-white"> First semester </label>
-            <Select
-              v-model="curriculum.major"
+            <MultiSelect
+              option-label="code"
+              v-model="(curriculum.firstYear ?? {}).first"
               editable
-              :options="[]"
+              :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
-              class="w-full md:w-56"
+              class="w-full"
             />
           </div>
-          <div>
+          <div class="flex-1">
             <label class="block text-gray-700 dark:text-white"> Second semester </label>
-            <Select
-              v-model="curriculum.major"
+            <MultiSelect
+              option-label="code"
+              v-model="(curriculum.firstYear ?? {}).second"
               editable
-              :options="[]"
+              :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
-              class="w-full md:w-56"
+              class="w-full"
             />
           </div>
         </div>
       </div>
       <div>
-        <label class="block text-gray-700 dark:text-white"> Fourth year </label>
+        <label class="block bg-red-800 text-white px-2"> Fourth year </label>
         <div class="flex gap-4">
-          <div>
+          <div class="flex-1">
             <label class="block text-gray-700 dark:text-white"> First semester </label>
-            <Select
-              v-model="curriculum.major"
+            <MultiSelect
+              option-label="code"
+              v-model="(curriculum.firstYear ?? {}).first"
               editable
-              :options="[]"
+              :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
-              class="w-full md:w-56"
+              class="w-full"
             />
           </div>
-          <div>
+          <div class="flex-1">
             <label class="block text-gray-700 dark:text-white"> Second semester </label>
-            <Select
-              v-model="curriculum.major"
+            <MultiSelect
+              option-label="code"
+              v-model="(curriculum.firstYear ?? {}).second"
               editable
-              :options="[]"
+              :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
-              class="w-full md:w-56"
+              class="w-full"
             />
           </div>
         </div>

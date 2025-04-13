@@ -48,9 +48,15 @@ onMounted(() => courseStore.getCourses())
       />
     </div>
 
-    <div class="flex flex-col gap-2">
-      <label>Subject Code</label>
-      <InputText required v-model="subject.code" />
+    <div class="flex gap-4">
+      <div class="flex flex-1 flex-col gap-2">
+        <label>Subject Code</label>
+        <InputText required v-model="subject.code" />
+      </div>
+      <div class="flex flex-1 flex-col gap-2">
+        <label>Units</label>
+        <InputText required v-model="subject.unit" />
+      </div>
     </div>
 
     <div class="flex flex-col gap-2">
