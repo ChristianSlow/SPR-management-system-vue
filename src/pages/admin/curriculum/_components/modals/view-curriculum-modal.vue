@@ -11,14 +11,15 @@ const course = courseStore.courses.find((c) => c.abbreviation === curriculum.cou
 
 <template>
   <div class="p-4 bg-white rounded shadow-md space-y-4">
-    <h2 class="text-xl font-semibold mb-2">Curriculum Details</h2>
-
-    <div v-if="curriculum.uid"><strong>UID:</strong> {{ curriculum.uid }}</div>
-    <div v-if="curriculum.name"><strong>Name:</strong> {{ curriculum.name }}</div>
-    <div v-if="curriculum.course">
+    <div v-if="curriculum.name" class="capitalize">
+      <strong>Name:</strong> {{ curriculum.name }}
+    </div>
+    <div v-if="curriculum.course" class="capitalize">
       <strong>Course:</strong> {{ course?.name || curriculum.course }}
     </div>
-    <div v-if="curriculum.major"><strong>Major:</strong> {{ curriculum.major }}</div>
+    <div v-if="curriculum.major" class="capitalize">
+      <strong>Major:</strong> {{ curriculum.major }}
+    </div>
 
     <div v-if="curriculum.firstYear">
       <h3 class="font-semibold mt-3">First Year</h3>
