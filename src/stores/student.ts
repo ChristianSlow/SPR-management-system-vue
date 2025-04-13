@@ -24,10 +24,10 @@ export const useStudentStore = defineStore('student', () => {
     isLoading.value = false
   }
 
-  async function editStudent(uid: string, student: Student) {
+  async function editStudent(student: Student) {
     isLoading.value = true
-    console.log(uid, student)
-    await StudentRepository.updateStudent(uid, student)
+    console.log(student)
+    await StudentRepository.updateStudent(student.uid as string, student)
     getStudents()
     isLoading.value = false
   }
@@ -35,6 +35,7 @@ export const useStudentStore = defineStore('student', () => {
   async function deleteStudent(uid: string) {
     isLoading.value = true
     await StudentRepository.destroyStudent(uid)
+    getStudents()
     isLoading.value = false
   }
   return {

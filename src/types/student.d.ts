@@ -1,5 +1,6 @@
 export interface Student {
   uid?: string
+  role?: string
   firstName?: string
   middleName?: string
   lastName?: string

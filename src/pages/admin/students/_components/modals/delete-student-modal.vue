@@ -16,11 +16,11 @@ function onClose() {
 function onSubmit() {
   if (!student.value || !student.value.uid) return
 
-  // store.deleteSubject(subject.value.uid)
+  store.deleteStudent(student.value.uid)
   toast.add({
     severity: 'success',
     summary: 'Success',
-    detail: 'Successfully deleted subject!',
+    detail: 'Successfully deleted student!',
     life: 3000,
   })
   onClose()

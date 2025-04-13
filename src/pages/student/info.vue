@@ -7,7 +7,9 @@ import { computed, onMounted, ref } from 'vue'
 
 const courseStore = useCourseStore()
 const studentStore = useStudentStore()
-const student = ref<Student>({})
+const student = ref<Student>({
+  role: 'student'
+})
 const toast = useToast()
 
 onMounted(() => {

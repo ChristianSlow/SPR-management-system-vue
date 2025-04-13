@@ -45,7 +45,7 @@ onMounted(() => {
         >
           <template #header>
             <div class="flex flex-wrap gap-2 items-center justify-between">
-              <h4 class="m-0">Total students: 100</h4>
+              <h4 class="m-0">Total students: {{ store.totalStudents }}</h4>
               <IconField>
                 <InputIcon>
                   <i class="pi pi-search" />
@@ -55,7 +55,7 @@ onMounted(() => {
             </div>
           </template>
           <template #empty>
-            <div class="flex items-center justify-center p-4">No subject found.</div>
+            <div class="flex items-center justify-center p-4">No student found.</div>
           </template>
           <Column header="Fullname" style="min-width: 16rem">
             <template #body="slotProps">

@@ -56,9 +56,9 @@ export const StudentRepository = {
     }
   },
 
-  async updateStudent(uid: string, payload: Partial<Student>) {
+  async updateStudent(uid: string, payload: Student) {
     try {
-      await updateDoc(doc(db, 'users', uid), payload)
+      await updateDoc(doc(db, 'users', uid), { ...payload })
 
       return { message: 'Successfully updated Student!' }
     } catch (error) {
