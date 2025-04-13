@@ -3,7 +3,7 @@ import { inject } from 'vue'
 import { useCourseStore } from '@/stores/course'
 
 const dialogRef = inject<any>('dialogRef')
-const courseStore = useCourseStore()
+const store = useCourseStore()
 
 const course = dialogRef.value.data
 
@@ -12,6 +12,7 @@ function onClose() {
 }
 
 function onDelete() {
+  store.deleteCourse(course.uid)
   onClose()
 }
 </script>
@@ -27,6 +28,12 @@ function onDelete() {
 
   <div class="flex justify-end gap-2 mt-4">
     <Button label="No" icon="pi pi-times" text @click="onClose" />
-    <Button label="Yes" icon="pi pi-check" severity="danger" @click="onDelete" />
+    <Button
+      label="Yes"
+      icon="pi pi-check"
+      severity="danger"
+      @click="onDelete"
+      :loading="store.isLoading"
+    />
   </div>
 </template>

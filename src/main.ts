@@ -49,6 +49,7 @@ import {
   InputGroupAddon,
   Badge,
   OverlayBadge,
+  OrderList,
 } from 'primevue'
 import { VueFire, VueFireAuth } from 'vuefire'
 import { firebaseApp } from './firebase/config'
@@ -105,6 +106,7 @@ app.component('InputGroup', InputGroup)
 app.component('InputGroupAddon', InputGroupAddon)
 app.component('Badge', Badge)
 app.component('OverlayBadge', OverlayBadge)
+app.component('OrderList', OrderList)
 
 app.use(createPinia())
 app.use(router)
