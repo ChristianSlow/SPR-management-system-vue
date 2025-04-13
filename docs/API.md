@@ -1,6 +1,15 @@
-VITE_API_KEY="AIzaSyDWj2euI92n-X1x1BgUxM80px74Ac02xWI",
-VITE_AUHT_DOMAIN="capstone-9a90b.firebaseapp.com",
-VITE_PROJECT_ID="capstone-9a90b",
-VITE_STORAGE_BUCKET="capstone-9a90b.firebasestorage.app",
-VITE_MESSAGING_SENDER_ID="156805047807",
+VITE_API_KEY="AIzaSyDWj2euI92n-X1x1BgUxM80px74Ac02xWI"
+VITE_AUHT_DOMAIN="capstone-9a90b.firebaseapp.com"
+VITE_PROJECT_ID="capstone-9a90b"
+VITE_STORAGE_BUCKET="capstone-9a90b.firebasestorage.app"
+VITE_MESSAGING_SENDER_ID="156805047807"
 VITE_APP_ID="1:156805047807:web:cd174e2f8c6d64c069b3ca"
+
+### test
+
+VITE_API_KEY="AIzaSyDWOQU_5soqrjX3Ysh7YWoGcA084nN1SXk"
+VITE_AUHT_DOMAIN="sprms-test.firebaseapp.com"
+VITE_PROJECT_ID="sprms-test"
+VITE_STORAGE_BUCKET="sprms-test.firebasestorage.app"
+VITE_MESSAGING_SENDER_ID="74856205818"
+VITE_APP_ID="1:74856205818:web:50879bffdd1d70e017e843"

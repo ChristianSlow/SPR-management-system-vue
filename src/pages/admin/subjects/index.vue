@@ -1,11 +1,5 @@
 <script setup lang="ts">
-import { useSubjectStore } from '@/stores/subject'
-import { useDialog } from 'primevue'
-import { defineAsyncComponent } from 'vue'
 import SubjectTable from './_components/subject-table.vue'
-
-const dialog = useDialog()
-const store = useSubjectStore()
 </script>
 
 <template>

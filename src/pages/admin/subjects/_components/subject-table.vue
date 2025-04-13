@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useToast } from 'primevue/usetoast'
+import { onMounted, ref } from 'vue'
 import { useDialog } from 'primevue'
 import { defineAsyncComponent } from 'vue'
+import { useSubjectStore } from '@/stores/subject'
 
 const addSubject = defineAsyncComponent(
   () => import('@/pages/admin/subjects/_components/add-subject-modal.vue'),
@@ -17,9 +17,10 @@ const editSubject = defineAsyncComponent(
 )
 
 const dialog = useDialog()
-const toast = useToast()
 const dt = ref()
-const products = ref()
+const store = useSubjectStore()
+
+onMounted(() => store.getSubjects())
 </script>
 
 <template>
@@ -51,9 +52,10 @@ const products = ref()
       </Toolbar>
       <div class="border rounded-sm">
         <DataTable
+          :loading="store.isLoading"
           ref="dt"
           size="small"
-          :value="products"
+          :value="store.subjects"
           dataKey="id"
           :paginator="true"
           :rows="10"
