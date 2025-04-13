@@ -7,7 +7,7 @@ import { Message, useToast } from 'primevue'
 import { computed, inject, onMounted, reactive } from 'vue'
 
 const dialogRef = inject<any>('dialogRef')
-const student = reactive<Student>({})
+const student = reactive<Student>(dialogRef.value.data)
 const studentStore = useStudentStore()
 const courseStore = useCourseStore()
 const toast = useToast()
@@ -17,11 +17,11 @@ function onClose() {
 }
 
 function onSubmit(payload: Student) {
-  studentStore.editStudent(payload.uid as string, payload)
+  studentStore.editStudent(payload)
   toast.add({
     severity: 'success',
     summary: 'Success',
-    detail: 'Succesfully added subject!',
+    detail: 'Succesfully updating student!',
     life: 3000,
   })
   onClose()
