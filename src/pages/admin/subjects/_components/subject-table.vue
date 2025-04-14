@@ -77,17 +77,17 @@ onMounted(() => store.getSubjects())
           <template #empty>
             <div class="flex items-center justify-center p-4">No subject found.</div>
           </template>
-          <Column field="code" header="Code" style="min-width: 16rem">
+          <Column field="code" header="Code" style="min-width: 12rem">
             <template #body="slotProps">
               {{ slotProps.data.code.toUpperCase() }}
             </template>
           </Column>
-          <Column field="name" header="Name" style="min-width: 12rem">
+          <Column field="name" header="Name" style="min-width: 16rem">
             <template #body="slotProps">
               <span class="capitalize"> {{ slotProps.data.name }}</span>
             </template>
           </Column>
-          <Column field="unit" header="Unit" style="min-width: 16rem"></Column>
+          <Column field="unit" header="Unit" style="min-width: 12rem"></Column>
           <Column :exportable="false" header="Actions" style="min-width: 12rem">
             <template #body="slotProps">
               <Button

@@ -17,6 +17,10 @@ const editStudent = defineAsyncComponent(
   () => import('@/pages/admin/students/_components/modals/edit-student-modal.vue'),
 )
 
+const viewStudent = defineAsyncComponent(
+  () => import('@/pages/admin/students/_components/modals/view-student-modal.vue'),
+)
+
 const store = useStudentStore()
 const dialog = useDialog()
 const toast = useToast()
@@ -66,6 +70,25 @@ onMounted(() => {
           <Column field="address" header="Address" style="min-width: 10rem"></Column>
           <Column :exportable="false" header="Actions">
             <template #body="slotProps">
+              <Button
+                label="view"
+                size="small"
+                icon="pi pi-eye"
+                class="mr-2"
+                @click="
+                  () => {
+                    dialog.open(viewStudent, {
+                      props: {
+                        header: 'Student Details',
+                        style: { width: '50vw' },
+                        breakpoints: { '960px': '75vw', '640px': '90vw' },
+                        modal: true,
+                      },
+                      data: slotProps.data,
+                    })
+                  }
+                "
+              />
               <Button
                 size="small"
                 label="Edit"
