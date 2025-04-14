@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useDialog } from 'primevue'
 import { defineAsyncComponent } from 'vue'
@@ -17,6 +17,10 @@ const editStudent = defineAsyncComponent(
   () => import('@/pages/admin/students/_components/modals/edit-student-modal.vue'),
 )
 
+const viewStudent = defineAsyncComponent(
+  () => import('@/pages/admin/students/_components/modals/view-student-modal.vue'),
+)
+
 const store = useStudentStore()
 const dialog = useDialog()
 const toast = useToast()
@@ -25,6 +29,10 @@ const products = ref()
 
 onMounted(() => {
   store.getStudents()
+})
+
+const filteredStudents = computed(() => {
+  return store.students.filter((student) => student.status === 'accepted')
 })
 </script>
 
@@ -35,7 +43,7 @@ onMounted(() => {
         <DataTable
           ref="dt"
           size="small"
-          :value="store.students"
+          :value="filteredStudents"
           dataKey="id"
           :paginator="true"
           :rows="10"
@@ -66,46 +74,67 @@ onMounted(() => {
           <Column field="address" header="Address" style="min-width: 10rem"></Column>
           <Column :exportable="false" header="Actions">
             <template #body="slotProps">
-              <Button
-                size="small"
-                label="Edit"
-                icon="pi pi-pencil"
-                class="mr-2"
-                @click="
-                  () => {
-                    dialog.open(editStudent, {
-                      props: {
-                        header: 'Edit Subject',
-                        style: { width: '50vw' },
-                        breakpoints: { '960px': '75vw', '640px': '90vw' },
-                        modal: true,
-                      },
-                      data: slotProps.data,
-                    })
-                  }
-                "
-              />
-              <Button
-                size="small"
-                outlined
-                severity="danger"
-                label="Delete"
-                icon="pi pi-trash"
-                class="mr-2"
-                @click="
-                  () => {
-                    dialog.open(deleteStudent, {
-                      props: {
-                        header: 'Confirm Delete',
-                        style: { width: '50vw' },
-                        breakpoints: { '960px': '75vw', '640px': '90vw' },
-                        modal: true,
-                      },
-                      data: slotProps.data,
-                    })
-                  }
-                "
-              />
+              <div class="flex gap-1">
+                <Button
+                  label="View"
+                  size="small"
+                  icon="pi pi-eye"
+                  class="mr-2"
+                  @click="
+                    () => {
+                      dialog.open(viewStudent, {
+                        props: {
+                          header: 'Student Details',
+                          style: { width: '100vw' },
+                          breakpoints: { '960px': '75vw', '640px': '90vw' },
+                          modal: true,
+                        },
+                        data: slotProps.data,
+                      })
+                    }
+                  "
+                />
+                <Button
+                  size="small"
+                  label="Edit"
+                  icon="pi pi-pencil"
+                  class="mr-2"
+                  @click="
+                    () => {
+                      dialog.open(editStudent, {
+                        props: {
+                          header: 'Edit Students',
+                          style: { width: '50vw' },
+                          breakpoints: { '960px': '75vw', '640px': '90vw' },
+                          modal: true,
+                        },
+                        data: slotProps.data,
+                      })
+                    }
+                  "
+                />
+                <Button
+                  size="small"
+                  outlined
+                  severity="danger"
+                  label="Delete"
+                  icon="pi pi-trash"
+                  class="mr-2"
+                  @click="
+                    () => {
+                      dialog.open(deleteStudent, {
+                        props: {
+                          header: 'Confirm Delete',
+                          style: { width: '50vw' },
+                          breakpoints: { '960px': '75vw', '640px': '90vw' },
+                          modal: true,
+                        },
+                        data: slotProps.data,
+                      })
+                    }
+                  "
+                />
+              </div>
             </template>
           </Column>
         </DataTable>

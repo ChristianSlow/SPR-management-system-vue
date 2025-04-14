@@ -20,7 +20,6 @@ export const SubjectRepository = {
   async fetchSubjects() {
     try {
       const querySnapshot = await getDocs(subjectsRef)
-      console.log(querySnapshot)
       const subjects = querySnapshot.docs.map<Subject>((doc) => ({
         ...doc.data(),
         uid: doc.id,
@@ -63,6 +62,7 @@ export const SubjectRepository = {
     try {
       const subjectDoc = await addDoc(collection(db, 'subjects'), {
         ...payload,
+        grade: '',
         createdAt: Timestamp.now(),
       })
       return { message: 'Successfully added subjects!', data: subjectDoc.id }

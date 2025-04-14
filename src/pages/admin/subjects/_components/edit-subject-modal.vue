@@ -44,7 +44,7 @@ function onSubmit(payload: Subject) {
     </div>
 
     <div class="flex w-full gap-2 justify-end mt-4">
-      <Button label="Cancel" class="p-button-text" @click="onClose" />
+      <Button label="Cancel" severity="danger" class="p-button-text" @click="onClose" />
       <Button label="Update" class="p-button-primary" type="submit" :loading="store.isLoading" />
     </div>
   </form>

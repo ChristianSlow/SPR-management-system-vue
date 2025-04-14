@@ -5,7 +5,7 @@ import { useToast } from 'primevue/usetoast'
 import { inject, ref } from 'vue'
 
 const dialogRef = inject<any>('dialogRef')
-const subject = ref<Subject>(dialogRef.value.data) 
+const subject = ref<Subject>(dialogRef.value.data)
 const store = useSubjectStore()
 const toast = useToast()
 
@@ -31,7 +31,9 @@ function onSubmit() {
   <div class="p-4">
     <p>
       Are you sure you want to delete the subject
-      <strong>{{ subject.code }} - {{ subject.name }}</strong>?
+      <strong class="capitalize"
+        >{{ subject.code?.toLocaleUpperCase() }} - {{ subject.name }}</strong
+      >?
     </p>
 
     <div class="flex justify-end gap-2 mt-4">

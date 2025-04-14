@@ -36,10 +36,9 @@ export const StudentRepository = {
   async fetchStudent(uid: string) {
     try {
       const studentDoc = await getDoc(doc(db, 'users', uid))
-
       return { data: { ...studentDoc.data(), uid: studentDoc.id } }
     } catch (error) {
-      console.error('Error fetching students:', error)
+      console.error('Error fetching curriculums:', error)
       return { data: {} }
     }
   },

@@ -1,9 +1,14 @@
 <script setup lang="ts">
+import { useLogout } from '@/composables/useLogout'
+import type { Auth } from 'firebase/auth'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { useFirebaseAuth } from 'vuefire'
 
+const auth = useFirebaseAuth()
 const route = useRoute()
 const op = ref()
+const out = useLogout()
 
 const items = [
   {
@@ -44,8 +49,8 @@ const items = [
   },
   {
     label: 'Settings',
-    path: '/admin/account',
-    name: 'admin-account',
+    path: '/admin/setting',
+    name: 'admin-setting',
     icon: 'pi pi-cog mr-2',
   },
 ]
@@ -129,7 +134,13 @@ const toggle = (event: any) => {
   <Popover ref="op">
     <div class="flex flex-col gap-4">
       <div>
-        <Button label="Log out" severity="secondary" icon="pi pi-sign-out" text />
+        <Button
+          label="Log out"
+          severity="secondary"
+          icon="pi pi-sign-out"
+          text
+          @click="out.logout(auth as Auth)"
+        />
       </div>
     </div>
   </Popover>

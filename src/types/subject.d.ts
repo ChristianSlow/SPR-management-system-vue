@@ -3,6 +3,7 @@ export interface Subject {
   code?: string
   name?: string
   unit?: string
+  grade?: ''
   courseIds?: string[]
   createdAt?: any
 }

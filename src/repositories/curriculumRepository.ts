@@ -7,7 +7,9 @@ import {
   getDoc,
   getDocs,
   getFirestore,
+  query,
   updateDoc,
+  where,
 } from 'firebase/firestore'
 
 const db = getFirestore()
@@ -30,14 +32,25 @@ export const CurriculumRepository = {
     }
   },
 
-  async fetchCurriculum(uid: string) {
+  async fetchCurriculum(course: string) {
     try {
-      const curriculumDoc = await getDoc(doc(db, 'curriculums', uid))
+      const curriculumDoc = await getDocs(
+        query(collection(db, 'curriculums'), where('course', '==', course)),
+      )
 
-      return { data: { ...curriculumDoc.data(), uid: curriculumDoc.id } }
+      const doc = curriculumDoc.docs[0]
+
+      if (doc) {
+        return {
+          ...doc.data(),
+          uid: doc.id,
+        } as Curriculum
+      } else {
+        return {} as Curriculum
+      }
     } catch (error) {
-      console.error('Error fetching curriculums:', error)
-      return { data: {} }
+      console.error('Error fetching curriculum:', error)
+      return {}
     }
   },
 
