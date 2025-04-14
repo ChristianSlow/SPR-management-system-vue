@@ -75,6 +75,17 @@ const filteredMajor = computed(() => {
           v-model="student.civilStatus"
         />
       </div>
+      <div class="flex flex-1 flex-col gap-2">
+        <label for="mobile">Student Mobile Number</label>
+        <InputText
+          id="mobile"
+          v-model="student.studentMobileNumber"
+          type="tel"
+          maxlength="11"
+          pattern="[0-9]{11}"
+          required
+        />
+      </div>
     </div>
     <div class="flex flex-col gap-2">
       <label>Place of Birth</label>
@@ -121,8 +132,15 @@ const filteredMajor = computed(() => {
         <InputText required v-model="student.parentName" />
       </div>
       <div class="flex flex-1 flex-col gap-2">
-        <label>Parent Mobile Number</label>
-        <InputText required v-model="student.parentMobileNumber" />
+        <label for="mobile">Parent Mobile Number</label>
+        <InputText
+          id="mobile"
+          v-model="student.studentMobileNumber"
+          type="tel"
+          maxlength="11"
+          pattern="[0-9]{11}"
+          required
+        />
       </div>
     </div>
     <div class="flex flex-col gap-2">

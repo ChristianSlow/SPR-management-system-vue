@@ -6,11 +6,11 @@ export interface Student {
   lastName?: string
   sex?: string
   civilStatus?: string
-  studentMobileNumber?: string
+  studentMobileNumber?: any
   birthPlace?: string
   birthDate?: any
   parentName?: string
-  parentMobileNumber?: string
+  parentMobileNumber?: any
   address?: string
   course?: string
   semester?: string

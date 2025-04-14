@@ -181,7 +181,7 @@ async function onFormSubmit() {
         >
           <div class="text-center">
             <img
-              src="/tlogow.jpg"
+              src="/tlogow.png"
               class="mx-auto w-20 h-20 md:w-24 md:h-24 drop-shadow-md"
               alt="Tañon College Logo"
             />
@@ -213,9 +213,17 @@ async function onFormSubmit() {
               <InputText id="username" v-model="credentials.email" />
             </div>
             <div class="flex flex-col gap-2">
-              <label for="username">Password</label>
-              <InputText id="username" v-model="credentials.password" />
+              <label for="password">Password</label>
+              <Password
+                id="password"
+                v-model="credentials.password"
+                toggleMask
+                :feedback="false"
+                class="w-full"
+                inputClass="w-full"
+              />
             </div>
+
             <!-- 
             <div class="flex items-center gap-2">
               <input type="checkbox" v-model="rememberMe" id="remember" class="cursor-pointer" />

@@ -38,7 +38,7 @@ onMounted(async () => {
           detail: 'Redirecting...',
           life: 2500,
         })
-        router.push('/dashboard')
+        router.push('/')
       }
     }
   }
@@ -56,6 +56,7 @@ async function onSubmit(payload: any) {
     detail: 'Succesfully added subject!',
     life: 3000,
   })
+  router.push('/student')
 }
 </script>
 <template>
@@ -113,6 +114,17 @@ async function onSubmit(payload: any) {
                 :options="['Single', 'Married', 'Widowed', 'Separated']"
               />
             </div>
+            <div class="flex flex-1 flex-col gap-2">
+              <label for="mobile">Mobile Number</label>
+              <InputText
+                id="mobile"
+                v-model="student.studentMobileNumber"
+                type="tel"
+                maxlength="11"
+                pattern="[0-9]{11}"
+                required
+              />
+            </div>
           </div>
 
           <!-- Place of Birth -->
@@ -167,8 +179,15 @@ async function onSubmit(payload: any) {
               <InputText required v-model="student.parentName" />
             </div>
             <div class="flex flex-1 flex-col gap-2">
-              <label>Parent Mobile Number</label>
-              <InputText required v-model="student.parentMobileNumber" />
+              <label for="mobile">Parent Mobile Number</label>
+              <InputText
+                id="mobile"
+                v-model="student.parentMobileNumber"
+                type="tel"
+                maxlength="11"
+                pattern="[0-9]{11}"
+                required
+              />
             </div>
           </div>
 
