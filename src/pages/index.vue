@@ -1,51 +1,56 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { signInWithEmailAndPassword } from 'firebase/auth'
-import { useRouter } from 'vue-router'
 import { doc, getDoc } from 'firebase/firestore'
-import Carousel from 'primevue/carousel'
+import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence } from 'firebase/auth'
 import { useFirebaseAuth, useFirestore } from 'vuefire'
 import { useToast } from 'primevue/usetoast'
+import { useRouter } from 'vue-router'
 
-const auth = useFirebaseAuth()
 const db = useFirestore()
-const router = useRouter()
 const toast = useToast()
+const auth = useFirebaseAuth()!
+const router = useRouter()
 
 const showPassword = ref(false)
 const loginError = ref('')
 const isLoggingIn = ref(false)
 const loginSuccess = ref(false)
+const isLoading = ref(false)
 
 const credentials = ref({
   email: '',
   password: '',
 })
+const rememberMe = ref(true)
 
-const signIn = async (e: Event) => {
-  e.preventDefault()
+async function onFormSubmit() {
+  isLoading.value = true
   loginError.value = ''
   isLoggingIn.value = true
   loginSuccess.value = false
 
-  // Basic validation
   if (!credentials.value.email.includes('@')) {
     loginError.value = 'Enter a valid email address.'
+    toast.add({ severity: 'error', summary: 'Invalid Email', detail: loginError.value, life: 3000 })
     isLoggingIn.value = false
     return
   }
+
   if (credentials.value.password.length < 6) {
     loginError.value = 'Password must be at least 6 characters.'
+    toast.add({ severity: 'error', summary: 'Weak Password', detail: loginError.value, life: 3000 })
     isLoggingIn.value = false
     return
   }
 
   try {
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      credentials.value.email,
-      credentials.value.password,
-    )
+    const { email, password } = credentials.value
+
+    if (rememberMe.value) {
+      await setPersistence(auth, browserLocalPersistence)
+    }
+
+    const userCredential = await signInWithEmailAndPassword(auth, email, password)
     const user = userCredential.user
 
     const docRef = doc(db, 'users', user.uid)
@@ -55,100 +60,59 @@ const signIn = async (e: Event) => {
       const userData = docSnap.data()
       loginSuccess.value = true
 
-      toast.add({
-        severity: 'success',
-        summary: 'Login Successful',
-        detail: `Welcome, ${userData.role}`,
-        life: 3000,
-      })
+      toast.add({ severity: 'success', summary: 'Login Successful', detail: 'Redirecting...', life: 2000 })
 
       setTimeout(() => {
         if (userData.role === 'admin') {
           router.push('/admin')
         } else if (userData.role === 'student') {
           router.push(userData.isDone ? '/infopage' : '/designatedsub')
+        } else {
+          toast.add({ severity: 'warn', summary: 'Unknown Role', detail: 'Redirecting to dashboard', life: 2500 })
+          router.push('/dashboard')
         }
       }, 1500)
     } else {
       loginError.value = 'User record not found.'
+      toast.add({ severity: 'error', summary: 'Login Failed', detail: loginError.value, life: 3000 })
     }
   } catch (error: any) {
-    console.error('Login error:', error.message)
-    if (error.code === 'auth/wrong-password') {
-      loginError.value = 'Incorrect password. Please try again.'
-    } else if (error.code === 'auth/user-not-found') {
-      loginError.value = 'No account found with this email.'
-    } else {
-      loginError.value = 'Login failed. Please check your credentials.'
+    console.error('Error signing in:', error)
+    switch (error.code) {
+      case 'auth/invalid-email':
+      case 'auth/user-not-found':
+      case 'auth/wrong-password':
+      case 'auth/invalid-credential':
+        loginError.value = 'Incorrect email or password.'
+        break
+      default:
+        loginError.value = 'An unknown error occurred.'
     }
+    toast.add({ severity: 'error', summary: 'Authentication Error', detail: loginError.value, life: 3000 })
   } finally {
     isLoggingIn.value = false
+    isLoading.value = false
   }
 }
 </script>
 
 <template>
   <div class="flex flex-col min-h-screen relative">
-    <!-- Hero Section -->
+    <Toast />
+
+    <!-- Fullscreen Loader -->
     <div
-      class="relative w-full flex justify-center items-center h-screen bg-cover bg-center px-4"
-      style="background-image: url('/bg.jpg')"
+      v-if="isLoading"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
     >
-      <div class="absolute inset-0 bg-black bg-opacity-50"></div>
-      <div
-        class="relative z-10 flex flex-col justify-center items-center text-white text-center animate-fade-in"
-      >
-        <img
-          src="/tlogow.png"
-          alt="Tañon College Logo"
-          class="w-32 h-32 md:w-40 md:h-40 mb-4 drop-shadow-lg"
-        />
-        <h1 class="text-3xl md:text-5xl font-extrabold tracking-wide drop-shadow-md">
-          Welcome to Tañon College
-        </h1>
-      </div>
+      <i class="pi pi-spin pi-spinner text-4xl text-white"></i>
     </div>
+
+    <!-- Hero Section -->
+    <!-- (keep as-is) -->
 
     <!-- About Section -->
-    <div class="w-full max-w-lg mx-auto bg-white shadow-lg rounded-2xl p-6 text-center mt-10">
-      <img
-        src="/tlogow.png"
-        class="mx-auto w-20 h-20 md:w-24 md:h-24 drop-shadow-md"
-        alt="Tañon College Logo"
-      />
-      <h1 class="text-xl md:text-3xl font-bold text-red-800">Tañon College</h1>
-      <h4 class="text-xl md:text-xl pt-4 font-bold text-black">About Our Institution</h4>
-
-      <Carousel
-        :value="[
-          {
-            title: 'Quality Education',
-            description: 'We offer outstanding programs to prepare you for the future.',
-          },
-          {
-            title: 'Dynamic Community',
-            description: 'Be part of an engaging and supportive academic environment.',
-          },
-          {
-            title: 'Commitment to Excellence',
-            description: 'Tañon College fosters academic and ethical excellence.',
-          },
-        ]"
-        :numVisible="1"
-        :numScroll="1"
-        :circular="true"
-        :autoplayInterval="4000"
-      >
-        <template #item="slotProps">
-          <div class="p-4">
-            <h3 class="text-lg md:text-xl font-semibold text-gray-800">
-              {{ slotProps.data.title }}
-            </h3>
-            <p class="text-gray-600 mt-2 text-sm md:text-base">{{ slotProps.data.description }}</p>
-          </div>
-        </template>
-      </Carousel>
-    </div>
+    <!-- (keep as-is) -->
 
     <!-- Login Section -->
     <div class="w-full flex flex-col md:flex-row items-center min-h-screen bg-gray-100 mt-10">
@@ -171,7 +135,7 @@ const signIn = async (e: Event) => {
 
           <!-- Login Form -->
           <form
-            @submit.prevent="signIn"
+            @submit.prevent="onFormSubmit"
             class="mt-6 space-y-4"
             :class="{ 'opacity-60 pointer-events-none': isLoggingIn }"
           >
@@ -182,21 +146,21 @@ const signIn = async (e: Event) => {
                 type="email"
                 id="email"
                 autocomplete="email"
+                aria-label="Email address"
                 class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none transition"
                 required
               />
             </div>
 
             <div class="relative">
-              <label for="password" class="block text-sm font-medium text-gray-700"
-                >Password:</label
-              >
+              <label for="password" class="block text-sm font-medium text-gray-700">Password:</label>
               <div class="relative">
                 <input
                   v-model="credentials.password"
                   :type="showPassword ? 'text' : 'password'"
                   id="password"
                   autocomplete="current-password"
+                  aria-label="Password"
                   class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none transition pr-10"
                   required
                 />
@@ -211,14 +175,21 @@ const signIn = async (e: Event) => {
               </div>
             </div>
 
-            <!-- Error Message -->
-            <p v-if="loginError" class="text-red-500 text-sm mt-2 text-center">{{ loginError }}</p>
+            <div class="flex items-center gap-2">
+              <input type="checkbox" v-model="rememberMe" id="remember" class="cursor-pointer" />
+              <label for="remember" class="text-sm text-gray-700 cursor-pointer">Remember me</label>
+            </div>
 
             <div class="flex justify-between items-center">
               <RouterLink to="/forgot-password" class="text-sm text-blue-600 hover:underline">
                 Forgot Password?
               </RouterLink>
             </div>
+
+            <!-- Error Message -->
+            <p v-if="loginError" class="text-red-500 text-sm mt-2 text-center" aria-live="polite">
+              {{ loginError }}
+            </p>
 
             <!-- Login Button -->
             <button
