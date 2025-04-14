@@ -6,23 +6,22 @@ import { doc, getDoc } from 'firebase/firestore'
 import { useToast } from 'primevue'
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useCurrentUser, useFirestore } from 'vuefire'
+import { getCurrentUser, useCurrentUser, useFirestore } from 'vuefire'
 
-const user = useCurrentUser()
 const db = useFirestore()
 const courseStore = useCourseStore()
 const studentStore = useStudentStore()
 const router = useRouter()
-const student = ref<Student>({
-  role: 'student',
-})
+const student = ref<Student>({})
 const toast = useToast()
 
 onMounted(async () => {
+  const user = await getCurrentUser()
+
   courseStore.getCourses()
-  console.log(user.value)
-  if (user.value) {
-    const docRef = doc(db, 'users', user.value.uid)
+  console.log(user)
+  if (user) {
+    const docRef = doc(db, 'users', user.uid)
     const docSnap = await getDoc(docRef)
     if (docSnap.exists()) {
       const userData = docSnap.data()
@@ -31,6 +30,7 @@ onMounted(async () => {
         router.push('/admin')
       } else if (userData.role === 'student') {
         console.log(userData)
+        student.value = { ...userData }
       } else {
         toast.add({
           severity: 'warn',
