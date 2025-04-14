@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useDialog } from 'primevue'
 import { defineAsyncComponent } from 'vue'
@@ -16,7 +16,27 @@ const DeleteQueue = defineAsyncComponent(
 const store = useStudentStore()
 const dialog = useDialog()
 const toast = useToast()
-const dt = ref()
+
+// Reactive variables for search and status filters
+const searchQuery = ref('')
+const statusQuery = ref('')
+
+// Computed property to filter students based on searchQuery (name, course, major) and statusQuery
+const filteredStudents = computed(() => {
+  return store.students.filter((student) => {
+    const fullName =
+      `${student.firstName} ${student.middleName ?? ''} ${student.lastName}`.toLowerCase()
+    const course = student.course?.toLowerCase() ?? ''
+    const major = student.major?.toLowerCase() ?? ''
+    const query = searchQuery.value.toLowerCase()
+
+    const matchesSearch =
+      fullName.includes(query) || course.includes(query) || major.includes(query)
+    const matchesStatus = statusQuery.value ? student.status === statusQuery.value : true
+
+    return matchesSearch && matchesStatus
+  })
+})
 
 onMounted(() => {
   store.getStudents()
@@ -28,67 +48,54 @@ onMounted(() => {
     <div class="card">
       <Toolbar class="mb-6">
         <template #start>
-          <InputText type="text" placeholder="Search..." />
+          <InputText
+            v-model="searchQuery"
+            type="text"
+            placeholder="Search by Name, Course, or Major..."
+          />
         </template>
         <template #end>
+          <!-- Dropdown for selecting the status filter -->
           <Select
-            :options="['Pending', 'Accepted', 'Denied']"
+            v-model="statusQuery"
+            :options="['', 'Pending', 'Accepted', 'Denied']"
             placeholder="Select status"
             class="w-full md:w-56"
           />
-          <!-- <Button
-            label="New"
-            icon="pi pi-plus"
-            class="mr-2"
-            @click="
-              () => {
-                dialog.open(addCurriculum, {
-                  props: {
-                    header: 'Add Curriculum',
-                    style: { width: '50vw' },
-                    breakpoints: { '960px': '75vw', '640px': '90vw' },
-                    modal: true,
-                  },
-                })
-              }
-            "
-          /> -->
         </template>
       </Toolbar>
+
       <div class="border rounded-sm">
         <DataTable
           ref="dt"
           size="small"
-          :value="store.students"
+          :value="filteredStudents"
           dataKey="id"
           :paginator="true"
           :rows="10"
           :loading="store.isLoading"
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
           :rowsPerPageOptions="[5, 10, 25]"
-          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} students"
         >
-          <!-- <template #header>
-              <div class="flex flex-wrap gap-2 items-center justify-between">
-                <h4 class="m-0">Manage Products</h4>
-                <IconField>
-                  <InputIcon>
-                    <i class="pi pi-search" />
-                  </InputIcon>
-                  <InputText v-model="filters['global'].value" placeholder="Search..." />
-                </IconField>
-              </div>
-            </template> -->
           <template #empty>
             <div class="flex items-center justify-center p-4">No queue found.</div>
           </template>
+
           <Column header="Fullname" style="min-width: 16rem">
             <template #body="slotProps">
-              <span>{{ slotProps.data.firstName }} {{ slotProps.data.lastName }}</span>
+              <span>
+                {{ slotProps.data.firstName }}
+                {{ slotProps.data.middleName ?? '' }}
+                {{ slotProps.data.lastName }}
+              </span>
             </template>
           </Column>
-          <Column field="sex" header="Gender"></Column>
-          <Column field="address" header="Address" style="min-width: 10rem"></Column>
+
+          <Column field="course" header="Course" style="min-width: 10rem" />
+          <Column field="major" header="Major" style="min-width: 10rem" />
+          <Column field="status" header="Status" style="min-width: 10rem" />
+
           <Column :exportable="false" header="Actions">
             <template #body="slotProps">
               <div class="flex gap-2">
