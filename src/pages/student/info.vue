@@ -24,7 +24,7 @@ onMounted(async () => {
     const docRef = doc(db, 'users', user.uid)
     const docSnap = await getDoc(docRef)
     if (docSnap.exists()) {
-      const userData = docSnap.data()
+      const userData = { uid: docSnap.id, ...docSnap.data() } as Student
 
       if (userData.role === 'admin') {
         router.push('/admin')
@@ -49,7 +49,7 @@ const filteredMajor = computed(() => {
 })
 
 async function onSubmit(payload: Student) {
-  studentStore.addStudent(payload)
+  studentStore.editStudent(payload)
   toast.add({
     severity: 'success',
     summary: 'Success',

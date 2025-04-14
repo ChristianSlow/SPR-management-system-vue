@@ -35,7 +35,7 @@ export const CurriculumRepository = {
   async fetchCurriculum(course: string) {
     try {
       const curriculumDoc = await getDocs(
-        query(collection(db, 'cities'), where('course', '==', course)),
+        query(collection(db, 'curriculums'), where('course', '==', course)),
       )
 
       const doc = curriculumDoc.docs[0]

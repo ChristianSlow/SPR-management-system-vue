@@ -8,6 +8,7 @@ import type { Curriculum } from '@/types/curriculum'
 export const useStudentStore = defineStore('student', () => {
   const isLoading = ref(false)
   const students = ref<Student[]>([])
+  const student = ref<Student>({})
   const totalStudents = ref(0)
 
   async function getStudents() {
@@ -15,26 +16,19 @@ export const useStudentStore = defineStore('student', () => {
     const response = await StudentRepository.fetchStudents()
     students.value = response.data
     totalStudents.value = students.value.length
-    console.log(students.value)
     isLoading.value = false
   }
 
-  async function getStudent() {
+  async function getStudent(uid: string) {
     isLoading.value = true
-    const response = await StudentRepository.fetchStudents()
-    students.value = response.data
-    totalStudents.value = students.value.length
-    console.log(students.value)
+    const response = await StudentRepository.fetchStudent(uid)
+    student.value = response.data
     isLoading.value = false
   }
 
   async function addStudent(student: Student) {
     isLoading.value = true
-    const curriculum = await CurriculumRepository.fetchCurriculum(student.course as string)
-    await StudentRepository.createStudent({
-      ...student,
-      curriculum,
-    })
+    await StudentRepository.createStudent(student)
     getStudents()
     isLoading.value = false
   }
@@ -42,7 +36,8 @@ export const useStudentStore = defineStore('student', () => {
   async function editStudent(student: Student) {
     isLoading.value = true
     console.log(student)
-    await StudentRepository.updateStudent(student.uid as string, student)
+    const curriculum = await CurriculumRepository.fetchCurriculum(student.course as string)
+    await StudentRepository.updateStudent(student.uid as string, { ...student, curriculum })
     getStudents()
     isLoading.value = false
   }
@@ -55,6 +50,7 @@ export const useStudentStore = defineStore('student', () => {
   }
   return {
     students,
+    student,
     totalStudents,
     isLoading,
     addStudent,
