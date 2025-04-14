@@ -2,18 +2,46 @@
 import { useCourseStore } from '@/stores/course'
 import { useStudentStore } from '@/stores/student'
 import type { Student } from '@/types/student'
+import { doc, getDoc } from 'firebase/firestore'
 import { useToast } from 'primevue'
 import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { getCurrentUser, useCurrentUser, useFirestore } from 'vuefire'
 
+const db = useFirestore()
 const courseStore = useCourseStore()
 const studentStore = useStudentStore()
-const student = ref<Student>({
-  role: 'student'
-})
+const router = useRouter()
+const student = ref<Student>({})
 const toast = useToast()
 
-onMounted(() => {
+onMounted(async () => {
+  const user = await getCurrentUser()
+
   courseStore.getCourses()
+  console.log(user)
+  if (user) {
+    const docRef = doc(db, 'users', user.uid)
+    const docSnap = await getDoc(docRef)
+    if (docSnap.exists()) {
+      const userData = docSnap.data()
+
+      if (userData.role === 'admin') {
+        router.push('/admin')
+      } else if (userData.role === 'student') {
+        console.log(userData)
+        student.value = { ...userData }
+      } else {
+        toast.add({
+          severity: 'warn',
+          summary: 'Unknown Role',
+          detail: 'Redirecting...',
+          life: 2500,
+        })
+        router.push('/')
+      }
+    }
+  }
 })
 
 const filteredMajor = computed(() => {
@@ -28,6 +56,7 @@ async function onSubmit(payload: any) {
     detail: 'Succesfully added subject!',
     life: 3000,
   })
+  router.push('/student')
 }
 </script>
 <template>
@@ -85,6 +114,17 @@ async function onSubmit(payload: any) {
                 :options="['Single', 'Married', 'Widowed', 'Separated']"
               />
             </div>
+            <div class="flex flex-1 flex-col gap-2">
+              <label for="mobile">Mobile Number</label>
+              <InputText
+                id="mobile"
+                v-model="student.studentMobileNumber"
+                type="tel"
+                maxlength="11"
+                pattern="[0-9]{11}"
+                required
+              />
+            </div>
           </div>
 
           <!-- Place of Birth -->
@@ -139,8 +179,15 @@ async function onSubmit(payload: any) {
               <InputText required v-model="student.parentName" />
             </div>
             <div class="flex flex-1 flex-col gap-2">
-              <label>Parent Mobile Number</label>
-              <InputText required v-model="student.parentMobileNumber" />
+              <label for="mobile">Parent Mobile Number</label>
+              <InputText
+                id="mobile"
+                v-model="student.parentMobileNumber"
+                type="tel"
+                maxlength="11"
+                pattern="[0-9]{11}"
+                required
+              />
             </div>
           </div>
 

@@ -138,8 +138,79 @@ const filteredMajor = computed(() => {
           </div>
         </div>
       </div>
+      <div class="flex flex-1 flex-col gap-2">
+        <label for="mobile">Student Mobile Number</label>
+        <InputText
+          id="mobile"
+          v-model="student.studentMobileNumber"
+          type="tel"
+          maxlength="11"
+          pattern="[0-9]{11}"
+          required
+        />
+      </div>
     </div>
 
+    <div class="flex flex-col gap-2">
+      <label>Place of Birth</label>
+      <InputText required v-model="student.birthPlace" />
+    </div>
+    <div class="flex gap-2">
+      <div class="flex flex-1 flex-col gap-2">
+        <label>Course</label>
+        <Select
+          required
+          v-model="student.course"
+          option-label="name"
+          option-value="name"
+          :options="courseStore.courses"
+          :loading="courseStore.isLoading"
+        />
+      </div>
+      <div class="flex flex-1 flex-col gap-2" v-if="student.course">
+        <label>Major</label>
+        <Select required v-model="student.major" :options="filteredMajor?.majors" />
+      </div>
+    </div>
+    <div class="flex gap-2">
+      <div class="flex flex-1 flex-col gap-2">
+        <label>Year</label>
+        <Select
+          required
+          :options="['First Year', 'Second Year', 'Third Year', 'Fourth Year']"
+          v-model="student.year"
+        />
+      </div>
+      <div class="flex flex-1 flex-col gap-2">
+        <label>Semester</label>
+        <Select
+          required
+          :options="['First Semester', 'Second Semester']"
+          v-model="student.semester"
+        />
+      </div>
+    </div>
+    <div class="flex gap-2">
+      <div class="flex flex-1 flex-col gap-2">
+        <label>Parent Name</label>
+        <InputText required v-model="student.parentName" />
+      </div>
+      <div class="flex flex-1 flex-col gap-2">
+        <label for="mobile">Parent Mobile Number</label>
+        <InputText
+          id="mobile"
+          v-model="student.studentMobileNumber"
+          type="tel"
+          maxlength="11"
+          pattern="[0-9]{11}"
+          required
+        />
+      </div>
+    </div>
+    <div class="flex flex-col gap-2">
+      <label>Parent Address</label>
+      <InputText required v-model="student.address" />
+    </div>
     <div class="flex w-full gap-2 justify-end mt-4">
       <Button label="Cancel" class="p-button-text" @click="onClose" />
       <Button
