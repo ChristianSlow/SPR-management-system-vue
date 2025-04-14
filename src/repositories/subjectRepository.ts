@@ -62,6 +62,7 @@ export const SubjectRepository = {
     try {
       const subjectDoc = await addDoc(collection(db, 'subjects'), {
         ...payload,
+        grade: '',
         createdAt: Timestamp.now(),
       })
       return { message: 'Successfully added subjects!', data: subjectDoc.id }
