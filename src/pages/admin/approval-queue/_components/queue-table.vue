@@ -16,26 +16,27 @@ const DeleteQueue = defineAsyncComponent(
 const store = useStudentStore()
 const dialog = useDialog()
 const toast = useToast()
+const dt = ref()
 
-// Reactive variables for search and status filters
 const searchQuery = ref('')
 const statusQuery = ref('')
 
-// Computed property to filter students based on searchQuery (name, course, major) and statusQuery
 const filteredStudents = computed(() => {
-  return store.students.filter((student) => {
-    const fullName =
-      `${student.firstName} ${student.middleName ?? ''} ${student.lastName}`.toLowerCase()
-    const course = student.course?.toLowerCase() ?? ''
-    const major = student.major?.toLowerCase() ?? ''
-    const query = searchQuery.value.toLowerCase()
+  if (!statusQuery.value) return store.students
+  return store.students.filter((student) => student.status === statusQuery.value.toLowerCase())
+  // return store.students.filter((student) => {
+  //   const fullName =
+  //     `${student.firstName} ${student.middleName ?? ''} ${student.lastName}`.toLowerCase()
+  //   const course = student.course?.toLowerCase() ?? ''
+  //   const major = student.major?.toLowerCase() ?? ''
+  //   const query = searchQuery.value.toLowerCase()
 
-    const matchesSearch =
-      fullName.includes(query) || course.includes(query) || major.includes(query)
-    const matchesStatus = statusQuery.value ? student.status === statusQuery.value : true
+  //   const matchesSearch =
+  //     fullName.includes(query) || course.includes(query) || major.includes(query)
+  //   const matchesStatus = statusQuery.value ? student.status === statusQuery.value : true
 
-    return matchesSearch && matchesStatus
-  })
+  //   return matchesSearch && matchesStatus
+  // })
 })
 
 onMounted(() => {
@@ -98,7 +99,7 @@ onMounted(() => {
 
           <Column :exportable="false" header="Actions">
             <template #body="slotProps">
-              <div class="flex gap-2">
+              <div class="flex gap-2" v-if="slotProps.data.status === 'pending'">
                 <Button
                   label="Accept"
                   size="small"

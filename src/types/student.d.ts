@@ -19,6 +19,7 @@ export interface Student {
   year?: string
   major?: string
   curriculum?: Curriculum
+  status?: string
   createdAt?: any
   status?: any
 }

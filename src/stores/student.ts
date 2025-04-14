@@ -17,6 +17,7 @@ export const useStudentStore = defineStore('student', () => {
     students.value = response.data
     totalStudents.value = students.value.length
     isLoading.value = false
+    console.log(response.data)
   }
 
   async function updateStudentStatus(uid: string, status: string, note?: string) {

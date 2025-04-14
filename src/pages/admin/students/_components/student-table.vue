@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useDialog } from 'primevue'
 import { defineAsyncComponent } from 'vue'
@@ -30,6 +30,10 @@ const products = ref()
 onMounted(() => {
   store.getStudents()
 })
+
+const filteredStudents = computed(() => {
+  return store.students.filter((student) => student.status === 'accepted')
+})
 </script>
 
 <template>
@@ -39,7 +43,7 @@ onMounted(() => {
         <DataTable
           ref="dt"
           size="small"
-          :value="store.students"
+          :value="filteredStudents"
           dataKey="id"
           :paginator="true"
           :rows="10"
