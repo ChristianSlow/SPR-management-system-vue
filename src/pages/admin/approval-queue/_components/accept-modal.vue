@@ -1,11 +1,27 @@
 <script setup lang="ts">
 import { inject } from 'vue'
+import { useStudentStore } from '@/stores/student'
+import type { Student } from '@/types/student'
+import { useToast } from 'primevue'
 
 const dialogRef = inject<any>('dialogRef')
 const student = dialogRef.value.data
+const store = useStudentStore()
+const toast = useToast()
 
 function onClose() {
   dialogRef.value.close()
+}
+
+async function onSubmit(payload: Student) {
+  await store.editStudent({ ...payload, status: 'accepted' })
+  toast.add({
+    severity: 'success',
+    summary: 'Success',
+    detail: 'Succesfully accepted student!',
+    life: 3000,
+  })
+  onClose()
 }
 </script>
 
@@ -20,7 +36,7 @@ function onClose() {
     ></textarea>
     <div class="flex justify-end mt-4 gap-2">
       <Button label="Cancel" severity="danger" @click="onClose" />
-      <Button label="Accept" />
+      <Button label="Accept" @click="onSubmit(student)" :loading="store.isLoading" />
     </div>
   </div>
 </template>

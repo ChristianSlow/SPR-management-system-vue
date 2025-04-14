@@ -18,11 +18,9 @@ const dialog = useDialog()
 const toast = useToast()
 const dt = ref()
 
-// Reactive variables for search and status filters
 const searchQuery = ref('')
 const statusQuery = ref('')
 
-// Computed property to filter students based on searchQuery (name, course, major) and statusQuery
 const filteredStudents = computed(() => {
   if (!statusQuery.value) return store.students
   return store.students.filter((student) => student.status === statusQuery.value.toLowerCase())
@@ -101,7 +99,7 @@ onMounted(() => {
 
           <Column :exportable="false" header="Actions">
             <template #body="slotProps">
-              <div class="flex gap-2">
+              <div class="flex gap-2" v-if="slotProps.data.status === 'pending'">
                 <Button
                   label="Accept"
                   size="small"

@@ -1,14 +1,29 @@
 <script setup lang="ts">
 import { inject } from 'vue'
+import { useStudentStore } from '@/stores/student'
+import type { Student } from '@/types/student'
+import { useToast } from 'primevue'
 
 const dialogRef = inject<any>('dialogRef')
 const student = dialogRef.value.data
+const store = useStudentStore()
+const toast = useToast()
 
 function onClose() {
   dialogRef.value.close()
 }
-</script>
 
+async function onSubmit() {
+  await store.editStudent({ ...student, status: 'denied' })
+  toast.add({
+    severity: 'success',
+    summary: 'Success',
+    detail: 'Succesfully denied student!',
+    life: 3000,
+  })
+  onClose()
+}
+</script>
 <template>
   <div class="space-y-4">
     <div class="text-center">
@@ -21,8 +36,8 @@ function onClose() {
       >
     </div>
     <div class="flex justify-end gap-4">
-      <Button label="No" severity="danger" size="sm" icon="pi pi-times" text @click="onClose" />
-      <Button label="Yes" icon="pi pi-check" size="sm" />
+      <Button label="No" severity="danger" icon="pi pi-times" text @click="onClose" />
+      <Button label="Yes" icon="pi pi-check" @click="onSubmit" :loading="store.isLoading" />
     </div>
   </div>
 </template>
