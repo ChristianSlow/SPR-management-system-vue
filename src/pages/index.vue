@@ -123,7 +123,7 @@ async function onFormSubmit() {
         lastName: credentials.value.lastName,
         email,
         role: 'student',
-        isApprove: true,
+        status: 'pending',
         createdAt: Timestamp.now(),
       })
 

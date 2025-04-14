@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useDialog } from 'primevue'
 import { defineAsyncComponent } from 'vue'
@@ -17,9 +17,15 @@ const store = useStudentStore()
 const dialog = useDialog()
 const toast = useToast()
 const dt = ref()
+const selectedStatus = ref('')
 
 onMounted(() => {
   store.getStudents()
+})
+
+const filteredStudents = computed(() => {
+  if (!selectedStatus.value) return store.students
+  return store.students.filter((student) => student.status === selectedStatus.value)
 })
 </script>
 
@@ -32,7 +38,8 @@ onMounted(() => {
         </template>
         <template #end>
           <Select
-            :options="['Pending', 'Accepted', 'Denied']"
+            v-model="selectedStatus"
+            :options="['pending', 'accepted', 'denied']"
             placeholder="Select status"
             class="w-full md:w-56"
           />
@@ -59,7 +66,7 @@ onMounted(() => {
         <DataTable
           ref="dt"
           size="small"
-          :value="store.students"
+          :value="filteredStudents"
           dataKey="id"
           :paginator="true"
           :rows="10"
