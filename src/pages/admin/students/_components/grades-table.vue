@@ -2,7 +2,7 @@
 import type { Subject } from '@/types/subject'
 import { ref, onMounted } from 'vue'
 
-const props = defineProps()
+const props = defineProps<{ subjects: Subject[] }>()
 
 const columns = ref([
   { field: 'code', header: 'Code' },
@@ -48,10 +48,15 @@ const formatCurrency = (value: any) => {
 
 <template>
   <div>
-    <DataTable :value="props" editMode="cell" @cell-edit-complete="onCellEditComplete" size="small">
+    <DataTable
+      :value="props.subjects"
+      editMode="cell"
+      @cell-edit-complete="onCellEditComplete"
+      size="small"
+    >
       <Column v-for="col of columns" :key="col.field" :field="col.field" :header="col.header">
         <template #body="{ data, field }">
-          {{ data[field] }}
+          {{ data[field as any] }}
         </template>
         <template #editor="{ data, field }">
           <template v-if="field === 'grade'">
