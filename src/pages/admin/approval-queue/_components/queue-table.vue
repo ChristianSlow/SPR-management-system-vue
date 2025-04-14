@@ -63,6 +63,7 @@ onMounted(() => {
           dataKey="id"
           :paginator="true"
           :rows="10"
+          :loading="store.isLoading"
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
           :rowsPerPageOptions="[5, 10, 25]"
           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
@@ -86,46 +87,52 @@ onMounted(() => {
               <span>{{ slotProps.data.firstName }} {{ slotProps.data.lastName }}</span>
             </template>
           </Column>
-          <Column field="sex" header="Gender" style="min-width: 10rem"></Column>
+          <Column field="sex" header="Gender"></Column>
           <Column field="address" header="Address" style="min-width: 10rem"></Column>
-          <Column :exportable="false" header="Actions" style="min-width: 12rem">
+          <Column :exportable="false" header="Actions">
             <template #body="slotProps">
-              <Button
-                label="Accept"
-                icon="pi pi-pencil"
-                class="mr-2"
-                @click="
-                  () => {
-                    dialog.open(AcceptQueue, {
-                      props: {
-                        header: 'Confirm',
-                        style: { width: '50vw' },
-                        breakpoints: { '960px': '75vw', '640px': '90vw' },
-                        modal: true,
-                      },
-                    })
-                  }
-                "
-              />
-              <Button
-                outlined
-                severity="danger"
-                label="Decline"
-                icon="pi pi-trash"
-                class="mr-2"
-                @click="
-                  () => {
-                    dialog.open(DeleteQueue, {
-                      props: {
-                        header: 'Confirm Decline',
-                        style: { width: '50vw' },
-                        breakpoints: { '960px': '75vw', '640px': '90vw' },
-                        modal: true,
-                      },
-                    })
-                  }
-                "
-              />
+              <div class="flex gap-2">
+                <Button
+                  label="Accept"
+                  size="small"
+                  icon="pi pi-check"
+                  class="mr-2"
+                  @click="
+                    () => {
+                      dialog.open(AcceptQueue, {
+                        props: {
+                          header: `Accept ${slotProps.data.firstName} ${slotProps.data.middleName} ${slotProps.data.lastName}`,
+                          style: { width: '50vw' },
+                          breakpoints: { '960px': '75vw', '640px': '90vw' },
+                          modal: true,
+                        },
+                        data: slotProps.data,
+                      })
+                    }
+                  "
+                />
+                <Button
+                  size="small"
+                  outlined
+                  severity="danger"
+                  label="Decline"
+                  icon="pi pi-trash"
+                  class="mr-2"
+                  @click="
+                    () => {
+                      dialog.open(DeleteQueue, {
+                        props: {
+                          header: 'Confirm Decline',
+                          style: { width: '50vw' },
+                          breakpoints: { '960px': '75vw', '640px': '90vw' },
+                          modal: true,
+                        },
+                        data: slotProps.data,
+                      })
+                    }
+                  "
+                />
+              </div>
             </template>
           </Column>
         </DataTable>

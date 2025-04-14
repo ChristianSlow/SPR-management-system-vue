@@ -57,86 +57,78 @@ onMounted(() => store.getCurriculums())
           />
         </template>
       </Toolbar>
+      <span class="text-gray-600 text-semibold">Total Curriculum: 0</span>
       <div class="border rounded-sm">
-        <DataTable :loading="store.isLoading" :value="store.curriculums">
-          <!-- <template #header>
-              <div class="flex flex-wrap gap-2 items-center justify-between">
-                <h4 class="m-0">Manage Products</h4>
-                <IconField>
-                  <InputIcon>
-                    <i class="pi pi-search" />
-                  </InputIcon>
-                  <InputText v-model="filters['global'].value" placeholder="Search..." />
-                </IconField>
-              </div>
-            </template> -->
+        <DataTable :loading="store.isLoading" :value="store.curriculums" size="small">
           <template #empty>
             <div class="flex items-center justify-center p-4">No curriculum found.</div>
           </template>
           <Column field="name" header="Name" style="min-width: 12rem"></Column>
           <Column field="course" header="Course" style="min-width: 12rem"></Column>
           <Column field="major" header="Major" style="min-width: 12rem"></Column>
-          <Column :exportable="false" header="Actions" style="min-width: 12rem">
+          <Column :exportable="false" header="Actions">
             <template #body="slotProps">
-              <Button
-                label="view"
-                size="small"
-                icon="pi pi-eye"
-                class="mr-2"
-                @click="
-                  () => {
-                    dialog.open(viewCurriculum, {
-                      props: {
-                        header: 'Curriculum Details',
-                        style: { width: '50vw' },
-                        breakpoints: { '960px': '75vw', '640px': '90vw' },
-                        modal: true,
-                      },
-                      data: slotProps.data,
-                    })
-                  }
-                "
-              />
-              <Button
-                label="Edit"
-                size="small"
-                icon="pi pi-pencil"
-                class="mr-2"
-                @click="
-                  () => {
-                    dialog.open(editCurriculum, {
-                      props: {
-                        header: 'Edit Curriculum',
-                        style: { width: '50vw' },
-                        breakpoints: { '960px': '75vw', '640px': '90vw' },
-                        modal: true,
-                      },
-                      data: slotProps.data,
-                    })
-                  }
-                "
-              />
-              <Button
-                label="Delete"
-                outlined
-                severity="danger"
-                size="small"
-                icon="pi pi-trash"
-                class="mr-2"
-                @click="
-                  () => {
-                    dialog.open(deleteCurriculum, {
-                      props: {
-                        header: 'Confirm Delete',
-                        style: { width: '50vw' },
-                        breakpoints: { '960px': '75vw', '640px': '90vw' },
-                        modal: true,
-                      },
-                      data: slotProps.data,
-                    })
-                  }
-                "
-              />
+              <div class="flex gap-1">
+                <Button
+                  label="view"
+                  size="small"
+                  icon="pi pi-eye"
+                  class="mr-2"
+                  @click="
+                    () => {
+                      dialog.open(viewCurriculum, {
+                        props: {
+                          header: 'Curriculum Details',
+                          style: { width: '50vw' },
+                          breakpoints: { '960px': '75vw', '640px': '90vw' },
+                          modal: true,
+                        },
+                        data: slotProps.data,
+                      })
+                    }
+                  "
+                />
+                <Button
+                  label="Edit"
+                  size="small"
+                  icon="pi pi-pencil"
+                  class="mr-2"
+                  @click="
+                    () => {
+                      dialog.open(editCurriculum, {
+                        props: {
+                          header: 'Edit Curriculum',
+                          style: { width: '50vw' },
+                          breakpoints: { '960px': '75vw', '640px': '90vw' },
+                          modal: true,
+                        },
+                        data: slotProps.data,
+                      })
+                    }
+                  "
+                />
+                <Button
+                  label="Delete"
+                  outlined
+                  severity="danger"
+                  size="small"
+                  icon="pi pi-trash"
+                  class="mr-2"
+                  @click="
+                    () => {
+                      dialog.open(deleteCurriculum, {
+                        props: {
+                          header: 'Confirm Delete',
+                          style: { width: '50vw' },
+                          breakpoints: { '960px': '75vw', '640px': '90vw' },
+                          modal: true,
+                        },
+                        data: slotProps.data,
+                      })
+                    }
+                  "
+                />
+              </div>
             </template>
           </Column>
         </DataTable>
