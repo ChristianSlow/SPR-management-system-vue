@@ -1,8 +1,15 @@
 <script setup lang="ts">
 import type { Subject } from '@/types/subject'
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 
-const props = defineProps<{ subjects: Subject[] }>()
+const props = defineProps<{
+  subjects: Subject[]
+  context: { year: string; semester: string }
+}>()
+
+const emit = defineEmits<{
+  update: [updatedSubjects: Subject[], context: { year: string; semester: string }]
+}>()
 
 const columns = ref([
   { field: 'code', header: 'Code' },
@@ -12,37 +19,11 @@ const columns = ref([
 ])
 
 const onCellEditComplete = (event: any) => {
-  let { data, newValue, field } = event
-
-  switch (field) {
-    case 'quantity':
-    case 'price':
-      if (isPositiveInteger(newValue)) data[field] = newValue
-      else event.preventDefault()
-      break
-
-    default:
-      if (newValue.trim().length > 0) data[field] = newValue
-      else event.preventDefault()
-      break
+  const { data, newValue, field } = event
+  if (newValue != null) {
+    data[field] = newValue
+    emit('update', props.subjects, props.context)
   }
-}
-const isPositiveInteger = (val: any) => {
-  let str = String(val)
-
-  str = str.trim()
-
-  if (!str) {
-    return false
-  }
-
-  str = str.replace(/^0+/, '') || '0'
-  var n = Math.floor(Number(str))
-
-  return n !== Infinity && String(n) === str && n >= 0
-}
-const formatCurrency = (value: any) => {
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value)
 }
 </script>
 
