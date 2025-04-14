@@ -49,6 +49,11 @@ const router = createRouter({
           name: 'admin-approval-queue',
           component: () => import('@/pages/admin/approval-queue/index.vue'),
         },
+        {
+          path: 'setting',
+          name: 'admin-setting',
+          component: () => import('@/pages/admin/setting/index.vue'),
+        },
       ],
     },
     {

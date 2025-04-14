@@ -44,8 +44,8 @@ const items = [
   },
   {
     label: 'Settings',
-    path: '/admin/account',
-    name: 'admin-account',
+    path: '/admin/setting',
+    name: 'admin-setting',
     icon: 'pi pi-cog mr-2',
   },
 ]
