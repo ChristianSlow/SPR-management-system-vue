@@ -7,6 +7,7 @@ import { Message, useToast } from 'primevue'
 import { computed, inject, onMounted, reactive, watchEffect, toRaw } from 'vue'
 import GradesTable from '../grades-table.vue'
 import type { Subject } from '@/types/subject'
+import type { Curriculum } from '@/types/curriculum'
 
 const dialogRef = inject<any>('dialogRef')
 const studentStore = useStudentStore()
@@ -42,7 +43,7 @@ const handleSubjectUpdate = (
   context: { year: string; semester: string },
 ) => {
   if (studentStore.student.curriculum && context) {
-    const curriculum = toRaw(studentStore.student.curriculum)
+    const curriculum = toRaw(studentStore.student.curriculum) as any
 
     curriculum[context.year] = {
       ...curriculum[context.year],
