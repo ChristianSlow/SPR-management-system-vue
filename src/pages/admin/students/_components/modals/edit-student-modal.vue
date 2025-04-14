@@ -4,7 +4,8 @@ import { useCourseStore } from '@/stores/course'
 import { useStudentStore } from '@/stores/student'
 import type { Student } from '@/types/student'
 import { Message, useToast } from 'primevue'
-import { computed, inject, onMounted, reactive } from 'vue'
+import { computed, inject, onMounted, reactive, watchEffect } from 'vue'
+import GradesTable from '../grades-table.vue'
 
 const dialogRef = inject<any>('dialogRef')
 const student = reactive<Student>(dialogRef.value.data)
@@ -31,6 +32,8 @@ onMounted(() => {
   courseStore.getCourses()
 })
 
+watchEffect(() => console.log(student))
+
 const filteredMajor = computed(() => {
   return courseStore.courses.find((item) => item.name === student.course)
 })
@@ -41,7 +44,7 @@ const filteredMajor = computed(() => {
     <div>
       <h3 class="bg-red-800 px-2 text-white">Student Details</h3>
       <div class="p-4 border rounded-bl-md rounded-br-md flex flex-col gap-4">
-        <div class="flex gap-2">
+        <div class="flex gap-2 flex-wrap">
           <div class="flex flex-col gap-2">
             <label>First Name</label>
             <InputText required v-model="student.firstName" />
@@ -112,6 +115,7 @@ const filteredMajor = computed(() => {
         </div> -->
       </div>
     </div>
+    
     <div>
       <h3 class="bg-red-800 px-2 text-white">Educational Details</h3>
       <div class="p-4 border rounded-bl-md rounded-br-md flex flex-col gap-4">
@@ -151,7 +155,18 @@ const filteredMajor = computed(() => {
           </div>
         </div>
       </div>
+      <!-- <div>
+        <div class="border p-2 mt-2">
+          <span>First Semester</span>
+          <GradesTable :subjects="student.curriculum?.firstYear?.first" />
+        </div>
+        <div class="border p-2 mt-2">
+          <span>Second Semester</span>
+          <GradesTable :subjects="student.curriculum?.firstYear?.second" />
+        </div>
+      </div> -->
     </div>
+
     <div class="flex w-full gap-2 justify-end mt-4">
       <Button label="Cancel" class="p-button-text" @click="onClose" />
       <Button

@@ -23,6 +23,6 @@ function onClose() {
     <div class="flex justify-end gap-4">
       <Button label="No" severity="danger" size="sm" icon="pi pi-times" text @click="onClose" />
       <Button label="Yes" icon="pi pi-check" size="sm" />
-    </div>
+    </
   </div>
 </template>

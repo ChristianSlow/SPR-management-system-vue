@@ -81,7 +81,7 @@ onMounted(() => {
                       dialog.open(viewStudent, {
                         props: {
                           header: 'Student Details',
-                          style: { width: '50vw' },
+                          style: { width: '100vw' },
                           breakpoints: { '960px': '75vw', '640px': '90vw' },
                           modal: true,
                         },

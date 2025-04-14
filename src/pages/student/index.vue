@@ -38,7 +38,7 @@
             </thead>
             <tbody>
               <tr class="even:bg-gray-100 hover:bg-gray-200 text-gray-700">
-                <td class="border p-2">ubject Code</td>
+                <td class="border p-2">Subject Code</td>
                 <td class="border p-2">Descriptive Title</td>
                 <td class="border p-2 text-center">Units</td>
                 <td class="border p-2 text-center">Grades</td>
@@ -51,13 +51,13 @@
           </div>
         </div>
       </div>
-      <div class="flex justify-center mt-6">
+      <!-- <div class="flex justify-center mt-6">
         <Button
           label="Enroll"
           icon="pi pi-sign-out"
           class="p-button-sm p-button-danger transition-transform hover:scale-105"
         />
-      </div>
+      </div> -->
       <!-- Logout Button (Now Below the Content) -->
       <div class="flex justify-center mt-6">
         <Button
