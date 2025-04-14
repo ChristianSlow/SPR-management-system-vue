@@ -63,9 +63,9 @@ watch(
         </div>
         <div class="flex-1">
           <label for="course" class="block text-gray-700 dark:text-white"> Major </label>
-          <MultiSelect
+          <Select
             option-label="name"
-            v-model="(curriculum.firstYear ?? {}).first"
+            v-model="curriculum.major"
             editable
             :options="filteredMajor?.majors"
             placeholder="Select a major"
