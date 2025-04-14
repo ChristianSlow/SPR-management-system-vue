@@ -11,6 +11,6 @@ export interface Curriculum {
 }
 
 export interface Year {
-  first: string[]
-  second: string[]
+  first?: string[]
+  second?: string[]
 }
