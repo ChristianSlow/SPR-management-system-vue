@@ -14,13 +14,13 @@ onMounted(async () => {
 </script>
 <template>
   <div class="p-1 bg-white min-h-screen w-full">
-    <div class="rounded-lg p-1 w-full max-w-4xl mx-auto">
+    <div class="rounded-lg p-1 w-full mx-auto">
       <div class="flex justify-end items-center mb-4">
         <Button
+          label="Download"
           icon="pi pi-download"
           class="p-button-sm custom-download-button transition-transform hover:scale-105"
-          >Download</Button
-        >
+        />
       </div>
 
       <div class="text-center mb-6">
@@ -42,10 +42,10 @@ onMounted(async () => {
         <h2 class="text-lg font-semibold text-gray-900">Major: {{ store.student.major }}</h2>
       </div>
 
-      <div class="flex gap-4 items-start">
+      <div class="flex gap-4 items-start w-full">
         <div class="border p-2 rounded-md flex-1">
           <span>First Semester</span>
-          <DataTable :value="store.student.curriculum?.firstYear?.first">
+          <DataTable :value="store.student.curriculum?.firstYear?.first" :loading="store.isLoading">
             <template #empty> no subjects found. </template>
             <Column field="code"></Column>
             <Column field="unit"></Column>
@@ -54,14 +54,16 @@ onMounted(async () => {
           </DataTable>
         </div>
 
-        <div class="border p-2 rounded-md flex-1">
+        <div class="border p-2 rounded-md flex-1 w-full">
           <span>Second Semester</span>
-          <DataTable :value="store.student.curriculum?.firstYear?.second">
+          <DataTable
+            :value="store.student.curriculum?.firstYear?.second"
+            :loading="store.isLoading"
+          >
             <template #empty> no subjects found. </template>
             <Column field="code"></Column>
             <Column field="unit"></Column>
             <Column field="name"></Column>
-            <Column header="Enrolled"></Column>
             <Column header="Grd"></Column>
           </DataTable>
         </div>
@@ -73,17 +75,17 @@ onMounted(async () => {
 
       <div class="flex justify-center mt-6">
         <Button
+          label="Enroll"
           icon="pi pi-sign-out"
           class="p-button-sm p-button-danger transition-transform hover:scale-105"
-          >Enroll</Button
-        >
+        />
       </div>
       <div class="flex justify-center mt-6">
         <Button
+          label="Logout"
           icon="pi pi-sign-out"
           class="p-button-sm p-button-danger transition-transform hover:scale-105"
-          >Logout</Button
-        >
+        />
       </div>
     </div>
   </div>
