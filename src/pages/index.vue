@@ -80,7 +80,7 @@ async function onFormSubmit() {
           if (userData.role === 'admin') {
             router.push('/admin')
           } else if (userData.role === 'student') {
-            router.push(userData.isDone ? '/infopage' : '/designatedsub')
+            router.push(userData.isDone ? '/infopage' : '/student')
           } else {
             toast.add({
               severity: 'warn',
@@ -147,6 +147,37 @@ async function onFormSubmit() {
     isLoading.value = false
   }
 }
+const infoSections = ref([
+  {
+    title: 'Philosopy',
+    description:
+      'A private non-sectarian school that promotes the holistic development of the learners in response to the changing society.',
+  },
+  {
+    title: 'Vision',
+    description:
+      'Provide the poor an access to quality education that would improve their lives and make them realize that poverty is not a hindrance to success.',
+  },
+  {
+    title: 'Mission',
+    description:
+      'Provides relevant quality Christian education that will equip the learners with 21st-century skills for global competitiveness.',
+  },
+  {
+    title: 'Goals',
+    description:
+      'The school aims to provide every student with lifelong skills that will make them: 1. Preserve and enrich their cultural heritage, 2. Inculcate moral and Christian values, 3. Attain a strong sense of Patriotism, and 4. Participate in political, social, and economic progress of their respective communities.',
+  },
+  {
+    title: 'Objectives',
+    description:
+      'The school aims to provide every student with lifelong skills that will make them preserve and enrich their cultural heritage, inculcate moral and Christian values, attain a strong sense of Patriotism, and participate in political, social, and economic progress of their respective communities.',
+  },
+  {
+    title: 'Core Values',
+    description: 'Service, Integrity, Honesty, Pro Nature, Pro Environment, and God-centered.',
+  },
+])
 </script>
 
 <template>
@@ -162,9 +193,55 @@ async function onFormSubmit() {
     </div>
 
     <!-- Hero Section -->
+    <div
+      class="relative w-full flex justify-center items-center h-screen bg-cover bg-center px-4"
+      style="background-image: url('/bg.jpg')"
+    >
+      <!-- Dark Overlay for Readability -->
+
+      <!-- Centered Content -->
+      <div
+        class="relative z-10 flex flex-col justify-center items-center text-white text-center animate-fade-in"
+      >
+        <img
+          src="/tlogow.png"
+          alt="Tañon College Logo"
+          class="w-32 h-32 md:w-40 md:h-40 mb-4 drop-shadow-lg"
+        />
+        <h1 class="text-3xl md:text-5xl font-extrabold tracking-wide drop-shadow-md">
+          Welcome to Tañon College
+        </h1>
+      </div>
+    </div>
     <!-- (keep as-is) -->
 
     <!-- About Section -->
+    <div class="w-full max-w-lg mx-auto bg-white shadow-lg rounded-2xl p-6 text-center mt-10">
+      <img
+        src="/tlogo.png"
+        class="mx-auto w-20 h-20 md:w-24 md:h-24 drop-shadow-md"
+        alt="Tañon College Logo"
+      />
+      <h1 class="text-xl md:text-3xl font-bold text-red-800">Tañon College</h1>
+      <h4 class="text-xl md:text-xl pt-4 font-bold text-black">About Our Institution</h4>
+
+      <Carousel
+        :value="infoSections"
+        :numVisible="1"
+        :numScroll="1"
+        :circular="true"
+        :autoplayInterval="3000"
+      >
+        <template #item="slotProps">
+          <div class="p-4">
+            <h3 class="text-lg md:text-xl font-semibold text-gray-800">
+              {{ slotProps.data.title }}
+            </h3>
+            <p class="text-gray-600 mt-2 text-sm md:text-base">{{ slotProps.data.description }}</p>
+          </div>
+        </template>
+      </Carousel>
+    </div>
     <!-- (keep as-is) -->
 
     <!-- Login Section -->
@@ -273,6 +350,7 @@ async function onFormSubmit() {
 </template>
 
 <style scoped>
+/* Fade-in animation */
 @keyframes fadeIn {
   from {
     opacity: 0;
