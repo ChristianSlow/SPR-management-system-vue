@@ -91,7 +91,6 @@ watchEffect(() => console.log(firstYear.first, firstYear.second))
         <div class="flex-1">
           <label for="course" class="block text-gray-700 dark:text-white"> Major </label>
           <Select
-            option-label="name"
             v-model="curriculum.major"
             editable
             :options="filteredMajor?.majors"
@@ -109,6 +108,9 @@ watchEffect(() => console.log(firstYear.first, firstYear.second))
             <MultiSelect
               v-model="firstYear.first"
               editable
+              display="chip"
+              :maxSelectedLabels="2"
+              filter
               :options="subjectStore.filteredSubjects"
               optionLabel="code"
               placeholder="Select a subjects"
@@ -120,6 +122,9 @@ watchEffect(() => console.log(firstYear.first, firstYear.second))
             <MultiSelect
               v-model="firstYear.second"
               optionLabel="code"
+              display="chip"
+              :maxSelectedLabels="2"
+              filter
               editable
               :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
@@ -135,6 +140,9 @@ watchEffect(() => console.log(firstYear.first, firstYear.second))
             <label class="block text-gray-700 dark:text-white"> First semester </label>
             <MultiSelect
               option-label="code"
+              display="chip"
+              :maxSelectedLabels="2"
+              filter
               v-model="secondYear.first"
               editable
               :options="subjectStore.filteredSubjects"
@@ -146,7 +154,10 @@ watchEffect(() => console.log(firstYear.first, firstYear.second))
             <label class="block text-gray-700 dark:text-white"> Second semester </label>
             <MultiSelect
               option-label="code"
+              display="chip"
+              :maxSelectedLabels="2"
               v-model="secondYear.second"
+              filter
               editable
               :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
@@ -162,7 +173,10 @@ watchEffect(() => console.log(firstYear.first, firstYear.second))
             <label class="block text-gray-700 dark:text-white"> First semester </label>
             <MultiSelect
               option-label="code"
+              display="chip"
+              :maxSelectedLabels="2"
               v-model="thirdYear.first"
+              filter
               editable
               :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
@@ -173,7 +187,10 @@ watchEffect(() => console.log(firstYear.first, firstYear.second))
             <label class="block text-gray-700 dark:text-white"> Second semester </label>
             <MultiSelect
               option-label="code"
+              display="chip"
+              :maxSelectedLabels="2"
               v-model="thirdYear.second"
+              filter
               editable
               :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
@@ -189,7 +206,10 @@ watchEffect(() => console.log(firstYear.first, firstYear.second))
             <label class="block text-gray-700 dark:text-white"> First semester </label>
             <MultiSelect
               option-label="code"
+              display="chip"
+              :maxSelectedLabels="2"
               v-model="fourthYear.first"
+              filter
               editable
               :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
@@ -200,7 +220,10 @@ watchEffect(() => console.log(firstYear.first, firstYear.second))
             <label class="block text-gray-700 dark:text-white"> Second semester </label>
             <MultiSelect
               option-label="code"
+              display="chip"
+              :maxSelectedLabels="2"
               v-model="fourthYear.second"
+              filter
               editable
               :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
