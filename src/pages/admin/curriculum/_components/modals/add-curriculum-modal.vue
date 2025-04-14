@@ -111,7 +111,6 @@ watchEffect(() => console.log(firstYear.first, firstYear.second))
               editable
               :options="subjectStore.filteredSubjects"
               optionLabel="code"
-              optionValue="uid"
               placeholder="Select a subjects"
               class="w-full"
             />
@@ -121,7 +120,6 @@ watchEffect(() => console.log(firstYear.first, firstYear.second))
             <MultiSelect
               v-model="firstYear.second"
               optionLabel="code"
-              optionValue="uid"
               editable
               :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
