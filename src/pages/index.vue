@@ -125,6 +125,7 @@ async function onFormSubmit() {
         lastName: credentials.value.lastName,
         email,
         role: 'student',
+        isApproved: false,
         isDone: false,
         createdAt: new Date(),
       })
