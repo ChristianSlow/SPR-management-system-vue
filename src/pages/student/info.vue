@@ -143,7 +143,7 @@ async function onSubmit(payload: Student) {
                 :options="courseStore.courses"
                 :loading="courseStore.isLoading"
                 option-label="name"
-                option-value="name"
+                option-value="abbreviation"
               />
             </div>
             <div class="flex flex-1 flex-col gap-2">
