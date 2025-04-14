@@ -91,6 +91,7 @@ watchEffect(() => console.log(firstYear.first, firstYear.second))
         <div class="flex-1">
           <label for="course" class="block text-gray-700 dark:text-white"> Major </label>
           <Select
+            option-label="name"
             v-model="curriculum.major"
             editable
             :options="filteredMajor?.majors"
