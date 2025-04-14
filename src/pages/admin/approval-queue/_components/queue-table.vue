@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useDialog } from 'primevue'
 import { defineAsyncComponent } from 'vue'
+import { useStudentStore } from '@/stores/student'
 
 const AcceptQueue = defineAsyncComponent(
   () => import('@/pages/admin/approval-queue/_components/accept-modal.vue'),
@@ -12,10 +13,14 @@ const DeleteQueue = defineAsyncComponent(
   () => import('@/pages/admin/approval-queue/_components/delete-modal.vue'),
 )
 
+const store = useStudentStore()
 const dialog = useDialog()
 const toast = useToast()
 const dt = ref()
-const products = ref()
+
+onMounted(() => {
+  store.getStudents()
+})
 </script>
 
 <template>
@@ -54,7 +59,7 @@ const products = ref()
         <DataTable
           ref="dt"
           size="small"
-          :value="products"
+          :value="store.students"
           dataKey="id"
           :paginator="true"
           :rows="10"
@@ -76,11 +81,17 @@ const products = ref()
           <template #empty>
             <div class="flex items-center justify-center p-4">No queue found.</div>
           </template>
-          <Column field="code" header="Name" style="min-width: 12rem"></Column>
+          <Column header="Fullname" style="min-width: 16rem">
+            <template #body="slotProps">
+              <span>{{ slotProps.data.firstName }} {{ slotProps.data.lastName }}</span>
+            </template>
+          </Column>
+          <Column field="sex" header="Gender" style="min-width: 10rem"></Column>
+          <Column field="address" header="Address" style="min-width: 10rem"></Column>
           <Column :exportable="false" header="Actions" style="min-width: 12rem">
             <template #body="slotProps">
               <Button
-                label="Edit"
+                label="Accept"
                 icon="pi pi-pencil"
                 class="mr-2"
                 @click="
@@ -97,14 +108,16 @@ const products = ref()
                 "
               />
               <Button
-                label="Delete"
+                outlined
+                severity="danger"
+                label="Decline"
                 icon="pi pi-trash"
                 class="mr-2"
                 @click="
                   () => {
                     dialog.open(DeleteQueue, {
                       props: {
-                        header: 'Confirm Delete',
+                        header: 'Confirm Decline',
                         style: { width: '50vw' },
                         breakpoints: { '960px': '75vw', '640px': '90vw' },
                         modal: true,
@@ -113,7 +126,6 @@ const products = ref()
                   }
                 "
               />
-              <Button icon="pi pi-trash" outlined rounded severity="danger" />
             </template>
           </Column>
         </DataTable>
