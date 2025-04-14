@@ -8,6 +8,7 @@ import type { Curriculum } from '@/types/curriculum'
 export const useStudentStore = defineStore('student', () => {
   const isLoading = ref(false)
   const students = ref<Student[]>([])
+  const student = ref<Student>({})
   const totalStudents = ref(0)
 
   async function getStudents() {
@@ -18,12 +19,10 @@ export const useStudentStore = defineStore('student', () => {
     isLoading.value = false
   }
 
-  async function getStudent() {
+  async function getStudent(uid: string) {
     isLoading.value = true
-    const response = await StudentRepository.fetchStudents()
-    students.value = response.data
-    totalStudents.value = students.value.length
-    console.log(students.value)
+    const response = await StudentRepository.fetchStudent(uid)
+    student.value = response.data
     isLoading.value = false
   }
 
@@ -56,6 +55,7 @@ export const useStudentStore = defineStore('student', () => {
   }
   return {
     students,
+    student,
     totalStudents,
     isLoading,
     addStudent,
