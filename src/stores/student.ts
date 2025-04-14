@@ -28,13 +28,7 @@ export const useStudentStore = defineStore('student', () => {
 
   async function addStudent(student: Student) {
     isLoading.value = true
-    console.log(student)
-    const curriculum = await CurriculumRepository.fetchCurriculum(student.course as string)
-    console.log(curriculum)
-    await StudentRepository.createStudent({
-      ...student,
-      curriculum,
-    })
+    await StudentRepository.createStudent(student)
     getStudents()
     isLoading.value = false
   }
@@ -42,7 +36,8 @@ export const useStudentStore = defineStore('student', () => {
   async function editStudent(student: Student) {
     isLoading.value = true
     console.log(student)
-    await StudentRepository.updateStudent(student.uid as string, student)
+    const curriculum = await CurriculumRepository.fetchCurriculum(student.course as string)
+    await StudentRepository.updateStudent(student.uid as string, { ...student, curriculum })
     getStudents()
     isLoading.value = false
   }
