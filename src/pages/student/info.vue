@@ -2,18 +2,46 @@
 import { useCourseStore } from '@/stores/course'
 import { useStudentStore } from '@/stores/student'
 import type { Student } from '@/types/student'
+import { doc, getDoc } from 'firebase/firestore'
 import { useToast } from 'primevue'
 import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useCurrentUser, useFirestore } from 'vuefire'
 
+const user = useCurrentUser()
+const db = useFirestore()
 const courseStore = useCourseStore()
 const studentStore = useStudentStore()
+const router = useRouter()
 const student = ref<Student>({
-  role: 'student'
+  role: 'student',
 })
 const toast = useToast()
 
-onMounted(() => {
+onMounted(async () => {
   courseStore.getCourses()
+  console.log(user.value)
+  if (user.value) {
+    const docRef = doc(db, 'users', user.value.uid)
+    const docSnap = await getDoc(docRef)
+    if (docSnap.exists()) {
+      const userData = docSnap.data()
+
+      if (userData.role === 'admin') {
+        router.push('/admin')
+      } else if (userData.role === 'student') {
+        console.log(userData)
+      } else {
+        toast.add({
+          severity: 'warn',
+          summary: 'Unknown Role',
+          detail: 'Redirecting...',
+          life: 2500,
+        })
+        router.push('/dashboard')
+      }
+    }
+  }
 })
 
 const filteredMajor = computed(() => {

@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { doc, getDoc } from 'firebase/firestore'
-import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence } from 'firebase/auth'
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  setPersistence,
+  browserLocalPersistence,
+} from 'firebase/auth'
+import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { useFirebaseAuth, useFirestore } from 'vuefire'
 import { useToast } from 'primevue/usetoast'
 import { useRouter } from 'vue-router'
@@ -16,12 +21,16 @@ const loginError = ref('')
 const isLoggingIn = ref(false)
 const loginSuccess = ref(false)
 const isLoading = ref(false)
+const isLogin = ref(true)
+const rememberMe = ref(true)
 
 const credentials = ref({
+  firstName: '',
+  middleName: '',
+  lastName: '',
   email: '',
   password: '',
 })
-const rememberMe = ref(true)
 
 async function onFormSubmit() {
   isLoading.value = true
@@ -29,66 +38,112 @@ async function onFormSubmit() {
   isLoggingIn.value = true
   loginSuccess.value = false
 
-  if (!credentials.value.email.includes('@')) {
+  const { email, password, firstName, lastName } = credentials.value
+
+  if (!email.includes('@')) {
     loginError.value = 'Enter a valid email address.'
     toast.add({ severity: 'error', summary: 'Invalid Email', detail: loginError.value, life: 3000 })
     isLoggingIn.value = false
+    isLoading.value = false
     return
   }
 
-  if (credentials.value.password.length < 6) {
+  if (password.length < 6) {
     loginError.value = 'Password must be at least 6 characters.'
     toast.add({ severity: 'error', summary: 'Weak Password', detail: loginError.value, life: 3000 })
     isLoggingIn.value = false
+    isLoading.value = false
     return
   }
 
   try {
-    const { email, password } = credentials.value
+    await setPersistence(auth, browserLocalPersistence)
 
-    if (rememberMe.value) {
-      await setPersistence(auth, browserLocalPersistence)
-    }
+    if (isLogin.value) {
+      // Login logic
+      const userCredential = await signInWithEmailAndPassword(auth, email, password)
+      const user = userCredential.user
+      const docRef = doc(db, 'users', user.uid)
+      const docSnap = await getDoc(docRef)
 
-    const userCredential = await signInWithEmailAndPassword(auth, email, password)
-    const user = userCredential.user
+      if (docSnap.exists()) {
+        const userData = docSnap.data()
+        loginSuccess.value = true
 
-    const docRef = doc(db, 'users', user.uid)
-    const docSnap = await getDoc(docRef)
+        toast.add({
+          severity: 'success',
+          summary: 'Login Successful',
+          detail: 'Redirecting...',
+          life: 2000,
+        })
 
-    if (docSnap.exists()) {
-      const userData = docSnap.data()
-      loginSuccess.value = true
+        setTimeout(() => {
+          if (userData.role === 'admin') {
+            router.push('/admin')
+          } else if (userData.role === 'student') {
+            router.push(userData.isDone ? '/infopage' : '/designatedsub')
+          } else {
+            toast.add({
+              severity: 'warn',
+              summary: 'Unknown Role',
+              detail: 'Redirecting...',
+              life: 2500,
+            })
+            router.push('/dashboard')
+          }
+        }, 1500)
+      } else {
+        loginError.value = 'User record not found.'
+        toast.add({
+          severity: 'error',
+          summary: 'Login Failed',
+          detail: loginError.value,
+          life: 3000,
+        })
+      }
+    } else {
+      // Sign-up logic
+      if (!firstName || !lastName) {
+        loginError.value = 'Please fill in all required fields.'
+        toast.add({
+          severity: 'warn',
+          summary: 'Missing Info',
+          detail: loginError.value,
+          life: 3000,
+        })
+        isLoading.value = false
+        isLoggingIn.value = false
+        return
+      }
 
-      toast.add({ severity: 'success', summary: 'Login Successful', detail: 'Redirecting...', life: 2000 })
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+      const user = userCredential.user
+
+      await setDoc(doc(db, 'users', user.uid), {
+        firstName: credentials.value.firstName,
+        middleName: credentials.value.middleName,
+        lastName: credentials.value.lastName,
+        email,
+        role: 'student',
+        isDone: false,
+        createdAt: new Date(),
+      })
+
+      toast.add({
+        severity: 'success',
+        summary: 'Account Created',
+        detail: 'Redirecting...',
+        life: 2000,
+      })
 
       setTimeout(() => {
-        if (userData.role === 'admin') {
-          router.push('/admin')
-        } else if (userData.role === 'student') {
-          router.push(userData.isDone ? '/infopage' : '/designatedsub')
-        } else {
-          toast.add({ severity: 'warn', summary: 'Unknown Role', detail: 'Redirecting to dashboard', life: 2500 })
-          router.push('/dashboard')
-        }
+        router.push('/student/info')
       }, 1500)
-    } else {
-      loginError.value = 'User record not found.'
-      toast.add({ severity: 'error', summary: 'Login Failed', detail: loginError.value, life: 3000 })
     }
   } catch (error: any) {
-    console.error('Error signing in:', error)
-    switch (error.code) {
-      case 'auth/invalid-email':
-      case 'auth/user-not-found':
-      case 'auth/wrong-password':
-      case 'auth/invalid-credential':
-        loginError.value = 'Incorrect email or password.'
-        break
-      default:
-        loginError.value = 'An unknown error occurred.'
-    }
-    toast.add({ severity: 'error', summary: 'Authentication Error', detail: loginError.value, life: 3000 })
+    console.error('Auth Error:', error)
+    loginError.value = error.message
+    toast.add({ severity: 'error', summary: 'Auth Error', detail: error.message, life: 3000 })
   } finally {
     isLoggingIn.value = false
     isLoading.value = false
@@ -139,52 +194,39 @@ async function onFormSubmit() {
             class="mt-6 space-y-4"
             :class="{ 'opacity-60 pointer-events-none': isLoggingIn }"
           >
-            <div>
-              <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
-              <input
-                v-model="credentials.email"
-                type="email"
-                id="email"
-                autocomplete="email"
-                aria-label="Email address"
-                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none transition"
-                required
-              />
-            </div>
-
-            <div class="relative">
-              <label for="password" class="block text-sm font-medium text-gray-700">Password:</label>
-              <div class="relative">
-                <input
-                  v-model="credentials.password"
-                  :type="showPassword ? 'text' : 'password'"
-                  id="password"
-                  autocomplete="current-password"
-                  aria-label="Password"
-                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none transition pr-10"
-                  required
-                />
-                <button
-                  type="button"
-                  aria-label="Toggle password visibility"
-                  class="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
-                  @click="showPassword = !showPassword"
-                >
-                  <i :class="showPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
-                </button>
+            <div v-if="!isLogin">
+              <div class="flex flex-col gap-2">
+                <label for="firstname">Firstname</label>
+                <InputText id="firstname" v-model="credentials.firstName" />
+              </div>
+              <div class="flex flex-col gap-2">
+                <label for="middlename">Middlename</label>
+                <InputText id="middlename" v-model="credentials.middleName" />
+              </div>
+              <div class="flex flex-col gap-2">
+                <label for="lastname">Lastname</label>
+                <InputText id="lastname" v-model="credentials.lastName" />
               </div>
             </div>
-
+            <div class="flex flex-col gap-2">
+              <label for="username">Email</label>
+              <InputText id="username" v-model="credentials.email" />
+            </div>
+            <div class="flex flex-col gap-2">
+              <label for="username">Password</label>
+              <InputText id="username" v-model="credentials.password" />
+            </div>
+            <!-- 
             <div class="flex items-center gap-2">
               <input type="checkbox" v-model="rememberMe" id="remember" class="cursor-pointer" />
               <label for="remember" class="text-sm text-gray-700 cursor-pointer">Remember me</label>
-            </div>
+            </div> -->
 
-            <div class="flex justify-between items-center">
+            <!-- <div class="flex justify-between items-center">
               <RouterLink to="/forgot-password" class="text-sm text-blue-600 hover:underline">
                 Forgot Password?
               </RouterLink>
-            </div>
+            </div> -->
 
             <!-- Error Message -->
             <p v-if="loginError" class="text-red-500 text-sm mt-2 text-center" aria-live="polite">
@@ -194,27 +236,29 @@ async function onFormSubmit() {
             <!-- Login Button -->
             <button
               type="submit"
+              :loading="isLoading"
               class="w-full bg-red-800 text-white py-3 rounded-lg hover:bg-red-900 transition-transform transform hover:scale-105 shadow-md flex justify-center items-center gap-2"
-              :disabled="isLoggingIn"
             >
-              <template v-if="isLoggingIn">
-                <i class="pi pi-spin pi-spinner"></i> Logging in...
-              </template>
-              <template v-else-if="loginSuccess">
-                <i class="pi pi-check-circle text-green-300"></i> Login successful!
-              </template>
-              <template v-else> Login </template>
+              {{ isLogin ? 'Login' : 'Sign up' }}
             </button>
           </form>
 
           <!-- Create Account -->
           <div class="mt-6 text-center">
-            <RouterLink
-              to="/createaccount"
+            <Button
+              v-if="isLogin"
+              @click="isLogin = false"
               class="w-full inline-block bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600 transition-transform transform hover:scale-105 shadow-md"
             >
               Create Account
-            </RouterLink>
+            </Button>
+            <Button
+              v-else
+              @click="isLogin = true"
+              class="w-full inline-block bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600 transition-transform transform hover:scale-105 shadow-md"
+            >
+              Login Account
+            </Button>
           </div>
         </div>
       </div>
