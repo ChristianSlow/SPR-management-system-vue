@@ -21,4 +21,5 @@ export interface Student {
   curriculum?: Curriculum
   status?: string
   createdAt?: any
+  status?: any
 }

@@ -1,10 +1,14 @@
 <script setup lang="ts">
+import { useLogout } from '@/composables/useLogout'
+import type { Auth } from 'firebase/auth'
 import { useStudentStore } from '@/stores/student'
 import { onMounted, ref } from 'vue'
-import { getCurrentUser } from 'vuefire'
+import { getCurrentUser, useFirebaseAuth } from 'vuefire'
 
 const products = ref()
 const store = useStudentStore()
+const auth = useFirebaseAuth()
+const out = useLogout()
 
 onMounted(async () => {
   const user = await getCurrentUser()
@@ -69,10 +73,11 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div class="text-right font-semibold text-md mt-6 p-4 bg-gray-200 rounded-lg">
-        Total Units: <span class="text-blue-600">Total Units</span>
+          <div class="text-right font-semibold text-md mt-6 p-4 bg-gray-200 rounded-lg">
+            Total Units: <span class="text-blue-600">Total Units</span>
+          </div>
+        </div>
       </div>
-
       <div class="flex justify-center mt-6">
         <Button
           label="Enroll"
@@ -80,6 +85,7 @@ onMounted(async () => {
           class="p-button-sm p-button-danger transition-transform hover:scale-105"
         />
       </div>
+      <!-- Logout Button (Now Below the Content) -->
       <div class="flex justify-center mt-6">
         <Button
           label="Logout"
@@ -88,5 +94,4 @@ onMounted(async () => {
         />
       </div>
     </div>
-  </div>
 </template>
