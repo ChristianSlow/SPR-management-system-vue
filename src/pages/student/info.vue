@@ -48,7 +48,7 @@ const filteredMajor = computed(() => {
   return courseStore.courses.find((item) => item.name === student.value.course)
 })
 
-async function onSubmit(payload: any) {
+async function onSubmit(payload: Student) {
   studentStore.addStudent(payload)
   toast.add({
     severity: 'success',

@@ -2,6 +2,8 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { Student } from '@/types/student'
 import { StudentRepository } from '@/repositories/studentRepository'
+import { CurriculumRepository } from '@/repositories/curriculumRepository'
+import type { Curriculum } from '@/types/curriculum'
 
 export const useStudentStore = defineStore('student', () => {
   const isLoading = ref(false)
@@ -28,7 +30,11 @@ export const useStudentStore = defineStore('student', () => {
 
   async function addStudent(student: Student) {
     isLoading.value = true
-    await StudentRepository.createStudent(student)
+    const curriculum = await CurriculumRepository.fetchCurriculum(student.course as string)
+    await StudentRepository.createStudent({
+      ...student,
+      curriculum,
+    })
     getStudents()
     isLoading.value = false
   }

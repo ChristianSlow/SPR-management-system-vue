@@ -1,3 +1,5 @@
+import type { Curriculum } from './curriculum'
+
 export interface Student {
   uid?: string
   role?: string
@@ -16,5 +18,6 @@ export interface Student {
   semester?: string
   year?: string
   major?: string
+  curriculum?: Curriculum
   createdAt?: any
 }
