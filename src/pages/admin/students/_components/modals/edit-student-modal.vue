@@ -4,8 +4,10 @@ import { useCourseStore } from '@/stores/course'
 import { useStudentStore } from '@/stores/student'
 import type { Student } from '@/types/student'
 import { Message, useToast } from 'primevue'
-import { computed, inject, onMounted, reactive, watchEffect } from 'vue'
+import { computed, inject, onMounted, reactive, watchEffect, toRaw } from 'vue'
 import GradesTable from '../grades-table.vue'
+import type { Subject } from '@/types/subject'
+import type { Curriculum } from '@/types/curriculum'
 
 const dialogRef = inject<any>('dialogRef')
 const studentStore = useStudentStore()
@@ -16,8 +18,8 @@ function onClose() {
   dialogRef.value.close()
 }
 
-function onSubmit(payload: Student) {
-  studentStore.editStudent(payload)
+async function onSubmit(payload: Student) {
+  await studentStore.editStudent(payload)
   toast.add({
     severity: 'success',
     summary: 'Success',
@@ -32,10 +34,29 @@ onMounted(() => {
   studentStore.student = dialogRef.value.data
 })
 
-watchEffect(() => console.log(studentStore.student))
-
 const filteredMajor = computed(() => {
   return courseStore.courses.find((item) => item.name === studentStore.student.course)
+})
+
+const handleSubjectUpdate = (
+  updatedSubjects: Subject[],
+  context: { year: string; semester: string },
+) => {
+  if (studentStore.student.curriculum && context) {
+    const curriculum = toRaw(studentStore.student.curriculum) as any
+
+    curriculum[context.year] = {
+      ...curriculum[context.year],
+      [context.semester]: updatedSubjects,
+    }
+
+    studentStore.student.curriculum = reactive(curriculum)
+  }
+  console.log(updatedSubjects, context)
+}
+
+watchEffect(() => {
+  console.log(studentStore.student)
 })
 </script>
 
@@ -162,11 +183,19 @@ const filteredMajor = computed(() => {
       <div>
         <div class="border p-2 mt-2">
           <span>First Semester</span>
-          <GradesTable :subjects="studentStore.student.curriculum?.firstYear?.first ?? []" />
+          <GradesTable
+            :subjects="studentStore.student.curriculum?.firstYear?.first ?? []"
+            :context="{ year: 'firstYear', semester: 'first' }"
+            @update="handleSubjectUpdate"
+          />
         </div>
         <div class="border p-2 mt-2">
           <span>Second Semester</span>
-          <GradesTable :subjects="studentStore.student.curriculum?.firstYear?.second ?? []" />
+          <GradesTable
+            :subjects="studentStore.student.curriculum?.firstYear?.second ?? []"
+            :context="{ year: 'firstYear', semester: 'second' }"
+            @update="handleSubjectUpdate"
+          />
         </div>
       </div>
     </div>

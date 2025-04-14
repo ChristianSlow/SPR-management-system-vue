@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { CurriculumRepository } from '@/repositories/curriculumRepository'
 import { useCourseStore } from '@/stores/course'
 import { useStudentStore } from '@/stores/student'
 import type { Student } from '@/types/student'
@@ -49,7 +50,8 @@ const filteredMajor = computed(() => {
 })
 
 async function onSubmit(payload: Student) {
-  studentStore.editStudent(payload)
+  const curriculum = await CurriculumRepository.fetchCurriculum(payload.course as string)
+  studentStore.editStudent({ ...payload, curriculum })
   toast.add({
     severity: 'success',
     summary: 'Success',
