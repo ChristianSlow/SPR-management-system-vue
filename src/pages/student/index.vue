@@ -33,29 +33,39 @@ onMounted(async () => {
         <p class="text-gray-900 text-sm">San Carlos City, Negros Occidental</p>
       </div>
       <div class="flex justify-between px-5">
-        <h2 class="text-lg font-bold text-black text-center">Name: Wilson Laguada</h2>
-        <h2 class="text-lg font-bold text-black text-center mb-4">Year: First Year</h2>
+        <h2 class="text-lg font-bold text-black text-center">
+          Name: {{ store.student.firstName }} {{ store.student.middleName }}
+          {{ store.student.lastName }}
+        </h2>
+        <h2 class="text-lg font-bold text-black text-center mb-4">
+          Year: {{ store.student.year }}
+        </h2>
       </div>
       <div class="flex justify-between px-5">
-        <h2 class="text-xl font-bold text-gray-900 text-center">Course: BSIT</h2>
-        <h2 class="text-lg font-semibold text-gray-900 text-center mb-3">Major: Luto-luto</h2>
+        <h2 class="text-xl font-bold text-gray-900 text-center">
+          Course: {{ store.student.course }}
+        </h2>
+        <h2 class="text-lg font-semibold text-gray-900 text-center mb-3">
+          Major: {{ store.student.major }}
+        </h2>
       </div>
 
       <div>
         <div class="flex gap-4 items-start">
           <div class="border p-2 rounded-md flex-1">
             <span>First Semester</span>
-            <DataTable :value="products">
+            <DataTable :value="store.student.curriculum?.firstYear?.first">
+              <template #empty> no subjects found. </template>
               <Column field="code"></Column>
               <Column field="unit"></Column>
               <Column field="name"></Column>
-              <Column header="Enrolled"></Column>
-              <Column header="Grd"></Column>
+              <Column field="grade" header="Grd"></Column>
             </DataTable>
           </div>
           <div class="border p-2 rounded-md flex-1">
             <span>Second Semester</span>
-            <DataTable :value="products">
+            <DataTable :value="store.student.curriculum?.firstYear?.second">
+              <template #empty> no subjects found. </template>
               <Column field="code"></Column>
               <Column field="unit"></Column>
               <Column field="name"></Column>

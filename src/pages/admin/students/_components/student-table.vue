@@ -72,7 +72,7 @@ onMounted(() => {
             <template #body="slotProps">
               <div class="flex gap-1">
                 <Button
-                  label="view"
+                  label="View"
                   size="small"
                   icon="pi pi-eye"
                   class="mr-2"
