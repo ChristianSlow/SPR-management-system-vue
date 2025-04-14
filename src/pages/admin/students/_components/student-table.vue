@@ -70,65 +70,67 @@ onMounted(() => {
           <Column field="address" header="Address" style="min-width: 10rem"></Column>
           <Column :exportable="false" header="Actions">
             <template #body="slotProps">
-              <Button
-                label="view"
-                size="small"
-                icon="pi pi-eye"
-                class="mr-2"
-                @click="
-                  () => {
-                    dialog.open(viewStudent, {
-                      props: {
-                        header: 'Student Details',
-                        style: { width: '50vw' },
-                        breakpoints: { '960px': '75vw', '640px': '90vw' },
-                        modal: true,
-                      },
-                      data: slotProps.data,
-                    })
-                  }
-                "
-              />
-              <Button
-                size="small"
-                label="Edit"
-                icon="pi pi-pencil"
-                class="mr-2"
-                @click="
-                  () => {
-                    dialog.open(editStudent, {
-                      props: {
-                        header: 'Edit Students',
-                        style: { width: '50vw' },
-                        breakpoints: { '960px': '75vw', '640px': '90vw' },
-                        modal: true,
-                      },
-                      data: slotProps.data,
-                    })
-                  }
-                "
-              />
-              <Button
-                size="small"
-                outlined
-                severity="danger"
-                label="Delete"
-                icon="pi pi-trash"
-                class="mr-2"
-                @click="
-                  () => {
-                    dialog.open(deleteStudent, {
-                      props: {
-                        header: 'Confirm Delete',
-                        style: { width: '50vw' },
-                        breakpoints: { '960px': '75vw', '640px': '90vw' },
-                        modal: true,
-                      },
-                      data: slotProps.data,
-                    })
-                  }
-                "
-              />
+              <div class="flex gap-1">
+                <Button
+                  label="view"
+                  size="small"
+                  icon="pi pi-eye"
+                  class="mr-2"
+                  @click="
+                    () => {
+                      dialog.open(viewStudent, {
+                        props: {
+                          header: 'Student Details',
+                          style: { width: '50vw' },
+                          breakpoints: { '960px': '75vw', '640px': '90vw' },
+                          modal: true,
+                        },
+                        data: slotProps.data,
+                      })
+                    }
+                  "
+                />
+                <Button
+                  size="small"
+                  label="Edit"
+                  icon="pi pi-pencil"
+                  class="mr-2"
+                  @click="
+                    () => {
+                      dialog.open(editStudent, {
+                        props: {
+                          header: 'Edit Students',
+                          style: { width: '50vw' },
+                          breakpoints: { '960px': '75vw', '640px': '90vw' },
+                          modal: true,
+                        },
+                        data: slotProps.data,
+                      })
+                    }
+                  "
+                />
+                <Button
+                  size="small"
+                  outlined
+                  severity="danger"
+                  label="Delete"
+                  icon="pi pi-trash"
+                  class="mr-2"
+                  @click="
+                    () => {
+                      dialog.open(deleteStudent, {
+                        props: {
+                          header: 'Confirm Delete',
+                          style: { width: '50vw' },
+                          breakpoints: { '960px': '75vw', '640px': '90vw' },
+                          modal: true,
+                        },
+                        data: slotProps.data,
+                      })
+                    }
+                  "
+                />
+              </div>
             </template>
           </Column>
         </DataTable>

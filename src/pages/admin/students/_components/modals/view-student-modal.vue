@@ -1,113 +1,55 @@
 <script setup lang="ts">
 import { inject } from 'vue'
-import { useStudentStore } from '@/stores/student'
+import { formatDate } from '@/composables/formatTimstampDate'
 
 const dialogRef = inject<any>('dialogRef')
 const student = dialogRef.value.data
-
-const studentStore = useStudentStore()
-const students = studentStore.students
 </script>
 
 <template>
-  <form class="flex flex-col gap-4">
-    <div class="flex gap-2">
-      <div class="flex flex-col gap-2">
-        <label>First Name</label>
-        <InputText required {{student.firstName}} />
-      </div>
-      <div class="flex flex-col gap-2">
-        <label>Middle Name</label>
-        <InputText required {{student.middleName}} />
-      </div>
-      <div class="flex flex-col gap-2">
-        <label>Last Name</label>
-        <InputText required {{student.lastName}} />
+  <div class="space-y-4">
+    <div class="bg-red-800 flex items-end p-4">
+      <Avatar icon="pi pi-user" class="mr-2" size="xlarge" />
+      <div>
+        <span class="text-white text-xl">
+          {{ student.firstName }} {{ student.middleName }} {{ student.lastName }}
+        </span>
+        <br />
+        <span class="capitalize text-white"> {{ student.course }} - {{ student.major }} </span>
       </div>
     </div>
-    <div class="flex gap-2">
-      <div class="flex flex-1 flex-col gap-2">
-        <label>Date of Birth</label>
-        <DatePicker
-          {{student.birthDate}}
-          showIcon
-          fluid
-          :showOnFocus="false"
-          inputId="buttondisplay"
-        />
-      </div>
-      <div class="flex flex-1 flex-col gap-2">
-        <label>Sex</label>
-        <Select required :options="['Male', 'Female']" {{student.sex}} />
-      </div>
-      <div class="flex flex-1 flex-col gap-2">
-        <label>Civil Status</label>
-        <Select
-          required
-          :options="['Single', 'Married', 'Widowed', 'Separated']"
-          {{student.civilStatus}}
-        />
-      </div>
-      <div class="flex flex-1 flex-col gap-2">
-        <label for="mobile">Student Mobile Number</label>
-        <InputText
-          id="mobile"
-          {{student.studentMobileNumber}}
-          type="tel"
-          maxlength="11"
-          pattern="[0-9]{11}"
-          required
-        />
+
+    <div>
+      <h2 class="bg-gray-100 px-2 py-1 font-semibold">Student Details</h2>
+      <div class="p-4 space-y-4 text-sm">
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <strong>Full Name:</strong> {{ student.lastName }}, {{ student.firstName }}
+            {{ student.middleName }}
+          </div>
+          <div><strong>Gender:</strong> {{ student.sex }}</div>
+          <div><strong>Civil Status:</strong> {{ student.civilStatus }}</div>
+          <div><strong>Phone #:</strong> {{ student.studentMobileNumber }}</div>
+          <div><strong>Birth Date:</strong> {{ formatDate(student.birthDate) }}</div>
+          <div><strong>Birth Place:</strong> {{ student.birthPlace }}</div>
+          <div><strong>Parent's Name:</strong> {{ student.parentName }}</div>
+          <div><strong>Parent's Phone #:</strong> {{ student.parentMobileNumber }}</div>
+          <div class="col-span-2"><strong>Address:</strong> {{ student.address }}</div>
+        </div>
       </div>
     </div>
-    <div class="flex flex-col gap-2">
-      <label>Place of Birth</label>
-      <InputText {{student.birthPlace}} />
-    </div>
-    <div class="flex gap-2">
-      <div class="flex flex-1 flex-col gap-2">
-        <label>Course</label>
-        <Select required {{student.course}} option-label="name" option-value="name" />
-      </div>
-      <div class="flex flex-1 flex-col gap-2">
-        <label>Major</label>
-        <Select required {{student.major}} />
-      </div>
-    </div>
-    <div class="flex gap-2">
-      <div class="flex flex-1 flex-col gap-2">
-        <label>Year</label>
-        <Select
-          required
-          :options="['First Year', 'Second Year', 'Third Year', 'Fourth Year']"
-          {{student.year}}
-        />
-      </div>
-      <div class="flex flex-1 flex-col gap-2">
-        <label>Semester</label>
-        <Select required :options="['First Semester', 'Second Semester']" {{student.semester}} />
+
+    <div>
+      <h2 class="bg-gray-100 px-2 py-1 font-semibold">Academic Info</h2>
+      <div class="p-4 space-y-2 text-sm">
+        <div class="grid grid-cols-2 gap-2">
+          <div><strong>Course:</strong> {{ student.course }}</div>
+          <div><strong>Major:</strong> {{ student.major }}</div>
+          <div><strong>Year:</strong> {{ student.year }}</div>
+          <div><strong>Semester:</strong> {{ student.semester }}</div>
+          <div><strong>Curriculum:</strong> {{ student.curriculum?.name || 'N/A' }}</div>
+        </div>
       </div>
     </div>
-    <div class="flex gap-2">
-      <div class="flex flex-1 flex-col gap-2">
-        <label>Parent Name</label>
-        <InputText required {{student.parentName}} />
-      </div>
-      <div class="flex flex-1 flex-col gap-2">
-        <label for="mobile">Parent Mobile Number</label>
-        <InputText
-          id="mobile"
-          {{student.parentMobileNumber}}
-          type="tel"
-          maxlength="11"
-          pattern="[0-9]{11}"
-          required
-        />
-      </div>
-    </div>
-    <div class="flex flex-col gap-2">
-      <label>Parent Address</label>
-      <InputText required {{student.address}} />
-    </div>
-  </form>
+  </div>
 </template>

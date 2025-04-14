@@ -65,7 +65,7 @@ onMounted(() => courseStore.getCourses())
     </div>
 
     <div class="flex w-full gap-2 justify-end mt-4">
-      <Button label="Cancel" class="p-button-text" @click="onClose" />
+      <Button label="Cancel" severity="danger" class="p-button-text" @click="onClose" />
       <Button label="Save" class="p-button-primary" type="submit" :loading="store.isLoading" />
     </div>
   </form>

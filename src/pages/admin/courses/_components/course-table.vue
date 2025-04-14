@@ -75,8 +75,8 @@ onMounted(() => store.getCourses())
         </Column>
         <Column header="Majors">
           <template #body="sloProps">
-            <ul>
-              <li v-for="major in sloProps.data.majors" :key="major">
+            <ul class="bg-gray-100 p-2 rounded-sm max-h-80 overflow-y-scroll">
+              <li v-for="major in sloProps.data.majors" :key="major" class="capitalize">
                 {{ major }}
               </li>
             </ul>
