@@ -6,7 +6,7 @@ import {
   setPersistence,
   browserLocalPersistence,
 } from 'firebase/auth'
-import { doc, getDoc, setDoc } from 'firebase/firestore'
+import { doc, getDoc, setDoc, Timestamp } from 'firebase/firestore'
 import { useFirebaseAuth, useFirestore } from 'vuefire'
 import { useToast } from 'primevue/usetoast'
 import { useRouter } from 'vue-router'
@@ -60,7 +60,6 @@ async function onFormSubmit() {
     await setPersistence(auth, browserLocalPersistence)
 
     if (isLogin.value) {
-      // Login logic
       const userCredential = await signInWithEmailAndPassword(auth, email, password)
       const user = userCredential.user
       const docRef = doc(db, 'users', user.uid)
@@ -102,7 +101,6 @@ async function onFormSubmit() {
         })
       }
     } else {
-      // Sign-up logic
       if (!firstName || !lastName) {
         loginError.value = 'Please fill in all required fields.'
         toast.add({
@@ -125,9 +123,8 @@ async function onFormSubmit() {
         lastName: credentials.value.lastName,
         email,
         role: 'student',
-        isApproved: false,
-        isDone: false,
-        createdAt: new Date(),
+        isApprove: true,
+        createdAt: Timestamp.now(),
       })
 
       toast.add({
