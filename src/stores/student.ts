@@ -15,7 +15,6 @@ export const useStudentStore = defineStore('student', () => {
     const response = await StudentRepository.fetchStudents()
     students.value = response.data
     totalStudents.value = students.value.length
-    console.log(students.value)
     isLoading.value = false
   }
 
@@ -30,7 +29,9 @@ export const useStudentStore = defineStore('student', () => {
 
   async function addStudent(student: Student) {
     isLoading.value = true
+    console.log(student)
     const curriculum = await CurriculumRepository.fetchCurriculum(student.course as string)
+    console.log(curriculum)
     await StudentRepository.createStudent({
       ...student,
       curriculum,

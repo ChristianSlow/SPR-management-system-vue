@@ -45,7 +45,7 @@ onMounted(async () => {
 })
 
 const filteredMajor = computed(() => {
-  return courseStore.courses.find((item) => item.name === student.value.course)
+  return courseStore.courses.find((item) => item.abbreviation === student.value.course)
 })
 
 async function onSubmit(payload: Student) {
