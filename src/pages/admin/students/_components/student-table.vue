@@ -75,7 +75,7 @@ onMounted(() => {
                   () => {
                     dialog.open(editStudent, {
                       props: {
-                        header: 'Edit Subject',
+                        header: 'Edit Students',
                         style: { width: '50vw' },
                         breakpoints: { '960px': '75vw', '640px': '90vw' },
                         modal: true,

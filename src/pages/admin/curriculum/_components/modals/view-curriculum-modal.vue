@@ -10,96 +10,166 @@ const course = courseStore.courses.find((c) => c.abbreviation === curriculum.cou
 </script>
 
 <template>
-  <div class="p-4 bg-white rounded shadow-md space-y-4">
-    <div v-if="curriculum.name" class="capitalize">
-      <strong>Name:</strong> {{ curriculum.name }}
-    </div>
-    <div v-if="curriculum.course" class="capitalize">
-      <strong>Course:</strong> {{ course?.name || curriculum.course }}
-    </div>
-    <div v-if="curriculum.major" class="capitalize">
-      <strong>Major:</strong> {{ curriculum.major }}
+  <div class="p-4 bg-white rounded space-y-4">
+    <div>
+      <div v-if="curriculum.name" class="capitalize">
+        <strong>Name:</strong> {{ curriculum.name }}
+      </div>
+      <div v-if="curriculum.course" class="capitalize">
+        <strong>Course:</strong> {{ course?.name || curriculum.course }}
+      </div>
+      <div v-if="curriculum.major" class="capitalize">
+        <strong>Major:</strong> {{ curriculum.major }}
+      </div>
     </div>
 
     <div v-if="curriculum.firstYear">
-      <h3 class="font-semibold mt-3">First Year</h3>
+      <h3 class="font-semibold mt-3 bg-red-800 text-white px-2">First Year</h3>
       <div class="p-4 border rounded-md">
         <label>First Semester</label>
-        <pre
+        <div
           class="bg-gray-100 p-2 rounded"
           v-for="item in curriculum.firstYear.first"
           :key="item"
-          >{{ item }}</pre
+          v-if="curriculum.firstYear.first.length > 0"
         >
+          <div class="border bg-white p-2 rounded-sm">
+            <span>Code: {{ item.code }}</span
+            ><br />
+            <span>Name: {{ item.name }}</span
+            ><br />
+            <span>Unit: {{ item.unit }}</span>
+          </div>
+        </div>
+        <div class="bg-gray-100 p-2 rounded" v-else>no subjects found.</div>
         <label>Second Semester</label>
-        <pre
+        <div
           class="bg-gray-100 p-2 rounded"
-          v-for="item in curriculum.firstYear.second"
+          v-for="item in curriculum.firstYear.first"
           :key="item"
-          >{{ item }}</pre
+          v-if="curriculum.firstYear.second.length > 0"
         >
+          <div class="border bg-white p-2 rounded-sm">
+            <span>Code: {{ item.code }}</span
+            ><br />
+            <span>Name: {{ item.name }}</span
+            ><br />
+            <span>Unit: {{ item.unit }}</span>
+          </div>
+        </div>
+        <div class="bg-gray-100 p-2 rounded" v-else>no subjects found.</div>
       </div>
     </div>
     <div v-if="curriculum.secondYear">
-      <h3 class="font-semibold mt-3">Second Year</h3>
+      <h3 class="font-semibold mt-3 bg-red-800 text-white px-2">Second Year</h3>
       <div class="p-4 border rounded-md">
         <label>First Semester</label>
-        <pre
+        <div
           class="bg-gray-100 p-2 rounded"
           v-for="item in curriculum.secondYear.first"
           :key="item"
-          >{{ item }}</pre
+          v-if="curriculum.secondYear.first.length > 0"
         >
+          <div class="border bg-white p-2 rounded-sm">
+            <span>Code: {{ item.code }}</span
+            ><br />
+            <span>Name: {{ item.name }}</span
+            ><br />
+            <span>Unit: {{ item.unit }}</span>
+          </div>
+        </div>
+        <div class="bg-gray-100 p-2 rounded" v-else>no subjects found.</div>
         <label>Second Semester</label>
-        <pre
+        <div
           class="bg-gray-100 p-2 rounded"
-          v-for="item in curriculum.secondYear.second"
+          v-for="item in curriculum.secondYear.first"
           :key="item"
-          >{{ item }}</pre
+          v-if="curriculum.secondYear.second.length > 0"
         >
+          <div class="border bg-white p-2 rounded-sm">
+            <span>Code: {{ item.code }}</span
+            ><br />
+            <span>Name: {{ item.name }}</span
+            ><br />
+            <span>Unit: {{ item.unit }}</span>
+          </div>
+        </div>
+        <div class="bg-gray-100 p-2 rounded" v-else>no subjects found.</div>
       </div>
     </div>
     <div v-if="curriculum.thirdYear">
-      <h3 class="font-semibold mt-3">Third Year</h3>
+      <h3 class="font-semibold mt-3 bg-red-800 text-white px-2">Third Year</h3>
       <div class="p-4 border rounded-md">
         <label>First Semester</label>
-        <pre
+        <div
           class="bg-gray-100 p-2 rounded"
           v-for="item in curriculum.thirdYear.first"
           :key="item"
-          >{{ item }}</pre
+          v-if="curriculum.thirdYear.first.length > 0"
         >
+          <div class="border bg-white p-2 rounded-sm">
+            <span>Code: {{ item.code }}</span
+            ><br />
+            <span>Name: {{ item.name }}</span
+            ><br />
+            <span>Unit: {{ item.unit }}</span>
+          </div>
+        </div>
+        <div class="bg-gray-100 p-2 rounded" v-else>no subjects found.</div>
         <label>Second Semester</label>
-        <pre
+        <div
           class="bg-gray-100 p-2 rounded"
-          v-for="item in curriculum.thirdYear.second"
+          v-for="item in curriculum.thirdYear.first"
           :key="item"
-          >{{ item }}</pre
+          v-if="curriculum.thirdYear.second.length > 0"
         >
+          <div class="border bg-white p-2 rounded-sm">
+            <span>Code: {{ item.code }}</span
+            ><br />
+            <span>Name: {{ item.name }}</span
+            ><br />
+            <span>Unit: {{ item.unit }}</span>
+          </div>
+        </div>
+        <div class="bg-gray-100 p-2 rounded" v-else>no subjects found.</div>
       </div>
     </div>
     <div v-if="curriculum.fourthYear">
-      <h3 class="font-semibold mt-3">Fourth Year</h3>
+      <h3 class="font-semibold mt-3 bg-red-800 text-white px-2">Fourth Year</h3>
       <div class="p-4 border rounded-md">
         <label>First Semester</label>
-        <pre
+        <div
           class="bg-gray-100 p-2 rounded"
           v-for="item in curriculum.fourthYear.first"
           :key="item"
-          >{{ item }}</pre
+          v-if="curriculum.fourthYear.first.length > 0"
         >
+          <div class="border bg-white p-2 rounded-sm">
+            <span>Code: {{ item.code }}</span
+            ><br />
+            <span>Name: {{ item.name }}</span
+            ><br />
+            <span>Unit: {{ item.unit }}</span>
+          </div>
+        </div>
+        <div class="bg-gray-100 p-2 rounded" v-else>no subjects found.</div>
         <label>Second Semester</label>
-        <pre
+        <div
           class="bg-gray-100 p-2 rounded"
-          v-for="item in curriculum.fourthYear.second"
+          v-for="item in curriculum.fourthYear.first"
           :key="item"
-          >{{ item }}</pre
+          v-if="curriculum.fourthYear.second.length > 0"
         >
+          <div class="border bg-white p-2 rounded-sm">
+            <span>Code: {{ item.code }}</span
+            ><br />
+            <span>Name: {{ item.name }}</span
+            ><br />
+            <span>Unit: {{ item.unit }}</span>
+          </div>
+        </div>
+        <div class="bg-gray-100 p-2 rounded" v-else>no subjects found.</div>
       </div>
-    </div>
-
-    <div v-if="curriculum.createdAt">
-      <strong>Created At:</strong> {{ new Date(curriculum.createdAt).toLocaleString() }}
     </div>
 
     <!-- Buttons -->
