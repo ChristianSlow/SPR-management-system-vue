@@ -50,7 +50,10 @@ const filteredMajor = computed(() => {
 })
 
 async function onSubmit(payload: Student) {
-  const curriculum = await CurriculumRepository.fetchCurriculum(payload.course as string)
+  const curriculum = await CurriculumRepository.fetchCurriculum(
+    payload.course as string,
+    payload.major as string,
+  )
   studentStore.editStudent({ ...payload, curriculum })
   toast.add({
     severity: 'success',
