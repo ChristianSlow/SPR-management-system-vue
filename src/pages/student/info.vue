@@ -8,6 +8,7 @@ import { useToast } from 'primevue'
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { getCurrentUser, useCurrentUser, useFirestore } from 'vuefire'
+import FileUploadProof from './_components/file-upload-proof.vue'
 
 const db = useFirestore()
 const courseStore = useCourseStore()
@@ -46,7 +47,7 @@ onMounted(async () => {
 })
 
 const filteredMajor = computed(() => {
-  return courseStore.courses.find((item) => item.abbreviation === student.value.course)
+  return courseStore.courses.find((item: any) => item.abbreviation === student.value.course)
 })
 
 async function onSubmit(payload: Student) {
@@ -63,6 +64,11 @@ async function onSubmit(payload: Student) {
   })
   router.push('/student')
 }
+
+function getImage(e: any) {
+  student.value.file1 = e[0]
+  student.value.file2 = e[1]
+}
 </script>
 <template>
   <Fluid class="flex justify-center p-2">
@@ -77,9 +83,7 @@ async function onSubmit(payload: Student) {
           <p class="text-gray-600 text-sm">San Carlos City, Negros Occidental</p>
         </div>
 
-        <!-- Student Information -->
         <form class="flex flex-col gap-4">
-          <!-- Name Fields -->
           <div class="flex flex-col md:flex-row gap-2">
             <div class="flex flex-col gap-2 flex-1">
               <label>First Name</label>
@@ -95,7 +99,6 @@ async function onSubmit(payload: Student) {
             </div>
           </div>
 
-          <!-- Birth Info -->
           <div class="flex flex-col md:flex-row gap-2">
             <div class="flex flex-1 flex-col gap-2">
               <label>Date of Birth</label>
@@ -138,45 +141,6 @@ async function onSubmit(payload: Student) {
             <InputText required v-model="student.birthPlace" />
           </div>
 
-          <!-- Course Info -->
-          <div class="flex flex-col md:flex-row gap-2">
-            <div class="flex flex-1 flex-col gap-2">
-              <label>Course</label>
-              <Select
-                required
-                v-model="student.course"
-                :options="courseStore.courses"
-                :loading="courseStore.isLoading"
-                option-label="name"
-                option-value="abbreviation"
-              />
-            </div>
-            <div class="flex flex-1 flex-col gap-2">
-              <label>Major</label>
-              <Select required v-model="student.major" :options="filteredMajor?.majors" />
-            </div>
-          </div>
-
-          <!-- Year & Semester -->
-          <div class="flex flex-col md:flex-row gap-2">
-            <div class="flex flex-1 flex-col gap-2">
-              <label>Year</label>
-              <Select
-                required
-                v-model="student.year"
-                :options="['First Year', 'Second Year', 'Third Year', 'Fourth Year']"
-              />
-            </div>
-            <div class="flex flex-1 flex-col gap-2">
-              <label>Semester</label>
-              <Select
-                required
-                v-model="student.semester"
-                :options="['First Semester', 'Second Semester']"
-              />
-            </div>
-          </div>
-
           <!-- Parent Info -->
           <div class="flex flex-col md:flex-row gap-2">
             <div class="flex flex-1 flex-col gap-2">
@@ -200,6 +164,57 @@ async function onSubmit(payload: Student) {
           <div class="flex flex-col gap-2">
             <label>Parent Address</label>
             <InputText required v-model="student.address" />
+          </div>
+          <div>
+            <h2 class="text-xl font-semibold">Educational Details</h2>
+            <div class="flex flex-col md:flex-row gap-2">
+              <div class="flex flex-1 flex-col gap-2">
+                <label>Course</label>
+                <Select
+                  required
+                  v-model="student.course"
+                  :options="courseStore.courses"
+                  :loading="courseStore.isLoading"
+                  option-label="name"
+                  option-value="abbreviation"
+                />
+              </div>
+              <div class="flex flex-1 flex-col gap-2">
+                <label>Major</label>
+                <Select required v-model="student.major" :options="filteredMajor?.majors" />
+              </div>
+            </div>
+
+            <!-- Year & Semester -->
+            <div class="flex flex-col md:flex-row gap-2">
+              <div class="flex flex-1 flex-col gap-2">
+                <label>Year</label>
+                <Select
+                  required
+                  v-model="student.year"
+                  :options="['First Year', 'Second Year', 'Third Year', 'Fourth Year']"
+                />
+              </div>
+              <div class="flex flex-1 flex-col gap-2">
+                <label>Semester</label>
+                <Select
+                  required
+                  v-model="student.semester"
+                  :options="['First Semester', 'Second Semester']"
+                />
+              </div>
+            </div>
+            <div class="flex flex-col gap-2">
+              <label>GWA (General Weighted Average)</label>
+              <InputText required v-model="student.address" />
+            </div>
+
+            <div class="flex justify-between">
+              <div class="flex flex-col gap-2 flex-1">
+                <label>Upload photo of your card (Back to back)</label>
+                <FileUploadProof @change="getImage" />
+              </div>
+            </div>
           </div>
         </form>
 

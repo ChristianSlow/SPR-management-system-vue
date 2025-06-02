@@ -22,4 +22,8 @@ export interface Student {
   status?: string
   createdAt?: any
   status?: any
+  gwa?: string
+  gwaUrl?: string
+  file1?: any
+  file2?: any
 }

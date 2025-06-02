@@ -2,9 +2,11 @@
 import { inject, reactive, ref } from 'vue'
 import { useCourseStore } from '@/stores/course'
 import type { Course } from '@/types/course'
+import { useToast } from 'primevue'
 
 const dialogRef = inject<any>('dialogRef')
 const store = useCourseStore()
+const toast = useToast()
 
 const props = dialogRef.value.data
 
@@ -28,8 +30,14 @@ function removeMajor(index: number) {
   course.majors?.splice(index, 1)
 }
 
-function onSave() {
-  store.editCourse(course)
+async function onSave() {
+  const res = await store.editCourse(course)
+  toast.add({
+    severity: res.status,
+    summary: res.statusMessage,
+    detail: res.message,
+    life: 3000,
+  })
   onClose()
 }
 </script>

@@ -4,6 +4,7 @@ import { useToast } from 'primevue/usetoast'
 import { useDialog } from 'primevue'
 import { defineAsyncComponent } from 'vue'
 import { useStudentStore } from '@/stores/student'
+import ViewImage from './view-image.vue'
 
 const AcceptQueue = defineAsyncComponent(
   () => import('@/pages/admin/approval-queue/_components/accept-modal.vue'),
@@ -23,7 +24,7 @@ const statusQuery = ref('')
 
 const filteredStudents = computed(() => {
   if (!statusQuery.value) return store.students
-  return store.students.filter((student) => student.status === statusQuery.value.toLowerCase())
+  return store.students.filter((student: any) => student.status === statusQuery.value.toLowerCase())
   // return store.students.filter((student) => {
   //   const fullName =
   //     `${student.firstName} ${student.middleName ?? ''} ${student.lastName}`.toLowerCase()
@@ -94,14 +95,24 @@ onMounted(() => {
           </Column>
 
           <Column field="course" header="Course" style="min-width: 10rem" />
-          <Column field="major" header="Major" style="min-width: 10rem" />
+          <Column field="major" header="Major" style="min-width: 5rem" />
+          <Column field="gwa" header="GWA" style="min-width: 10rem" />
+          <Column field="proof" header="Proof">
+            <template #body="props">
+              <div class="flex gap-1">
+                <div v-for="i of 2" :key="i">
+                  <ViewImage />
+                </div>
+              </div>
+            </template>
+          </Column>
+
           <Column field="status" header="Status" style="min-width: 10rem" />
 
           <Column :exportable="false" header="Actions">
             <template #body="slotProps">
-              <div class="flex gap-2" v-if="slotProps.data.status === 'pending'">
+              <div class="flex gap-1" v-if="slotProps.data.status === 'pending'">
                 <Button
-                  label="Accept"
                   size="small"
                   icon="pi pi-check"
                   class="mr-2"
@@ -123,7 +134,6 @@ onMounted(() => {
                   size="small"
                   outlined
                   severity="danger"
-                  label="Decline"
                   icon="pi pi-trash"
                   class="mr-2"
                   @click="

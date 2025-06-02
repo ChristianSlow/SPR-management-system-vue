@@ -2,9 +2,11 @@
 import { inject, reactive, ref } from 'vue'
 import { useCourseStore } from '@/stores/course'
 import type { Course } from '@/types/course'
+import { useToast } from 'primevue'
 
 const dialogRef = inject<any>('dialogRef')
 const store = useCourseStore()
+const toast = useToast()
 
 const majorInput = ref('')
 const course = reactive<Course>({
@@ -26,9 +28,15 @@ function onClose() {
   dialogRef.value.close()
 }
 
-function onSave() {
+async function onSave() {
   if (!course.name?.trim()) return
-  store.addCourse(course)
+  const res = await store.addCourse(course)
+  toast.add({
+    severity: res.status,
+    summary: res.statusMessage,
+    detail: res.message,
+    life: 3000,
+  })
   onClose()
 }
 </script>
