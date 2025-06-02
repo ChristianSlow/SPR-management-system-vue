@@ -22,4 +22,6 @@ export interface Student {
   status?: string
   createdAt?: any
   status?: any
+  gwa?: string
+  proof?: any
 }
