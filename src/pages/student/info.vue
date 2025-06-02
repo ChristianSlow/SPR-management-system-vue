@@ -25,39 +25,9 @@ const filteredMajor = computed(() => {
   return courseStore.courses.find((item: any) => item.abbreviation === student.value.course)
 })
 
-async function onSubmit(event: Event) {
-  event.preventDefault()
-
-  const form = event.target as HTMLFormElement
-  const formData = new FormData(form)
-  formData.append('id', student.value.id || '')
-  formData.append('firstName', student.value.firstName || '')
-  formData.append('middleName', student.value.middleName || '')
-  formData.append('lastName', student.value.lastName || '')
-  formData.append('birthDate', student.value.birthDate || '')
-  formData.append('sex', student.value.sex || '')
-  formData.append('civilStatus', student.value.civilStatus || '')
-  formData.append('mobileNumber', student.value.studentMobileNumber || '')
-  formData.append('birthPlace', student.value.birthPlace || '')
-  formData.append('parentName', student.value.parentName || '')
-  formData.append('parentMobileNumber', student.value.parentMobileNumber || '')
-  formData.append('address', student.value.address || '')
-  formData.append('courseId', student.value.course || '')
-  formData.append('majorId', student.value.major || '')
-  formData.append('year', student.value.year || '')
-  formData.append('semester', student.value.semester || '')
-  formData.append('gwa', student.value.gwa || '')
-
-  // Append files if available
-  if (student.value.file1) formData.append('file1', student.value.file1)
-  if (student.value.file2) formData.append('file2', student.value.file2)
-  // Append files manually if they're outside of form inputs:
-  if (student.value.file1) formData.append('file1', student.value.file1)
-  if (student.value.file2) formData.append('file2', student.value.file2)
-  formData.append('id', student.value.id || '')
-
-  await studentStore.editStudent(formData)
-
+async function onSubmit(payload: Student) {
+  const curriculum = await CurriculumRepository.fetchCurriculum(payload.course as string)
+  studentStore.editStudent({ ...payload, curriculum })
   toast.add({
     severity: 'success',
     summary: 'Success',

@@ -66,7 +66,7 @@ export const useStudentStore = defineStore('student', () => {
     }
   }
 
-  async function editStudent(payload: FormData) {
+  async function editStudent(payload: any) {
     isLoading.value = true
     const id = payload.get('id')
     await StudentRepository.updateStudent(id as string, payload)

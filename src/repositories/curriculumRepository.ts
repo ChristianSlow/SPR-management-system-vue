@@ -32,22 +32,11 @@ export const CurriculumRepository = {
     }
   },
 
-  async fetchCurriculum(course: string, major: string) {
+  async fetchCurriculum(course: string) {
     try {
-      let curriculumDoc
-      if (major) {
-        curriculumDoc = await getDocs(
-          query(
-            collection(db, 'curriculums'),
-            where('course', '==', course),
-            where('major', '==', major),
-          ),
-        )
-      } else {
-        curriculumDoc = await getDocs(
-          query(collection(db, 'curriculums'), where('course', '==', course)),
-        )
-      }
+      const curriculumDoc = await getDocs(
+        query(collection(db, 'curriculums'), where('course', '==', course)),
+      )
 
       const doc = curriculumDoc.docs[0]
 

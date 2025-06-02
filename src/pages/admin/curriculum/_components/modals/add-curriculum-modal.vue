@@ -27,7 +27,6 @@ const fourthYear = reactive<Year>({
 })
 
 const curriculum = ref<Curriculum>({
-  major: '',
   firstYear,
   secondYear,
   thirdYear,
@@ -75,7 +74,7 @@ watchEffect(() => console.log(firstYear.first, firstYear.second))
         autofocus
         class="w-full rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
       />
-      <div class="flex gap-4 w-full flex-col">
+      <div class="flex gap-4 w-full">
         <div class="flex-1">
           <label for="course" class="block text-gray-700 dark:text-white"> Course </label>
           <Select
@@ -89,7 +88,7 @@ watchEffect(() => console.log(firstYear.first, firstYear.second))
             :loading="courseStore.isLoading"
           />
         </div>
-        <div class="flex-1" v-if="filteredMajor?.majors">
+        <div class="flex-1">
           <label for="course" class="block text-gray-700 dark:text-white"> Major </label>
           <Select
             v-model="curriculum.major"
