@@ -23,5 +23,7 @@ export interface Student {
   createdAt?: any
   status?: any
   gwa?: string
-  proof?: any
+  gwaUrl?: string
+  file1?: any
+  file2?: any
 }
