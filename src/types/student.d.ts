@@ -2,6 +2,8 @@ import type { Curriculum } from './curriculum'
 
 export interface Student {
   uid?: string
+  id?: string
+  userId?: string
   role?: string
   firstName?: string
   middleName?: string

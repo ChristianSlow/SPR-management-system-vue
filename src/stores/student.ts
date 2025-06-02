@@ -40,8 +40,9 @@ export const useStudentStore = defineStore('student', () => {
   async function getStudent(uid: string) {
     isLoading.value = true
     const response = await StudentRepository.fetchStudent(uid)
-    student.value = response?.data ?? {}
+    student.value = response?.data as Student
     isLoading.value = false
+    return response?.data as Student
   }
 
   async function addStudent(payload: File) {
@@ -65,10 +66,10 @@ export const useStudentStore = defineStore('student', () => {
     }
   }
 
-  async function editStudent(student: Student) {
+  async function editStudent(payload: FormData) {
     isLoading.value = true
-    console.log(student)
-    await StudentRepository.updateStudent(student.uid as string, student)
+    const id = payload.get('id')
+    await StudentRepository.updateStudent(id as string, payload)
     getStudents()
     isLoading.value = false
   }

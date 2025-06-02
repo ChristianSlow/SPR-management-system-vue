@@ -51,14 +51,22 @@ export const StudentRepository = {
     }
   },
 
-  async updateStudent(uid: string, payload: Student) {
-    // try {
-    //   await updateDoc(doc(db, 'users', uid), { ...payload })
-    //   return { message: 'Successfully updated Student!' }
-    // } catch (error) {
-    //   console.error('Error updating Student:', error)
-    //   return { message: 'Error updating Student' }
-    // }
+  async updateStudent(id: string, payload: any) {
+    try {
+      const { data, error } = await useFetch(`${API_URL}/enrollment`, {
+        method: 'POST',
+        body: payload,
+      }).json<H3Response>()
+
+      if (error.value) {
+        throw new Error(error.value.message || 'Network error')
+      }
+
+      return data.value
+    } catch (error) {
+      console.error('Error updating Student:', error)
+      return { message: 'Error updating Student' }
+    }
   },
 
   async destroyStudent(uid: string) {

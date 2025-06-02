@@ -3,66 +3,69 @@ import { CurriculumRepository } from '@/repositories/curriculumRepository'
 import { useCourseStore } from '@/stores/course'
 import { useStudentStore } from '@/stores/student'
 import type { Student } from '@/types/student'
-import { doc, getDoc } from 'firebase/firestore'
 import { useToast } from 'primevue'
-import { computed, onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { getCurrentUser, useCurrentUser, useFirestore } from 'vuefire'
+import { computed, onMounted, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import FileUploadProof from './_components/file-upload-proof.vue'
 
-const db = useFirestore()
 const courseStore = useCourseStore()
 const studentStore = useStudentStore()
 const router = useRouter()
 const student = ref<Student>({})
 const toast = useToast()
+const route = useRoute()
 
 onMounted(async () => {
-  const user = await getCurrentUser()
-
+  const result = await studentStore.getStudent(route.params.id as string)
+  student.value = result
   courseStore.getCourses()
-  console.log(user)
-  if (user) {
-    const docRef = doc(db, 'users', user.uid)
-    const docSnap = await getDoc(docRef)
-    if (docSnap.exists()) {
-      const userData = { uid: docSnap.id, ...docSnap.data() } as Student
-
-      if (userData.role === 'admin') {
-        router.push('/admin')
-      } else if (userData.role === 'student') {
-        console.log(userData)
-        student.value = { ...userData }
-      } else {
-        toast.add({
-          severity: 'warn',
-          summary: 'Unknown Role',
-          detail: 'Redirecting...',
-          life: 2500,
-        })
-        router.push('/')
-      }
-    }
-  }
 })
 
 const filteredMajor = computed(() => {
   return courseStore.courses.find((item: any) => item.abbreviation === student.value.course)
 })
 
-async function onSubmit(payload: Student) {
-  const curriculum = await CurriculumRepository.fetchCurriculum(
-    payload.course as string,
-    payload.major as string,
-  )
-  studentStore.editStudent({ ...payload, curriculum })
+async function onSubmit(event: Event) {
+  event.preventDefault()
+
+  const form = event.target as HTMLFormElement
+  const formData = new FormData(form)
+  formData.append('id', student.value.id || '')
+  formData.append('firstName', student.value.firstName || '')
+  formData.append('middleName', student.value.middleName || '')
+  formData.append('lastName', student.value.lastName || '')
+  formData.append('birthDate', student.value.birthDate || '')
+  formData.append('sex', student.value.sex || '')
+  formData.append('civilStatus', student.value.civilStatus || '')
+  formData.append('mobileNumber', student.value.studentMobileNumber || '')
+  formData.append('birthPlace', student.value.birthPlace || '')
+  formData.append('parentName', student.value.parentName || '')
+  formData.append('parentMobileNumber', student.value.parentMobileNumber || '')
+  formData.append('address', student.value.address || '')
+  formData.append('courseId', student.value.course || '')
+  formData.append('majorId', student.value.major || '')
+  formData.append('year', student.value.year || '')
+  formData.append('semester', student.value.semester || '')
+  formData.append('gwa', student.value.gwa || '')
+
+  // Append files if available
+  if (student.value.file1) formData.append('file1', student.value.file1)
+  if (student.value.file2) formData.append('file2', student.value.file2)
+  // Append files manually if they're outside of form inputs:
+  if (student.value.file1) formData.append('file1', student.value.file1)
+  if (student.value.file2) formData.append('file2', student.value.file2)
+  formData.append('id', student.value.id || '')
+
+  await studentStore.editStudent(formData)
+
   toast.add({
     severity: 'success',
     summary: 'Success',
-    detail: 'Succesfully added subject!',
+    detail: 'Successfully added subject!',
     life: 3000,
   })
-  router.push('/student')
+
+  // router.push('/student')
 }
 
 function getImage(e: any) {
@@ -83,19 +86,19 @@ function getImage(e: any) {
           <p class="text-gray-600 text-sm">San Carlos City, Negros Occidental</p>
         </div>
 
-        <form class="flex flex-col gap-4">
+        <form class="flex flex-col gap-4" @submit="onSubmit">
           <div class="flex flex-col md:flex-row gap-2">
             <div class="flex flex-col gap-2 flex-1">
               <label>First Name</label>
-              <InputText required v-model="student.firstName" />
+              <InputText required v-model="student.firstName" disabled name="firstName" />
             </div>
             <div class="flex flex-col gap-2 flex-1">
               <label>Middle Name</label>
-              <InputText required v-model="student.middleName" />
+              <InputText required v-model="student.middleName" disabled name="middleName" />
             </div>
             <div class="flex flex-col gap-2 flex-1">
               <label>Last Name</label>
-              <InputText required v-model="student.lastName" />
+              <InputText required v-model="student.lastName" disabled name="lastName" />
             </div>
           </div>
 
@@ -108,11 +111,12 @@ function getImage(e: any) {
                 :showOnFocus="false"
                 inputId="buttondisplay"
                 v-model="student.birthDate"
+                name="birthDate"
               />
             </div>
             <div class="flex flex-1 flex-col gap-2">
               <label>Sex</label>
-              <Select required v-model="student.sex" :options="['Male', 'Female']" />
+              <Select required v-model="student.sex" :options="['Male', 'Female']" name="sex" />
             </div>
             <div class="flex flex-1 flex-col gap-2">
               <label>Civil Status</label>
@@ -120,6 +124,7 @@ function getImage(e: any) {
                 required
                 v-model="student.civilStatus"
                 :options="['Single', 'Married', 'Widowed', 'Separated']"
+                name="civilStatus"
               />
             </div>
             <div class="flex flex-1 flex-col gap-2">
@@ -131,6 +136,7 @@ function getImage(e: any) {
                 maxlength="11"
                 pattern="[0-9]{11}"
                 required
+                name="mobileNumber"
               />
             </div>
           </div>
@@ -138,14 +144,14 @@ function getImage(e: any) {
           <!-- Place of Birth -->
           <div class="flex flex-col gap-2">
             <label>Place of Birth</label>
-            <InputText required v-model="student.birthPlace" />
+            <InputText required v-model="student.birthPlace" name="birthPlace" />
           </div>
 
           <!-- Parent Info -->
           <div class="flex flex-col md:flex-row gap-2">
             <div class="flex flex-1 flex-col gap-2">
               <label>Parent Name</label>
-              <InputText required v-model="student.parentName" />
+              <InputText required v-model="student.parentName" name="parentName" />
             </div>
             <div class="flex flex-1 flex-col gap-2">
               <label for="mobile">Parent Mobile Number</label>
@@ -156,6 +162,7 @@ function getImage(e: any) {
                 maxlength="11"
                 pattern="[0-9]{11}"
                 required
+                name="parentMobileNumber"
               />
             </div>
           </div>
@@ -163,7 +170,7 @@ function getImage(e: any) {
           <!-- Parent Address -->
           <div class="flex flex-col gap-2">
             <label>Parent Address</label>
-            <InputText required v-model="student.address" />
+            <InputText required v-model="student.address" name="address" />
           </div>
           <div>
             <h2 class="text-xl font-semibold">Educational Details</h2>
@@ -176,12 +183,18 @@ function getImage(e: any) {
                   :options="courseStore.courses"
                   :loading="courseStore.isLoading"
                   option-label="name"
-                  option-value="abbreviation"
+                  option-value="id"
+                  name="courseId"
                 />
               </div>
               <div class="flex flex-1 flex-col gap-2">
                 <label>Major</label>
-                <Select required v-model="student.major" :options="filteredMajor?.majors" />
+                <Select
+                  required
+                  v-model="student.major"
+                  :options="filteredMajor?.majors"
+                  name="majorId"
+                />
               </div>
             </div>
 
@@ -193,6 +206,7 @@ function getImage(e: any) {
                   required
                   v-model="student.year"
                   :options="['First Year', 'Second Year', 'Third Year', 'Fourth Year']"
+                  name="year"
                 />
               </div>
               <div class="flex flex-1 flex-col gap-2">
@@ -201,12 +215,13 @@ function getImage(e: any) {
                   required
                   v-model="student.semester"
                   :options="['First Semester', 'Second Semester']"
+                  name="semester"
                 />
               </div>
             </div>
             <div class="flex flex-col gap-2">
               <label>GWA (General Weighted Average)</label>
-              <InputText required v-model="student.address" />
+              <InputText required v-model="student.gwa" name="gwa" />
             </div>
 
             <div class="flex justify-between">
@@ -216,20 +231,18 @@ function getImage(e: any) {
               </div>
             </div>
           </div>
+          <!-- Submit Button -->
+          <div>
+            <Button
+              :loading="studentStore.isLoading"
+              label="Submit"
+              severity="danger"
+              type="submit"
+              raised
+              class="w-full py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors"
+            />
+          </div>
         </form>
-
-        <!-- Submit Button -->
-        <div>
-          <Button
-            :loading="studentStore.isLoading"
-            label="Submit"
-            @click="onSubmit(student)"
-            severity="danger"
-            type="submit"
-            raised
-            class="w-full py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors"
-          />
-        </div>
       </div>
     </div>
   </Fluid>
