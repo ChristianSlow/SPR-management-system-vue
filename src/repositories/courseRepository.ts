@@ -1,17 +1,30 @@
-import { useFetch } from '@vueuse/core'
-import type { H3Response } from '@/types/h3response'
 import type { Course } from '@/types/course'
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+  setDoc,
+  updateDoc,
+} from 'firebase/firestore'
 
-const API_URL = import.meta.env.VITE_API_URL
+const db = getFirestore()
+const coursesRef = collection(db, 'courses')
 
 export const CourseRepository = {
-  async fetchCourses(params: Record<string, any>) {
-    const queryString = new URLSearchParams(params).toString()
-    const url = `${API_URL}/courses${queryString ? '?' + queryString : ''}`
-
+  async fetchCourses() {
     try {
-      const { data: response } = await useFetch(url).json<H3Response<Course[]>>()
-      return response.value
+      const querySnapshot = await getDocs(coursesRef)
+
+      const courses = querySnapshot.docs.map<Course>((doc) => ({
+        ...doc.data(),
+        uid: doc.id,
+      }))
+
+      return { data: courses, total: 0 }
     } catch (error) {
       console.error('Error fetching courses:', error)
       return { data: [], total: 0 }
@@ -20,72 +33,45 @@ export const CourseRepository = {
 
   async fetchCourse(uid: string) {
     try {
-      const { data: response } = await useFetch(`${API_URL}/courses/${uid}`).json<
-        H3Response<Course>
-      >()
-      return response.value
+      const courseDoc = await getDoc(doc(db, 'courses', uid))
+
+      return { data: { ...courseDoc.data(), uid: courseDoc.id } }
     } catch (error) {
-      console.error('Error fetching course:', error)
+      console.error('Error fetching courses:', error)
       return { data: {} }
     }
   },
 
   async createCourse(payload: Course) {
     try {
-      const { data } = await useFetch(`${API_URL}/courses`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      }).json<H3Response>()
+      await setDoc(doc(db, 'courses', payload.abbreviation as string), {
+        ...payload,
+      })
 
-      return data.value
-    } catch (error) {
-      console.error('Error adding course:', error)
-      return {
-        statusCode: 500,
-        message: error instanceof Error ? error.message : 'Failed to add course',
-      }
+      return { message: 'Successfully added courses!' }
+    } catch {
+      return { message: 'Error adding courses' }
     }
   },
 
-  async updateCourse(id: string, payload: Course) {
+  async updateCourse(uid: string, payload: Course) {
     try {
-      const { data } = await useFetch(`${API_URL}/courses/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      }).json<H3Response>()
+      await updateDoc(doc(db, 'courses', uid), { ...payload })
 
-      return data.value
+      return { message: 'Successfully updated course!' }
     } catch (error) {
-      return {
-        statusCode: 500,
-        message: error instanceof Error ? error.message : 'Failed to update course',
-      }
+      console.error('Error updating course:', error)
+      return { message: 'Error updating course' }
     }
   },
 
-  async destroyCourse(id: string) {
+  async destroyCourse(uid: string) {
     try {
-      const { data, error } = await useFetch(`${API_URL}/courses/${id}`, {
-        method: 'DELETE',
-        body: id,
-      }).json<H3Response>()
+      const snapshot = await deleteDoc(doc(db, 'courses', uid))
 
-      if (error.value) {
-        throw new Error(error.value.message || 'Network error')
-      }
-
-      return data.value
-    } catch (error) {
-      return {
-        statusCode: 500,
-        message: error instanceof Error ? error.message : 'Failed to delete course',
-      }
+      return { message: 'Successfully added courses!', data: snapshot }
+    } catch {
+      return { message: 'Error adding courses' }
     }
   },
 }
