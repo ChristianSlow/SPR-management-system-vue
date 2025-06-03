@@ -126,7 +126,7 @@ const toggle = (event: any) => {
         </ul>
       </div>
 
-      <div class="w-full p-4 bg-gray-50">
+      <div class="w-full p-4 bg-gray-50 max-h-screen overflow-y-auto">
         <slot></slot>
       </div>
     </div>
