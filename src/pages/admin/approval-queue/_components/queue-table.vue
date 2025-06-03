@@ -40,6 +40,8 @@ const filteredStudents = computed(() => {
   // })
 })
 
+console.log(filteredStudents.value)
+
 onMounted(() => {
   store.getStudents()
 })

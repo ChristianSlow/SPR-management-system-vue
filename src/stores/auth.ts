@@ -19,7 +19,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function signUp(creds: any) {
     isLoading.value = true
-    const { data, error } = await useFetch(`${API_URL}/students`).post(creds).json()
+    const { data, error } = await useFetch(`${API_URL}/users`).post(creds).json()
     isLoading.value = false
     return data.value as any
   }
