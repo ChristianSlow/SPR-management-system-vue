@@ -24,7 +24,9 @@ const statusQuery = ref('pending')
 
 const filteredStudents = computed(() => {
   if (!statusQuery.value) return store.students
-  return store.students.filter((student: any) => student.status === statusQuery.value.toLowerCase())
+  return store.students.filter(
+    (student: any) => student.status.toLowerCase() === statusQuery.value.toLowerCase(),
+  )
   // return store.students.filter((student) => {
   //   const fullName =
   //     `${student.firstName} ${student.middleName ?? ''} ${student.lastName}`.toLowerCase()
@@ -114,7 +116,7 @@ onMounted(() => {
 
           <Column :exportable="false" header="Actions">
             <template #body="slotProps">
-              <div class="flex gap-1" v-if="slotProps.data.status === 'pending'">
+              <div class="flex gap-1" v-if="slotProps.data.status.toLowerCase() === 'pending'">
                 <Button
                   size="small"
                   icon="pi pi-check"

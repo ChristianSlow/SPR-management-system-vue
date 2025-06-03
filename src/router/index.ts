@@ -73,7 +73,7 @@ const router = createRouter({
   ],
 })
 
-const ADMIN_USER_ID = 'GHh3aoG1qadCtG6Ey2cWQMTZy173'
+const ADMIN_USER_ID = '6u9UryEQwOQmdfJ56DSlgDV9YuR2'
 
 router.beforeEach(async (to, _unused, next) => {
   const user = await getCurrentUser()

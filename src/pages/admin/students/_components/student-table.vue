@@ -23,16 +23,14 @@ const viewStudent = defineAsyncComponent(
 
 const store = useStudentStore()
 const dialog = useDialog()
-const toast = useToast()
 const dt = ref()
-const products = ref()
 
 onMounted(() => {
   store.getStudents()
 })
 
 const filteredStudents = computed(() => {
-  return store.students.filter((student) => student.status === 'accepted')
+  return store.students.filter((student: any) => student.status === 'accepted')
 })
 </script>
 

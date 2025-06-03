@@ -64,6 +64,7 @@ async function onFormSubmit() {
     if (isLogin.value) {
       const userCredential = await signInWithEmailAndPassword(auth, email, password)
       const user = userCredential.user
+      console.log(user.uid)
       const docRef = doc(db, 'users', user.uid)
       const docSnap = await getDoc(docRef)
 

@@ -22,15 +22,15 @@ async function onFileSelected(event: any) {
 }
 
 const filteredMajor = computed(() => {
-  return courseStore.courses.find((item) => item.abbreviation === student.value.course)
+  return courseStore.courses.find((item: any) => item.abbreviation === student.value.course)
 })
 
 async function onSubmit(payload: Student) {
-  const curriculum = await CurriculumRepository.fetchCurriculum(
-    payload.course as string,
-    payload.major as string,
-  )
-  studentStore.editStudent({ ...payload, curriculum }, file.value)
+  // const curriculum = await CurriculumRepository.fetchCurriculum(
+  //   payload.course as string,
+  //   payload.major as string,
+  // )
+  studentStore.editStudent({ ...payload }, file.value)
   toast.add({
     severity: 'success',
     summary: 'Success',
@@ -42,7 +42,6 @@ async function onSubmit(payload: Student) {
 
 onMounted(async () => {
   const user = await getCurrentUser()
-
   courseStore.getCourses()
 })
 </script>
