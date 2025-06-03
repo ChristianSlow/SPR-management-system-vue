@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { ref } from 'vue'
 import { usePrimeVue } from 'primevue/config'
 import { useToast } from 'primevue/usetoast'
@@ -108,4 +108,4 @@ const formatSize = (bytes: any) => {
       </template>
     </FileUpload>
   </div>
-</template>
+</template> -->

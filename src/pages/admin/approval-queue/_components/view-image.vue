@@ -21,7 +21,6 @@ defineProps<{
           src="https://primefaces.org/cdn/primevue/images/galleria/galleria11.jpg"
           alt="preview"
           :style="slotProps.style"
-          @click="slotProps.onClick"
         />
       </template>
     </Image>
