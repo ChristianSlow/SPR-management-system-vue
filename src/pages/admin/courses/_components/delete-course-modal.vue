@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { inject } from 'vue'
 import { useCourseStore } from '@/stores/course'
-import { useToast } from 'primevue'
 
 const dialogRef = inject<any>('dialogRef')
 const store = useCourseStore()
-const toast = useToast()
 
 const course = dialogRef.value.data
 
@@ -13,14 +11,8 @@ function onClose() {
   dialogRef.value.close()
 }
 
-async function onDelete() {
-  const res = await store.deleteCourse(course.id)
-  toast.add({
-    severity: res.status,
-    summary: res.statusMessage,
-    detail: res.message,
-    life: 3000,
-  })
+function onDelete() {
+  store.deleteCourse(course.uid)
   onClose()
 }
 </script>
