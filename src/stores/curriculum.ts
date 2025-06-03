@@ -7,42 +7,84 @@ export const useCurriculumStore = defineStore('curriculum', () => {
   const isLoading = ref(false)
   const curriculums = ref<Curriculum[]>([])
   const curriculum = ref<Curriculum>()
+  const searchQuery = ref('')
 
   async function getCurriculums() {
     isLoading.value = true
-    const response = await CurriculumRepository.fetchCurriculums()
-    curriculums.value = response.data
+    const response = await CurriculumRepository.fetchCurriculums({ q: searchQuery.value })
+    curriculums.value = response?.data || []
     isLoading.value = false
   }
 
   async function addCurriculum(curriculum: Curriculum) {
     console.log(curriculum)
     isLoading.value = true
-    await CurriculumRepository.createCurriculum({
-      course: curriculum.course?.toLowerCase(),
-      name: curriculum.name?.toLowerCase(),
-      major: curriculum.major?.toLowerCase(),
-      ...curriculum,
-    })
-    await getCurriculums()
-    isLoading.value = false
+    try {
+      const response = await CurriculumRepository.createCurriculum(curriculum)
+      await getCurriculums()
+      return {
+        status: 'success',
+        message: response?.message,
+        statusMessage: response?.statusMessage ?? '',
+      }
+    } catch (error) {
+      console.error('Error adding curriculum:', error)
+      return {
+        status: 'error',
+        message: 'Failed to add curricilum',
+        statusMessage: 'error',
+      }
+    } finally {
+      isLoading.value = false
+    }
   }
 
   async function editCurriculum(curriculum: Curriculum) {
     isLoading.value = true
-    await CurriculumRepository.updateCurriculum(curriculum.uid as string, {
-      course: curriculum.course?.toLowerCase(),
-      name: curriculum.name?.toLowerCase(),
-      major: curriculum.major?.toLowerCase(),
-    })
-    getCurriculums()
-    isLoading.value = false
+    try {
+      const response = await CurriculumRepository.updateCurriculum(curriculum.uid as string, {
+        course: curriculum.course?.toLowerCase(),
+        name: curriculum.name?.toLowerCase(),
+        major: curriculum.major?.toLowerCase(),
+      })
+      await getCurriculums()
+      return {
+        status: 'success',
+        message: response?.message,
+        statusMessage: response?.statusMessage ?? '',
+      }
+    } catch (error) {
+      console.error('Error updating curriculum:', error)
+      return {
+        status: 'error',
+        message: 'Failed to update curricilum',
+        statusMessage: 'error',
+      }
+    } finally {
+      isLoading.value = false
+    }
   }
 
   async function deleteCurriculum(uid: string) {
     isLoading.value = true
-    await CurriculumRepository.destroyCurriculum(uid)
-    isLoading.value = false
+    try {
+      const response = await CurriculumRepository.destroyCurriculum(uid)
+      await getCurriculums()
+      return {
+        status: 'success',
+        message: response?.message,
+        statusMessage: response?.statusMessage ?? '',
+      }
+    } catch (error) {
+      console.error('Error deleting curriculum:', error)
+      return {
+        status: 'error',
+        message: 'Failed to delete curricilum',
+        statusMessage: 'error',
+      }
+    } finally {
+      isLoading.value = false
+    }
   }
 
   return {

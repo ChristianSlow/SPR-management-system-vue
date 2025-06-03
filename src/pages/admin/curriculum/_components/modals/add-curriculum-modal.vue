@@ -3,6 +3,7 @@ import { useCourseStore } from '@/stores/course'
 import { useCurriculumStore } from '@/stores/curriculum'
 import { useSubjectStore } from '@/stores/subject'
 import type { Curriculum, Year } from '@/types/curriculum'
+import { useToast } from 'primevue'
 import { computed, inject, onMounted, reactive, ref, watch, watchEffect } from 'vue'
 
 const courseStore = useCourseStore()
@@ -26,6 +27,8 @@ const fourthYear = reactive<Year>({
   second: [],
 })
 
+const toast = useToast()
+
 const curriculum = ref<Curriculum>({
   firstYear,
   secondYear,
@@ -37,8 +40,15 @@ function onClose() {
   dialogRef.value.close()
 }
 
-function onSave() {
-  curriculumStore.addCurriculum(curriculum.value)
+async function onSave() {
+  const res = await curriculumStore.addCurriculum(curriculum.value)
+  console.log(res)
+  toast.add({
+    severity: res.status,
+    summary: res.statusMessage,
+    detail: res.message,
+    life: 3000,
+  })
   onClose()
 }
 

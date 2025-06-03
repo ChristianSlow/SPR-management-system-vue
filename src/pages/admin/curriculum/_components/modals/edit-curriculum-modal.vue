@@ -3,8 +3,10 @@ import { useCourseStore } from '@/stores/course'
 import { useCurriculumStore } from '@/stores/curriculum'
 import { useSubjectStore } from '@/stores/subject'
 import type { Curriculum, Year } from '@/types/curriculum'
+import { useToast } from 'primevue'
 import { computed, inject, onMounted, reactive, ref, watch, watchEffect } from 'vue'
 
+const toast = useToast()
 const courseStore = useCourseStore()
 const subjectStore = useSubjectStore()
 const curriculumStore = useCurriculumStore()
@@ -22,8 +24,14 @@ function onClose() {
   dialogRef.value.close()
 }
 
-function onSave() {
-  curriculumStore.addCurriculum(curriculum.value)
+async function onSave() {
+  const res = await curriculumStore.addCurriculum(curriculum.value)
+  toast.add({
+    severity: res.status,
+    summary: res.statusMessage,
+    detail: res.message,
+    life: 3000,
+  })
   onClose()
 }
 
@@ -33,7 +41,7 @@ onMounted(() => {
 })
 
 const filteredMajor = computed(() => {
-  return courseStore.courses.find((item) => item.abbreviation == curriculum.value.course)
+  return courseStore.courses.find((item:any) => item.abbreviation == curriculum.value.course)
 })
 
 watchEffect(() => {
