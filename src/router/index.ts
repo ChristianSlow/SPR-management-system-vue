@@ -62,7 +62,7 @@ const router = createRouter({
       component: () => import('@/pages/student/index.vue'),
     },
     {
-      path: '/student/info',
+      path: '/student/info/:id',
       name: 'student-info',
       component: () => import('@/pages/student/info.vue'),
     },

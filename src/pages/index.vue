@@ -1,20 +1,17 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  setPersistence,
-  browserLocalPersistence,
-} from 'firebase/auth'
-import { doc, getDoc, setDoc, Timestamp } from 'firebase/firestore'
+import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence } from 'firebase/auth'
+import { doc, getDoc } from 'firebase/firestore'
 import { useFirebaseAuth, useFirestore } from 'vuefire'
 import { useToast } from 'primevue/usetoast'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 const db = useFirestore()
 const toast = useToast()
 const auth = useFirebaseAuth()!
 const router = useRouter()
+const authStore = useAuthStore()
 
 const showPassword = ref(false)
 const loginError = ref('')
@@ -114,19 +111,8 @@ async function onFormSubmit() {
         return
       }
 
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-      const user = userCredential.user
-
-      await setDoc(doc(db, 'users', user.uid), {
-        firstName: credentials.value.firstName,
-        middleName: credentials.value.middleName,
-        lastName: credentials.value.lastName,
-        email,
-        role: 'student',
-        status: 'pending',
-        createdAt: Timestamp.now(),
-      })
-
+      const userCredential = await authStore.signUp(credentials.value)
+      console.log(userCredential.data)
       toast.add({
         severity: 'success',
         summary: 'Account Created',
@@ -135,7 +121,7 @@ async function onFormSubmit() {
       })
 
       setTimeout(() => {
-        router.push('/student/info')
+        router.push(`/student/info/${userCredential.data.id}`)
       }, 1500)
     }
   } catch (error: any) {

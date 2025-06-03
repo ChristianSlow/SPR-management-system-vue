@@ -74,18 +74,21 @@ onMounted(async () => {
       </div>
 
       <div class="text-right font-semibold text-md mt-6 p-4 bg-gray-200 rounded-lg">
-        Total Units: <span class="text-blue-600">Total Units</span>
+        <div class="text-right font-semibold text-md mt-6 p-4 bg-gray-200 rounded-lg">
+          Total Units: <span class="text-blue-600">Total Units</span>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- <div class="flex justify-center mt-6">
+  <div class="flex justify-center mt-6">
     <Button
       label="Enroll"
       icon="pi pi-sign-out"
       class="p-button-sm p-button-danger transition-transform hover:scale-105"
     />
-  </div> -->
+  </div>
+  -->
   <!-- Logout Button (Now Below the Content) -->
   <div class="flex justify-center mt-6">
     <Button
