@@ -3,13 +3,11 @@ import { CurriculumRepository } from '@/repositories/curriculumRepository'
 import { useCourseStore } from '@/stores/course'
 import { useStudentStore } from '@/stores/student'
 import type { Student } from '@/types/student'
-import { doc, getDoc } from 'firebase/firestore'
 import { useToast } from 'primevue'
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { getCurrentUser, useCurrentUser, useFirestore } from 'vuefire'
+import { getCurrentUser } from 'vuefire'
 
-const db = useFirestore()
 const courseStore = useCourseStore()
 const studentStore = useStudentStore()
 const router = useRouter()
@@ -22,35 +20,6 @@ async function onFileSelected(event: any) {
   file.value = event
   if (!file.value) return
 }
-
-onMounted(async () => {
-  const user = await getCurrentUser()
-
-  courseStore.getCourses()
-  console.log(user)
-  if (user) {
-    const docRef = doc(db, 'users', user.uid)
-    const docSnap = await getDoc(docRef)
-    if (docSnap.exists()) {
-      const userData = { uid: docSnap.id, ...docSnap.data() } as Student
-
-      if (userData.role === 'admin') {
-        router.push('/admin')
-      } else if (userData.role === 'student') {
-        console.log(userData)
-        student.value = { ...userData }
-      } else {
-        toast.add({
-          severity: 'warn',
-          summary: 'Unknown Role',
-          detail: 'Redirecting...',
-          life: 2500,
-        })
-        router.push('/')
-      }
-    }
-  }
-})
 
 const filteredMajor = computed(() => {
   return courseStore.courses.find((item) => item.abbreviation === student.value.course)
@@ -70,6 +39,12 @@ async function onSubmit(payload: Student) {
   })
   router.push('/student')
 }
+
+onMounted(async () => {
+  const user = await getCurrentUser()
+
+  courseStore.getCourses()
+})
 </script>
 <template>
   <Fluid class="flex justify-center p-2">
@@ -166,12 +141,12 @@ async function onSubmit(payload: Student) {
                 :options="courseStore.courses"
                 :loading="courseStore.isLoading"
                 option-label="name"
-                option-value="abbreviation"
+                option-value="id"
               />
             </div>
             <div class="flex flex-1 flex-col gap-2">
               <label>Major</label>
-              <Select required v-model="student.major" :options="filteredMajor?.majors" />
+              <Select required v-model="student.major" :options="courseStore.courses as any" />
             </div>
           </div>
 

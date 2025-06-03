@@ -10,11 +10,13 @@ import { doc, getDoc, setDoc, Timestamp } from 'firebase/firestore'
 import { useFirebaseAuth, useFirestore } from 'vuefire'
 import { useToast } from 'primevue/usetoast'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 const db = useFirestore()
 const toast = useToast()
 const auth = useFirebaseAuth()!
 const router = useRouter()
+const authStore = useAuthStore()
 
 const showPassword = ref(false)
 const loginError = ref('')
@@ -117,15 +119,7 @@ async function onFormSubmit() {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password)
       const user = userCredential.user
 
-      await setDoc(doc(db, 'users', user.uid), {
-        firstName: credentials.value.firstName,
-        middleName: credentials.value.middleName,
-        lastName: credentials.value.lastName,
-        email,
-        role: 'student',
-        status: 'pending',
-        createdAt: Timestamp.now(),
-      })
+      await authStore.signUp({ ...credentials.value, studentId: user.uid })
 
       toast.add({
         severity: 'success',

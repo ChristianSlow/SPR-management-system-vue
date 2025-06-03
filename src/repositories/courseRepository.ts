@@ -1,4 +1,6 @@
 import type { Course } from '@/types/course'
+import type { H3Response } from '@/types/h3response'
+import { useFetch } from '@vueuse/core'
 import {
   addDoc,
   collection,
@@ -13,21 +15,35 @@ import {
 
 const db = getFirestore()
 const coursesRef = collection(db, 'courses')
+const API_URL = import.meta.env.VITE_API_URL
 
 export const CourseRepository = {
-  async fetchCourses() {
+  // async fetchCourses() {
+  //   try {
+  //     const result = await useFetch(``)
+  //     const querySnapshot = await getDocs(coursesRef)
+
+  //     const courses = querySnapshot.docs.map<Course>((doc) => ({
+  //       ...doc.data(),
+  //       uid: doc.id,
+  //     }))
+
+  //     return { data: courses, total: 0 }
+  //   } catch (error) {
+  //     console.error('Error fetching courses:', error)
+  //     return { data: [], total: 0 }
+  //   }
+  // },
+  async fetchCourses(params: Record<string, any>) {
+    const queryString = new URLSearchParams(params).toString()
+    const url = `${API_URL}/courses${queryString ? '?' + queryString : ''}`
+
     try {
-      const querySnapshot = await getDocs(coursesRef)
-
-      const courses = querySnapshot.docs.map<Course>((doc) => ({
-        ...doc.data(),
-        uid: doc.id,
-      }))
-
-      return { data: courses, total: 0 }
+      const { data: response } = await useFetch(url).json<H3Response<Course[]>>()
+      return response.value
     } catch (error) {
       console.error('Error fetching courses:', error)
-      return { data: [], total: 0 }
+      return { data: [] }
     }
   },
 
