@@ -7,11 +7,12 @@ export const useCourseStore = defineStore('course', () => {
   const isLoading = ref(false)
   const courses = ref<Course[]>([])
   const course = ref<Course>()
+  const searchQuery = ref('')
 
   async function getCourses() {
     isLoading.value = true
-    const response = await CourseRepository.fetchCourses()
-    courses.value = response.data
+    const response = await CourseRepository.fetchCourses({ q: searchQuery.value })
+    courses.value = response?.data ?? []
     isLoading.value = false
   }
 
