@@ -10,18 +10,14 @@ export const useStudentStore = defineStore('student', () => {
   const students = ref<Student[]>([])
   const student = ref<Student>({})
   const totalStudents = ref(0)
-  const searchQuery = ref('')
 
   async function getStudents() {
     isLoading.value = true
-    const response = await StudentRepository.fetchStudents({
-      q: searchQuery.value,
-    })
-
-    students.value = response?.data || []
-    totalStudents.value = response?.total || 0
+    const response = await StudentRepository.fetchStudents()
+    students.value = response.data
+    totalStudents.value = students.value.length
     isLoading.value = false
-    console.log(students.value)
+    console.log(response.data)
   }
 
   async function updateStudentStatus(uid: string, status: string, note?: string) {
@@ -40,30 +36,15 @@ export const useStudentStore = defineStore('student', () => {
   async function getStudent(uid: string) {
     isLoading.value = true
     const response = await StudentRepository.fetchStudent(uid)
-    student.value = response?.data as Student
+    student.value = response.data
     isLoading.value = false
-    return response?.data as Student
   }
 
-  async function addStudent(payload: File) {
+  async function addStudent(student: Student) {
     isLoading.value = true
-    const formData = new FormData()
-    formData.append('file', payload)
-    const response = await StudentRepository.createStudent(formData)
-    if (response?.statusCode == 200) {
-      await getStudents()
-      return {
-        status: 'success',
-        message: response.message,
-        statusMessage: response.statusMessage ?? '',
-      }
-    }
+    await StudentRepository.createStudent(student)
+    getStudents()
     isLoading.value = false
-    return {
-      status: 'error',
-      message: response?.message,
-      statusMessage: response?.statusMessage ?? '',
-    }
   }
 
   async function editStudent(student: Student, file: File) {

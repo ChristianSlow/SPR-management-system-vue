@@ -14,16 +14,21 @@ import {
   where,
 } from 'firebase/firestore'
 
-const API_URL = import.meta.env.VITE_API_URL
+const db = getFirestore()
+const usersRef = collection(db, 'users')
+const studentsQuery = query(usersRef, where('role', '==', 'student'))
 
 export const StudentRepository = {
-  async fetchStudents(params: Record<string, any>) {
-    const queryString = new URLSearchParams(params).toString()
-    const url = `${API_URL}/students${queryString ? '?' + queryString : ''}`
-
+  async fetchStudents() {
     try {
-      const { data: response } = await useFetch(url).json<H3Response<Student[]>>()
-      return response.value
+      const querySnapshot = await getDocs(studentsQuery)
+
+      const students = querySnapshot.docs.map<Student>((doc) => ({
+        ...doc.data(),
+        uid: doc.id,
+      }))
+
+      return { data: students, total: 0 }
     } catch (error) {
       console.error('Error fetching students:', error)
       return { data: [], total: 0 }
@@ -32,34 +37,23 @@ export const StudentRepository = {
 
   async fetchStudent(uid: string) {
     try {
-      const { data: response } = await useFetch(`${API_URL}/students/${uid}`).json<
-        H3Response<Student>
-      >()
-      return response.value
+      const studentDoc = await getDoc(doc(db, 'users', uid))
+      return { data: { ...studentDoc.data(), uid: studentDoc.id } }
     } catch (error) {
-      console.error('Error fetching student:', error)
+      console.error('Error fetching curriculums:', error)
       return { data: {} }
     }
   },
 
-  async createStudent(payload: FormData) {
+  async createStudent(payload: Student) {
     try {
-      const { data, error } = await useFetch(`${API_URL}/students`, {
-        method: 'POST',
-        body: payload,
-      }).json<H3Response>()
+      const snapshot = await addDoc(usersRef, {
+        ...payload,
+      })
 
-      if (error.value) {
-        throw new Error(error.value.message || 'Network error')
-      }
-
-      return data.value
-    } catch (error) {
-      console.error('Error adding student:', error)
-      return {
-        statusCode: 500,
-        message: error instanceof Error ? error.message : 'Failed to add student',
-      }
+      return { message: 'Successfully added students!', data: snapshot.id }
+    } catch {
+      return { message: 'Error adding students' }
     }
   },
 
@@ -93,21 +87,11 @@ export const StudentRepository = {
 
   async destroyStudent(uid: string) {
     try {
-      const { data, error } = await useFetch(`${API_URL}/students/${uid}`, {
-        method: 'DELETE',
-        body: uid,
-      }).json<H3Response>()
+      const snapshot = await deleteDoc(doc(db, 'users', uid))
 
-      if (error.value) {
-        throw new Error(error.value.message || 'Network error')
-      }
-
-      return data.value
-    } catch (error) {
-      return {
-        statusCode: 500,
-        message: error instanceof Error ? error.message : 'Failed to delete student',
-      }
+      return { message: 'Successfully added students!', data: snapshot }
+    } catch {
+      return { message: 'Error adding students' }
     }
   },
 }
