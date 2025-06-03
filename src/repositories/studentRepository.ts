@@ -1,3 +1,4 @@
+import { supabase } from '@/supabase/supabase'
 import type { Student } from '@/types/student'
 import {
   addDoc,
@@ -8,6 +9,7 @@ import {
   getDocs,
   getFirestore,
   query,
+  setDoc,
   updateDoc,
   where,
 } from 'firebase/firestore'
@@ -55,9 +57,26 @@ export const StudentRepository = {
     }
   },
 
-  async updateStudent(uid: string, payload: Student) {
+  async updateStudent(uid: string, payload: Student, file: File) {
     try {
-      await updateDoc(doc(db, 'users', uid), { ...payload })
+      console.log(payload)
+      const timestamp = new Date().toISOString().replace(/[-:.]/g, '')
+      const uniqueFileName = `forms/${timestamp}_${file.name}`
+
+      const { data, error } = await supabase.storage.from('images').upload(uniqueFileName, file, {
+        contentType: file.type,
+        upsert: true,
+      })
+
+      const { data: publicUrlData } = supabase.storage
+        .from('images')
+        .getPublicUrl(`forms/${file.name}`)
+
+      await setDoc(
+        doc(db, 'users', uid),
+        { ...payload, gwaUrl: publicUrlData.publicUrl },
+        { merge: true },
+      )
 
       return { message: 'Successfully updated Student!' }
     } catch (error) {

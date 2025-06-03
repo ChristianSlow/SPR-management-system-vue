@@ -91,8 +91,7 @@ watchEffect(() => console.log(firstYear))
               :options="subjectStore.filteredSubjects"
               :loading="subjectStore.isLoading"
               optionLabel="code"
-              :maxSelectedLabels="3"
-              filter
+              optionValue="uid"
               placeholder="Select a subjects"
               class="w-full"
             />
@@ -102,8 +101,7 @@ watchEffect(() => console.log(firstYear))
             <MultiSelect
               v-model="firstYear.second"
               optionLabel="code"
-              :maxSelectedLabels="3"
-              filter
+              optionValue="uid"
               :options="subjectStore.filteredSubjects"
               :loading="subjectStore.isLoading"
               placeholder="Select a subjects"
@@ -118,10 +116,9 @@ watchEffect(() => console.log(firstYear))
           <div class="flex-1">
             <label class="block text-gray-700 dark:text-white"> First semester </label>
             <MultiSelect
-              optionLabel="code"
-              :maxSelectedLabels="3"
-              filter
+              option-label="code"
               v-model="secondYear.first"
+              editable
               :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
               class="w-full"
@@ -130,10 +127,9 @@ watchEffect(() => console.log(firstYear))
           <div class="flex-1">
             <label class="block text-gray-700 dark:text-white"> Second semester </label>
             <MultiSelect
-              optionLabel="code"
-              :maxSelectedLabels="3"
-              filter
+              option-label="code"
               v-model="secondYear.second"
+              editable
               :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
               class="w-full"
@@ -147,10 +143,9 @@ watchEffect(() => console.log(firstYear))
           <div class="flex-1">
             <label class="block text-gray-700 dark:text-white"> First semester </label>
             <MultiSelect
-              optionLabel="code"
-              :maxSelectedLabels="3"
-              filter
+              option-label="code"
               v-model="thirdYear.first"
+              editable
               :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
               class="w-full"
@@ -159,10 +154,9 @@ watchEffect(() => console.log(firstYear))
           <div class="flex-1">
             <label class="block text-gray-700 dark:text-white"> Second semester </label>
             <MultiSelect
-              optionLabel="code"
-              :maxSelectedLabels="3"
-              filter
+              option-label="code"
               v-model="thirdYear.second"
+              editable
               :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
               class="w-full"
@@ -176,10 +170,9 @@ watchEffect(() => console.log(firstYear))
           <div class="flex-1">
             <label class="block text-gray-700 dark:text-white"> First semester </label>
             <MultiSelect
-              optionLabel="code"
-              :maxSelectedLabels="3"
-              filter
+              option-label="code"
               v-model="fourthYear.first"
+              editable
               :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
               class="w-full"
@@ -188,10 +181,9 @@ watchEffect(() => console.log(firstYear))
           <div class="flex-1">
             <label class="block text-gray-700 dark:text-white"> Second semester </label>
             <MultiSelect
-              optionLabel="code"
-              :maxSelectedLabels="3"
-              filter
+              option-label="code"
               v-model="fourthYear.second"
+              editable
               :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
               class="w-full"

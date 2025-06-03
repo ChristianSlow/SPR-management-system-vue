@@ -16,6 +16,13 @@ const router = useRouter()
 const student = ref<Student>({})
 const toast = useToast()
 
+const file = ref()
+
+async function onFileSelected(event: any) {
+  file.value = event
+  if (!file.value) return
+}
+
 onMounted(async () => {
   const user = await getCurrentUser()
 
@@ -54,7 +61,7 @@ async function onSubmit(payload: Student) {
     payload.course as string,
     payload.major as string,
   )
-  studentStore.editStudent({ ...payload, curriculum })
+  studentStore.editStudent({ ...payload, curriculum }, file.value)
   toast.add({
     severity: 'success',
     summary: 'Success',
@@ -136,6 +143,17 @@ async function onSubmit(payload: Student) {
           <div class="flex flex-col gap-2">
             <label>Place of Birth</label>
             <InputText required v-model="student.birthPlace" />
+          </div>
+
+          <div class="flex gap-4 flex-grow">
+            <div class="flex flex-col gap-2 flex-1">
+              <label>General Average</label>
+              <InputText required v-model="student.gwa" />
+            </div>
+            <div class="flex flex-col gap-2 flex-1">
+              <label>Card</label>
+              <FileUpload ref="fileupload" mode="basic" accept="image/*" @select="onFileSelected" />
+            </div>
           </div>
 
           <!-- Course Info -->

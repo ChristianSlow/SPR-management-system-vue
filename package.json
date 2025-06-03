@@ -12,6 +12,8 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.49.9",
+    "@vueuse/core": "^13.3.0",
     "firebase": "^11.1.0",
     "pinia": "^3.0.1",
     "primeicons": "^7.0.0",
