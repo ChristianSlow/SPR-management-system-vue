@@ -14,7 +14,7 @@ function onClose() {
 }
 
 async function onSubmit() {
-  await store.editStudent({ ...student, status: 'denied' })
+  await store.deleteStudent(student.uid)
   toast.add({
     severity: 'success',
     summary: 'Success',

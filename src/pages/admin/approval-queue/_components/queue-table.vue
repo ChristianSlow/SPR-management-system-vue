@@ -20,7 +20,7 @@ const toast = useToast()
 const dt = ref()
 
 const searchQuery = ref('')
-const statusQuery = ref('')
+const statusQuery = ref('pending')
 
 const filteredStudents = computed(() => {
   if (!statusQuery.value) return store.students
@@ -60,7 +60,8 @@ onMounted(() => {
           <!-- Dropdown for selecting the status filter -->
           <Select
             v-model="statusQuery"
-            :options="['', 'Pending', 'Accepted', 'Denied']"
+            :options="['Pending', 'Accepted', 'Denied']"
+            defaultValue="Pending"
             placeholder="Select status"
             class="w-full md:w-56"
           />
@@ -101,7 +102,7 @@ onMounted(() => {
             <template #body="props">
               <div class="flex gap-1">
                 <div v-for="i of 2" :key="i">
-                  <ViewImage />
+                  <ViewImage image="" />
                 </div>
               </div>
             </template>

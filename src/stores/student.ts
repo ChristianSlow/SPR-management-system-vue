@@ -47,9 +47,9 @@ export const useStudentStore = defineStore('student', () => {
     isLoading.value = false
   }
 
-  async function editStudent(student: Student, file: File) {
+  async function editStudent(student: Student, file?: File) {
     isLoading.value = true
-    await StudentRepository.updateStudent(student.uid as string, student, file)
+    await StudentRepository.updateStudent(student.uid as string, student, file!)
     getStudents()
     isLoading.value = false
   }
