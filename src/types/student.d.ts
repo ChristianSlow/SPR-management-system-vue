@@ -21,11 +21,8 @@ export interface Student {
   year?: string
   major?: string
   curriculum?: Curriculum
+  generalAvg?: string
+  gwaUrl?: string
   status?: string
   createdAt?: any
-  status?: any
-  gwa?: string
-  gwaUrl?: string
-  file1?: any
-  file2?: any
 }

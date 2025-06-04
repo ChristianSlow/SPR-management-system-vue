@@ -44,10 +44,13 @@ export const useStudentStore = defineStore('student', () => {
     isLoading.value = false
   }
 
-  async function addStudent(payload: File) {
+  async function addStudent(file: File, file2: File, student: Student) {
     isLoading.value = true
     const formData = new FormData()
-    formData.append('file', payload)
+    formData.append('file', file)
+    formData.append('file2', file2)
+    formData.append('student', JSON.stringify(student))
+
     const response = await StudentRepository.createStudent(formData)
     if (response?.statusCode == 200) {
       await getStudents()
@@ -65,10 +68,12 @@ export const useStudentStore = defineStore('student', () => {
     }
   }
 
-  async function editStudent(payload: File) {
+  async function editStudent(file: File, file2: File, student: Student) {
     isLoading.value = true
     const formData = new FormData()
-    formData.append('file', payload)
+    formData.append('file', file)
+    formData.append('file2', file2)
+    formData.append('student', JSON.stringify(student))
     const response = await StudentRepository.createStudent(formData)
     if (response?.statusCode == 200) {
       await getStudents()

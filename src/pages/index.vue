@@ -83,7 +83,7 @@ async function onFormSubmit() {
           if (userData.role === 'admin') {
             router.push('/admin')
           } else if (userData.role === 'student') {
-            router.push(userData.isDone ? '/infopage' : '/student')
+            router.push(userData.isDone ? '/student/enrollment' : '/student')
           } else {
             toast.add({
               severity: 'warn',
@@ -130,7 +130,7 @@ async function onFormSubmit() {
       })
 
       setTimeout(() => {
-        router.push('/student/info')
+        router.push('/student/enrollment')
       }, 1500)
     }
   } catch (error: any) {

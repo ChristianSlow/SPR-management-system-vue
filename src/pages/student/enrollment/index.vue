@@ -11,14 +11,18 @@ import { getCurrentUser } from 'vuefire'
 const courseStore = useCourseStore()
 const studentStore = useStudentStore()
 const router = useRouter()
-const student = ref<Student>({})
 const toast = useToast()
 
-const file = ref()
+const student = ref<Student>({})
 
-async function onFileSelected(event: any) {
-  file.value = event
-  if (!file.value) return
+const fileFront = ref<File | null>(null)
+const fileBack = ref<File | null>(null)
+
+function onFileSelected(event: any) {
+  fileFront.value = event?.files?.[0] || null
+}
+function onFile2Selected(event: any) {
+  fileBack.value = event?.files?.[0] || null
 }
 
 const filteredMajor = computed(() => {
@@ -26,25 +30,22 @@ const filteredMajor = computed(() => {
 })
 
 async function onSubmit(payload: Student) {
-  // const curriculum = await CurriculumRepository.fetchCurriculum(
-  //   payload.course as string,
-  //   payload.major as string,
-  // )
-  studentStore.editStudent({ ...payload }, file.value)
+  const res = await studentStore.editStudent(fileFront.value, fileBack.value, { ...payload })
   toast.add({
-    severity: 'success',
-    summary: 'Success',
-    detail: 'Succesfully added subject!',
+    severity: res.status,
+    summary: res.statusMessage,
+    detail: res.message,
     life: 3000,
   })
   router.push('/student')
 }
 
 onMounted(async () => {
-  const user = await getCurrentUser()
-  courseStore.getCourses()
+  await getCurrentUser()
+  // courseStore.getCourses()
 })
 </script>
+
 <template>
   <Fluid class="flex justify-center p-2">
     <div class="flex mt-3 w-full justify-center">
@@ -59,7 +60,7 @@ onMounted(async () => {
         </div>
 
         <!-- Student Information -->
-        <form class="flex flex-col gap-4">
+        <form class="flex flex-col gap-4" @submit.prevent="onSubmit(student)">
           <!-- Name Fields -->
           <div class="flex flex-col md:flex-row gap-2">
             <div class="flex flex-col gap-2 flex-1">
@@ -119,14 +120,23 @@ onMounted(async () => {
             <InputText required v-model="student.birthPlace" />
           </div>
 
-          <div class="flex gap-4 flex-grow">
+          <div class="flex flex-col">
             <div class="flex flex-col gap-2 flex-1">
               <label>General Average</label>
-              <InputText required v-model="student.gwa" />
+              <InputText required v-model="student.generalAvg" />
             </div>
-            <div class="flex flex-col gap-2 flex-1">
+            <div class="flex flex-col gap-2 flex-1 p-2">
               <label>Card</label>
-              <FileUpload ref="fileupload" mode="basic" accept="image/*" @select="onFileSelected" />
+              <div class="flex gap-5 flex-wrap">
+                <div class="flex flex-col gap-2 flex-1">
+                  <label>Front</label>
+                  <FileUpload mode="basic" accept="image/*" @select="onFileSelected" />
+                </div>
+                <div class="flex flex-col gap-2 flex-1">
+                  <label>Back</label>
+                  <FileUpload mode="basic" accept="image/*" @select="onFile2Selected" />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -176,9 +186,9 @@ onMounted(async () => {
               <InputText required v-model="student.parentName" />
             </div>
             <div class="flex flex-1 flex-col gap-2">
-              <label for="mobile">Parent Mobile Number</label>
+              <label for="parent-mobile">Parent Mobile Number</label>
               <InputText
-                id="mobile"
+                id="parent-mobile"
                 v-model="student.parentMobileNumber"
                 type="tel"
                 maxlength="11"
@@ -193,20 +203,18 @@ onMounted(async () => {
             <label>Parent Address</label>
             <InputText required v-model="student.address" />
           </div>
-        </form>
 
-        <!-- Submit Button -->
-        <div>
-          <Button
-            :loading="studentStore.isLoading"
-            label="Submit"
-            @click="onSubmit(student)"
-            severity="danger"
-            type="submit"
-            raised
-            class="w-full py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors"
-          />
-        </div>
+          <div>
+            <Button
+              :loading="studentStore.isLoading"
+              label="Submit"
+              severity="danger"
+              type="submit"
+              raised
+              class="w-full py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors"
+            />
+          </div>
+        </form>
       </div>
     </div>
   </Fluid>

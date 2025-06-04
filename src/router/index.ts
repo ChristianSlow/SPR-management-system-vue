@@ -63,46 +63,57 @@ const router = createRouter({
       name: 'student-page',
       meta: { requiresAuth: true, requiresStudent: true },
       component: () => import('@/pages/student/index.vue'),
+      children: [
+        {
+          path: '/',
+          name: 'student-home',
+          component: () => import('@/pages/student/home/index.vue'),
+        },
+        {
+          path: 'enrollment',
+          name: 'student-enrollment',
+          component: () => import('@/pages/student/enrollment/index.vue'),
+        },
+      ],
     },
     {
-      path: '/student/info',
-      name: 'student-info',
-      meta: { requiresAuth: true, requiresStudent: true },
-      component: () => import('@/pages/student/info.vue'),
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: () => import('@/pages/error.vue'),
     },
   ],
 })
 
 const ADMIN_USER_ID = '6u9UryEQwOQmdfJ56DSlgDV9YuR2'
 
-router.beforeEach(async (to, _unused, next) => {
-  const user = await getCurrentUser()
-  const isAuthenticated = !!user
-  const isAdmin = user?.uid === ADMIN_USER_ID
+// router.beforeEach(async (to, _unused, next) => {
+//   const user = await getCurrentUser()
+//   const isAuthenticated = !!user
+//   const isAdmin = user?.uid === ADMIN_USER_ID
 
-  if (isAuthenticated && to.meta.requiresStudent) {
-    const target = isAdmin ? 'admin-dashboard' : 'student-page'
-    if (to.name !== target) {
-      return next({ name: target })
-    }
-    return next()
-  }
+//   if (isAuthenticated && to.meta.requiresStudent) {
+//     const target = isAdmin ? 'admin-dashboard' : 'student-page'
+//     if (to.name !== target) {
+//       return next({ name: target })
+//     }
+//     return next()
+//   }
 
-  if (!isAuthenticated && to.meta.requiresAuth) {
-    if (to.name !== 'auth') {
-      return next({ name: 'auth' })
-    }
-    return next()
-  }
+//   if (!isAuthenticated && to.meta.requiresAuth) {
+//     if (to.name !== 'auth') {
+//       return next({ name: 'auth' })
+//     }
+//     return next()
+//   }
 
-  if (to.meta.requiresAdmin && isAuthenticated && !isAdmin) {
-    if (to.name !== 'student-page') {
-      return next({ name: 'student-page' })
-    }
-    return next()
-  }
+//   if (to.meta.requiresAdmin && isAuthenticated && !isAdmin) {
+//     if (to.name !== 'student-page') {
+//       return next({ name: 'student-page' })
+//     }
+//     return next()
+//   }
 
-  next()
-})
+//   next()
+// })
 
 export default router
