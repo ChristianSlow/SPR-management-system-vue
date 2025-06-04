@@ -63,9 +63,20 @@ onMounted(() => store.getCurriculums())
           <template #empty>
             <div class="flex items-center justify-center p-4">No curriculum found.</div>
           </template>
-          <Column field="name" header="Name" style="min-width: 12rem"></Column>
+          <Column field="name" header="Name" class="uppercase" style="min-width: 12rem"></Column>
           <Column field="course" header="Course" style="min-width: 12rem"></Column>
-          <Column field="major" header="Major" style="min-width: 12rem"></Column>
+          <Column header="Majors" style="min-width: 12rem">
+            <!-- <template #body="sloProps">
+              <ul class="bg-gray-100 p-2 rounded-sm max-h-80 overflow-y-scroll">
+                <li v-for="major in sloProps.data.majors" :key="major" class="capitalize">
+                  {{ major.name }}
+                </li>
+                <li v-if="sloProps.data.majors.length === 0" class="text-gray-500">
+                  No majors associated
+                </li>
+              </ul>
+            </template> -->
+          </Column>
           <Column :exportable="false" header="Actions">
             <template #body="slotProps">
               <div class="flex gap-1">

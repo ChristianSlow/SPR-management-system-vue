@@ -78,7 +78,6 @@ onMounted(() => {
           size="small"
           :value="filteredStudents"
           dataKey="id"
-          :paginator="true"
           :rows="10"
           :loading="store.isLoading"
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
@@ -159,6 +158,19 @@ onMounted(() => {
             </template>
           </Column>
         </DataTable>
+        <Paginator
+          v-if="store.totalStudents > 10"
+          :template="{
+            '640px': 'PrevPageLink CurrentPageReport NextPageLink',
+            '960px': 'FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink',
+            '1300px': 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
+            default: 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink ',
+          }"
+          :rows="10"
+          @page="(e) => (store.page = e.page + 1)"
+          :totalRecords="store.totalStudents"
+        >
+        </Paginator>
       </div>
     </div>
   </div>

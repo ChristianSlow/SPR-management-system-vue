@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { CurriculumRepository } from '@/repositories/curriculumRepository'
+import { CourseRepository } from '@/repositories/courseRepository'
 import type { Curriculum } from '@/types/curriculum'
 
 export const useCurriculumStore = defineStore('curriculum', () => {
@@ -12,8 +13,19 @@ export const useCurriculumStore = defineStore('curriculum', () => {
   async function getCurriculums() {
     isLoading.value = true
     const response = await CurriculumRepository.fetchCurriculums({ q: searchQuery.value })
+    // const coursePromises =
+    //   response?.data?.map(async (curriculum: any) => {
+    //     const course = await CourseRepository.fetchCourse(curriculum.courseId)
+    //     return {
+    //       ...curriculum,
+    //       course: course?.data || null,
+    //     }
+    //   }) || []
+
+    // curriculums.value = await Promise.all(coursePromises)
     curriculums.value = response?.data || []
     isLoading.value = false
+    console.log(curriculums.value)
   }
 
   async function addCurriculum(curriculum: Curriculum) {

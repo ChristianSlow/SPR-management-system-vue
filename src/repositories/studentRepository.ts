@@ -18,9 +18,9 @@ export const StudentRepository = {
     }
   },
 
-  async fetchStudent(uid: string) {
+  async fetchStudent(id: string) {
     try {
-      const { data: response } = await useFetch(`${API_URL}/students/${uid}`).json<
+      const { data: response } = await useFetch(`${API_URL}/students/${id}`).json<
         H3Response<Student>
       >()
       return response.value
@@ -51,21 +51,32 @@ export const StudentRepository = {
     }
   },
 
-  async updateStudent(uid: string, payload: Student) {
-    // try {
-    //   await updateDoc(doc(db, 'users', uid), { ...payload })
-    //   return { message: 'Successfully updated Student!' }
-    // } catch (error) {
-    //   console.error('Error updating Student:', error)
-    //   return { message: 'Error updating Student' }
-    // }
+  async updateStudent(id: string, payload: FormData) {
+    try {
+      const { data, error } = await useFetch(`${API_URL}/students/${id}`, {
+        method: 'POST',
+        body: payload,
+      }).json<H3Response>()
+
+      if (error.value) {
+        throw new Error(error.value.message || 'Network error')
+      }
+
+      return data.value
+    } catch (error) {
+      console.error('Error updating student:', error)
+      return {
+        statusCode: 500,
+        message: error instanceof Error ? error.message : 'Failed to update student',
+      }
+    }
   },
 
-  async destroyStudent(uid: string) {
+  async destroyStudent(id: string) {
     try {
-      const { data, error } = await useFetch(`${API_URL}/students/${uid}`, {
+      const { data, error } = await useFetch(`${API_URL}/students/${id}`, {
         method: 'DELETE',
-        body: uid,
+        body: id,
       }).json<H3Response>()
 
       if (error.value) {

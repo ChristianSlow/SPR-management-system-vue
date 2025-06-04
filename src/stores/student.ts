@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { Student } from '@/types/student'
 import { StudentRepository } from '@/repositories/studentRepository'
@@ -11,11 +11,15 @@ export const useStudentStore = defineStore('student', () => {
   const student = ref<Student>({})
   const totalStudents = ref(0)
   const searchQuery = ref('')
+  const page = ref(0)
+
+  const offset = computed(() => page.value * 10)
 
   async function getStudents() {
     isLoading.value = true
     const response = await StudentRepository.fetchStudents({
       q: searchQuery.value,
+      offset: offset.value,
     })
 
     students.value = response?.data || []
@@ -25,16 +29,14 @@ export const useStudentStore = defineStore('student', () => {
   }
 
   async function updateStudentStatus(uid: string, status: string, note?: string) {
-    isLoading.value = true
-
-    await StudentRepository.updateStudent(uid, {
-      ...students.value.find((s) => s.uid === uid),
-      status,
-      note,
-    } as Student)
-
-    getStudents()
-    isLoading.value = false
+    // isLoading.value = true
+    // await StudentRepository.updateStudent(uid, {
+    //   ...students.value.find((s) => s.uid === uid),
+    //   status,
+    //   note,
+    // } as Student)
+    // getStudents()
+    // isLoading.value = false
   }
 
   async function getStudent(uid: string) {
@@ -68,18 +70,18 @@ export const useStudentStore = defineStore('student', () => {
     }
   }
 
-  async function editStudent(file: File, file2: File, student: Student) {
+  async function editStudent(uid: string, file: File, file2: File, student: Student) {
     isLoading.value = true
     const formData = new FormData()
     formData.append('file', file)
     formData.append('file2', file2)
     formData.append('student', JSON.stringify(student))
-    const response = await StudentRepository.createStudent(formData)
+    const response = await StudentRepository.updateStudent(uid, formData)
     if (response?.statusCode == 200) {
       await getStudents()
       return {
         status: 'success',
-        message: response.message,
+        message: 'Registered successfully!',
         statusMessage: response.statusMessage ?? '',
       }
     }
@@ -89,10 +91,6 @@ export const useStudentStore = defineStore('student', () => {
       message: response?.message,
       statusMessage: response?.statusMessage ?? '',
     }
-    console.log(student)
-    await StudentRepository.updateStudent(student.uid as string, student)
-    getStudents()
-    isLoading.value = false
   }
 
   async function deleteStudent(uid: string) {
@@ -106,6 +104,7 @@ export const useStudentStore = defineStore('student', () => {
     students,
     student,
     totalStudents,
+    page,
     isLoading,
     addStudent,
     getStudents,

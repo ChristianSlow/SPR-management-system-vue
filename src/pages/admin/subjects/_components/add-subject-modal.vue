@@ -20,12 +20,12 @@ function onClose() {
   dialogRef.value.close()
 }
 
-function onSubmit(payload: Subject) {
-  store.addSubject(payload)
+async function onSubmit(payload: Subject) {
+  const res = await store.addSubject(payload)
   toast.add({
-    severity: 'success',
-    summary: 'Success',
-    detail: 'Succesfully added subject!',
+    severity: res.status,
+    summary: res.statusMessage,
+    detail: res.message,
     life: 3000,
   })
   onClose()

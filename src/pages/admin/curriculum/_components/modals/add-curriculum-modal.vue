@@ -58,7 +58,7 @@ onMounted(() => {
 })
 
 const filteredMajor = computed(() => {
-  return courseStore.courses.find((item) => item.abbreviation == curriculum.value.course)
+  return courseStore.courses.find((item: any) => item.abbreviation == curriculum.value.course)
 })
 
 watch(
@@ -105,6 +105,7 @@ watchEffect(() => console.log(firstYear.first, firstYear.second))
             editable
             :options="filteredMajor?.majors"
             placeholder="Select a major"
+            optionLabel="name"
             class="w-full"
             :loading="courseStore.isLoading"
           />

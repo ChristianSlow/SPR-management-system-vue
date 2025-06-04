@@ -1,4 +1,6 @@
 import type { Subject } from '@/types/subject'
+import { useFetch } from '@vueuse/core'
+import type { H3Response } from '@/types/h3response'
 import {
   addDoc,
   collection,
@@ -16,81 +18,91 @@ import { useFirestore } from 'vuefire'
 const db = useFirestore()
 const subjectsRef = collection(db, 'subjects')
 
+const API_URL = import.meta.env.VITE_API_URL
+
 export const SubjectRepository = {
-  async fetchSubjects() {
+  async fetchSubjects(params: Record<string, any>) {
+    const queryString = new URLSearchParams(params).toString()
+    const url = `${API_URL}/subjects${queryString ? '?' + queryString : ''}`
+
     try {
-      const querySnapshot = await getDocs(subjectsRef)
-      const subjects = querySnapshot.docs.map<Subject>((doc) => ({
-        ...doc.data(),
-        uid: doc.id,
-      }))
-      return { data: subjects, total: 0 }
+      const { data: response } = await useFetch(url).json<H3Response<Subject[]>>()
+      return response.value
     } catch (error) {
       console.error('Error fetching subjects:', error)
-      return { data: [], total: 0 }
+      return { total: 0, data: [] }
     }
   },
 
-  async fetchFilteredSubject(key: string) {
+  async fetchSubject(id: string) {
     try {
-      const querySnapshot = await getDocs(
-        query(collection(db, 'subjects'), where('abbreviation', '==', key)),
-      )
-      const subjects = querySnapshot.docs.map<Subject>((doc) => ({
-        ...doc.data(),
-        uid: doc.id,
-      }))
-      return { data: subjects, total: 0 }
-    } catch (error) {
-      console.error('Error fetching subjects:', error)
-      return { data: {} }
-    }
-  },
+      const { data: response } = await useFetch(`${API_URL}/subjects/${id}`).json<
+        H3Response<Subject[]>
+      >()
 
-  async fetchSubject(uid: string) {
-    try {
-      const subjectDoc = await getDoc(doc(db, 'subjects', uid))
-
-      return { data: { ...subjectDoc.data(), uid: subjectDoc.id } }
+      return response.value
     } catch (error) {
-      console.error('Error fetching subjects:', error)
+      console.error('Error fetching subject:', error)
       return { data: {} }
     }
   },
 
   async createSubject(payload: Subject) {
     try {
-      const subjectDoc = await addDoc(collection(db, 'subjects'), {
-        ...payload,
-        grade: '',
-        createdAt: Timestamp.now(),
-      })
-      return { message: 'Successfully added subjects!', data: subjectDoc.id }
+      const { data } = await useFetch(`${API_URL}/subjects`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      }).json<H3Response>()
+
+      return data.value
     } catch (error) {
-      console.log(error)
-      return { message: 'Error adding subjects' }
+      console.error('Error adding subject:', error)
+      return {
+        statusCode: 500,
+        message: error instanceof Error ? error.message : 'Failed to add subject',
+      }
     }
   },
 
-  async updateSubject(uid: string, payload: Partial<Subject>) {
+  async updateSubject(id: string, payload: Partial<Subject>) {
     try {
-      const subjectDoc = doc(db, 'subjects', uid)
-      await updateDoc(subjectDoc, payload)
+      const { data } = await useFetch(`${API_URL}/subjects/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      }).json<H3Response>()
 
-      return { message: 'Successfully updated subject!' }
+      return data.value
     } catch (error) {
-      console.error('Error updating subject:', error)
-      return { message: 'Error updating subject' }
+      return {
+        statusCode: 500,
+        message: error instanceof Error ? error.message : 'Failed to update subject',
+      }
     }
   },
 
-  async destroySubject(uid: string) {
+  async destroySubject(id: string) {
     try {
-      const snapshot = await deleteDoc(doc(db, 'subjects', uid))
+      const { data, error } = await useFetch(`${API_URL}/subjects/${id}`, {
+        method: 'DELETE',
+        body: id,
+      }).json<H3Response>()
 
-      return { message: 'Successfully added subjects!', data: snapshot }
-    } catch {
-      return { message: 'Error adding subjects' }
+      if (error.value) {
+        throw new Error(error.value.message || 'Network error')
+      }
+
+      return data.value
+    } catch (error) {
+      return {
+        statusCode: 500,
+        message: error instanceof Error ? error.message : 'Failed to delete subject',
+      }
     }
   },
 }
