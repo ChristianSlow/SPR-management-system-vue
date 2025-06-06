@@ -19,6 +19,7 @@ export const useCourseStore = defineStore('course', () => {
   async function getCourse(uid: string) {
     isLoading.value = true
     const response = await CourseRepository.fetchCourse(uid)
+
     course.value = response?.data || {}
     isLoading.value = false
   }
@@ -91,6 +92,7 @@ export const useCourseStore = defineStore('course', () => {
 
   return {
     courses,
+    course,
     isLoading,
     getCourse,
     getCourses,

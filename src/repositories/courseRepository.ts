@@ -21,7 +21,7 @@ export const CourseRepository = {
   async fetchCourse(id: string) {
     try {
       const { data: response } = await useFetch(`${API_URL}/courses/${id}`).json<
-        H3Response<Course[]>
+        H3Response<Course>
       >()
 
       return response.value

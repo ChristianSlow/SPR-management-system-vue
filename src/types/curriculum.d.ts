@@ -7,3 +7,8 @@ export interface Curriculum {
   enrollments?: any
   createdAt?: string
 }
+
+export interface Year {
+  first?: any
+  second?: any
+}

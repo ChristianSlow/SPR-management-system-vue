@@ -25,4 +25,5 @@ export interface Student {
   gwaUrl?: string
   status?: string
   createdAt?: any
+  isEnrolled?: boolean
 }
