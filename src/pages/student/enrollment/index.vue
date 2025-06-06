@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import { CurriculumRepository } from '@/repositories/curriculumRepository'
 import { useCourseStore } from '@/stores/course'
 import { useStudentStore } from '@/stores/student'
 import type { Student } from '@/types/student'
 import { useToast } from 'primevue'
 import { computed, onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { getCurrentUser } from 'vuefire'
+import { useRoute, useRouter } from 'vue-router'
 
 const courseStore = useCourseStore()
 const studentStore = useStudentStore()
 const router = useRouter()
 const toast = useToast()
+const route = useRoute()
 
 const student = ref<Student>({})
 
@@ -30,7 +29,12 @@ const filteredMajor = computed(() => {
 })
 
 async function onSubmit(payload: Student) {
-  const res = await studentStore.editStudent(fileFront.value, fileBack.value, { ...payload })
+  const res = await studentStore.editStudent(
+    'id',
+    fileFront.value as File,
+    fileBack.value as File,
+    { ...payload } as Student,
+  )
   toast.add({
     severity: res.status,
     summary: res.statusMessage,
@@ -40,9 +44,11 @@ async function onSubmit(payload: Student) {
   router.push('/student')
 }
 
-onMounted(async () => {
-  await getCurrentUser()
+onMounted(() => {
+  // await getCurrentUser()
   // courseStore.getCourses()
+  // studentStore.getStudent(route.params.id as String)
+  console.log(route.params.id)
 })
 </script>
 

@@ -130,7 +130,7 @@ async function onFormSubmit() {
       })
 
       setTimeout(() => {
-        router.push('/student/enrollment')
+        router.push(`/student/enrollment/${user.uid}`)
       }, 1500)
     }
   } catch (error: any) {
