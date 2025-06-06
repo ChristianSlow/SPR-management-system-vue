@@ -4,6 +4,7 @@ import type { Student } from '@/types/student'
 import { StudentRepository } from '@/repositories/studentRepository'
 import { CurriculumRepository } from '@/repositories/curriculumRepository'
 import type { Curriculum } from '@/types/curriculum'
+import { watchDebounced } from '@vueuse/core'
 
 export const useStudentStore = defineStore('student', () => {
   const isLoading = ref(false)
@@ -18,8 +19,7 @@ export const useStudentStore = defineStore('student', () => {
   async function getStudents() {
     isLoading.value = true
     const response = await StudentRepository.fetchStudents({
-      q: searchQuery.value,
-      offset: offset.value,
+      search: searchQuery.value,
     })
 
     students.value = response?.data || []
@@ -100,12 +100,21 @@ export const useStudentStore = defineStore('student', () => {
     isLoading.value = false
   }
 
+  watchDebounced(
+    [searchQuery],
+    (newQuery) => {
+      getStudents()
+    },
+    { debounce: 300 },
+  )
+
   return {
     students,
     student,
     totalStudents,
     page,
     isLoading,
+    searchQuery,
     addStudent,
     getStudents,
     editStudent,

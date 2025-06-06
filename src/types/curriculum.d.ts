@@ -1,16 +1,9 @@
 export interface Curriculum {
-  uid?: string
+  id?: string
   name?: string
-  course?: string
-  major?: string
-  firstYear?: Year
-  secondYear?: Year
-  thirdYear?: Year
-  fourthYear?: Year
-  createdAt?: any
-}
-
-export interface Year {
-  first?: any
-  second?: any
+  course?: any
+  courseId?: string
+  subjects?: any
+  enrollments?: any
+  createdAt?: string
 }

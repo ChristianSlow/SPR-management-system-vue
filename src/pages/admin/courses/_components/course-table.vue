@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useCourseStore } from '@/stores/course'
 import { useDialog } from 'primevue'
-import { defineAsyncComponent, onMounted } from 'vue'
+import { defineAsyncComponent, onMounted, watch } from 'vue'
 
 const addCourse = defineAsyncComponent(
   () => import('@/pages/admin/courses/_components/add-course-modal.vue'),
@@ -19,6 +19,7 @@ const dialog = useDialog()
 const store = useCourseStore()
 
 onMounted(() => store.getCourses())
+console.log(store.courses)
 </script>
 
 <template>

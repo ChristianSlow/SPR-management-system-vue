@@ -12,17 +12,8 @@ export const useCurriculumStore = defineStore('curriculum', () => {
 
   async function getCurriculums() {
     isLoading.value = true
-    const response = await CurriculumRepository.fetchCurriculums({ q: searchQuery.value })
-    // const coursePromises =
-    //   response?.data?.map(async (curriculum: any) => {
-    //     const course = await CourseRepository.fetchCourse(curriculum.courseId)
-    //     return {
-    //       ...curriculum,
-    //       course: course?.data || null,
-    //     }
-    //   }) || []
-
-    // curriculums.value = await Promise.all(coursePromises)
+    const response = await CurriculumRepository.fetchCurriculums({ searchQuery: searchQuery.value })
+    console.log(response?.data)
     curriculums.value = response?.data || []
     isLoading.value = false
     console.log(curriculums.value)
@@ -54,10 +45,9 @@ export const useCurriculumStore = defineStore('curriculum', () => {
   async function editCurriculum(curriculum: Curriculum) {
     isLoading.value = true
     try {
-      const response = await CurriculumRepository.updateCurriculum(curriculum.uid as string, {
+      const response = await CurriculumRepository.updateCurriculum(curriculum.id as string, {
         course: curriculum.course?.toLowerCase(),
         name: curriculum.name?.toLowerCase(),
-        major: curriculum.major?.toLowerCase(),
       })
       await getCurriculums()
       return {

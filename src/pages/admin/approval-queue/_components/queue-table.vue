@@ -19,7 +19,6 @@ const dialog = useDialog()
 const toast = useToast()
 const dt = ref()
 
-const searchQuery = ref('')
 const statusQuery = ref('pending')
 
 const filteredStudents = computed(() => {
@@ -55,7 +54,7 @@ onMounted(() => {
       <Toolbar class="mb-6">
         <template #start>
           <InputText
-            v-model="searchQuery"
+            v-model="store.searchQuery"
             type="text"
             placeholder="Search by Name, Course, or Major..."
           />
