@@ -35,7 +35,7 @@ async function onSubmit(payload: Subject) {
       </div>
       <div class="flex flex-1 flex-col gap-2">
         <label>Units</label>
-        <InputText required v-model="subject.unit" />
+        <InputNumber required v-model="subject.unit" />
       </div>
     </div>
     <div class="flex flex-col gap-2">

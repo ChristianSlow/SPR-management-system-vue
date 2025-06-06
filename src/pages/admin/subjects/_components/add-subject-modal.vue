@@ -7,10 +7,9 @@ import { inject, onMounted, reactive } from 'vue'
 
 const dialogRef = inject<any>('dialogRef')
 const subject = reactive<Subject>({
-  courseIds: [],
   name: '',
   code: '',
-  unit: '',
+  unit: 0,
 })
 const store = useSubjectStore()
 const courseStore = useCourseStore()
@@ -30,33 +29,17 @@ async function onSubmit(payload: Subject) {
   })
   onClose()
 }
-
-onMounted(() => courseStore.getCourses())
 </script>
 
 <template>
   <form class="flex flex-col gap-4" @submit.prevent="onSubmit(subject)">
     <div class="flex flex-col gap-2">
-      <label>Course</label>
-      <MultiSelect
-        v-model="subject.courseIds"
-        :options="courseStore.courses"
-        optionLabel="abbreviation"
-        optionValue="abbreviation"
-        placeholder="Select course"
-        class="w-full"
-      />
+      <label>Subject Code</label>
+      <InputText required v-model="subject.code" />
     </div>
-
-    <div class="flex gap-4">
-      <div class="flex flex-1 flex-col gap-2">
-        <label>Subject Code</label>
-        <InputText required v-model="subject.code" />
-      </div>
-      <div class="flex flex-1 flex-col gap-2">
-        <label>Units</label>
-        <InputText required v-model="subject.unit" />
-      </div>
+    <div class="flex flex-col gap-2">
+      <label>Units</label>
+      <InputNumber required v-model="subject.unit" />
     </div>
 
     <div class="flex flex-col gap-2">

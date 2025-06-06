@@ -28,7 +28,7 @@ onMounted(() => store.getSubjects())
     <div class="card">
       <Toolbar class="mb-6">
         <template #start>
-          <InputText type="text" placeholder="Search..." />
+          <InputText type="text" placeholder="Search..." v-model="store.searchQuery" />
         </template>
         <template #end>
           <Button

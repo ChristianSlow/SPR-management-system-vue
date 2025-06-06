@@ -2,6 +2,7 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { Subject } from '@/types/subject'
 import { SubjectRepository } from '@/repositories/subjectRepository'
+import { watchDebounced } from '@vueuse/core'
 
 export const useSubjectStore = defineStore('subject', () => {
   const isLoading = ref(false)
@@ -13,7 +14,7 @@ export const useSubjectStore = defineStore('subject', () => {
   async function getSubjects() {
     isLoading.value = true
     const response = await SubjectRepository.fetchSubjects({
-      q: searchQuery.value,
+      search: searchQuery.value,
     })
     subjects.value = response?.data || []
     totalSubjects.value = response?.total || 0
@@ -95,10 +96,19 @@ export const useSubjectStore = defineStore('subject', () => {
     }
   }
 
+  watchDebounced(
+    [searchQuery],
+    (newQuery) => {
+      getSubjects()
+    },
+    { debounce: 300 },
+  )
+
   return {
     subjects,
     isLoading,
     filteredSubjects,
+    searchQuery,
     getSubjects,
     getFilteredSubject,
     addSubject,

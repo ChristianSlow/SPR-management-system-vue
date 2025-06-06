@@ -22,9 +22,6 @@ const viewCurriculum = defineAsyncComponent(
 )
 
 const dialog = useDialog()
-const toast = useToast()
-const dt = ref()
-const products = ref()
 const store = useCurriculumStore()
 
 onMounted(() => store.getCurriculums())
@@ -64,18 +61,22 @@ onMounted(() => store.getCurriculums())
             <div class="flex items-center justify-center p-4">No curriculum found.</div>
           </template>
           <Column field="name" header="Name" class="uppercase" style="min-width: 12rem"></Column>
-          <Column field="course" header="Course" style="min-width: 12rem"></Column>
+          <Column field="course" header="Course" style="min-width: 12rem">
+            <template #body="slotProps">
+              <label class="capitalize">
+                {{ slotProps.data.course.name }}
+              </label>
+            </template>
+          </Column>
           <Column header="Majors" style="min-width: 12rem">
-            <!-- <template #body="sloProps">
-              <ul class="bg-gray-100 p-2 rounded-sm max-h-80 overflow-y-scroll">
-                <li v-for="major in sloProps.data.majors" :key="major" class="capitalize">
-                  {{ major.name }}
-                </li>
-                <li v-if="sloProps.data.majors.length === 0" class="text-gray-500">
-                  No majors associated
-                </li>
-              </ul>
-            </template> -->
+            <template #body="slotProps">
+              <label v-for="major in slotProps.data.course.majors" :key="major" class="capitalize">
+                {{ major.name }}
+              </label>
+              <label v-if="slotProps.data.course.majors.length == 0" class="text-gray-500">
+                No majors associated
+              </label>
+            </template>
           </Column>
           <Column :exportable="false" header="Actions">
             <template #body="slotProps">

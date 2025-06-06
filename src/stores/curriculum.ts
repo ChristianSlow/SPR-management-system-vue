@@ -1,7 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { CurriculumRepository } from '@/repositories/curriculumRepository'
-import { CourseRepository } from '@/repositories/courseRepository'
 import type { Curriculum } from '@/types/curriculum'
 
 export const useCurriculumStore = defineStore('curriculum', () => {
@@ -13,7 +12,6 @@ export const useCurriculumStore = defineStore('curriculum', () => {
   async function getCurriculums() {
     isLoading.value = true
     const response = await CurriculumRepository.fetchCurriculums({ searchQuery: searchQuery.value })
-    console.log(response?.data)
     curriculums.value = response?.data || []
     isLoading.value = false
     console.log(curriculums.value)
