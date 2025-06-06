@@ -1,32 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { collection, getCountFromServer, query, where, getDocs } from 'firebase/firestore'
-import { useFirestore } from 'vuefire'
+import { useAnalyticStore } from '@/stores/analytic'
+import { onMounted } from 'vue'
 
-const db = useFirestore()
-
-const totalStudents = ref(0)
-const totalSubjects = ref(0)
-const totalCurriculum = ref(0)
-const totalCourses = ref(0)
-
-const fetchCounts = async () => {
-  const studentQuery = query(collection(db, 'users'), where('role', '==', 'student'))
-  const studentSnap = await getCountFromServer(studentQuery)
-  totalStudents.value = studentSnap.data().count
-
-  const subjectSnap = await getCountFromServer(collection(db, 'subjects'))
-  totalSubjects.value = subjectSnap.data().count
-
-  const curriculumSnap = await getCountFromServer(collection(db, 'curriculums'))
-  totalCurriculum.value = curriculumSnap.data().count
-
-  const coursesSnap = await getCountFromServer(collection(db, 'courses'))
-  totalCourses.value = coursesSnap.data().count
-}
+const store = useAnalyticStore()
 
 onMounted(() => {
-  fetchCounts()
+  store.fetchAnalytics()
 })
 </script>
 
@@ -40,7 +19,9 @@ onMounted(() => {
         <i class="pi pi-book text-4xl text-blue-500" />
         <div>
           <h3 class="text-lg text-gray-700 dark:text-white">Total Courses</h3>
-          <p class="text-gray-500 dark:text-gray-300 text-2xl font-medium">{{ totalCourses }}</p>
+          <p class="text-gray-500 dark:text-gray-300 text-2xl font-medium">
+            {{ store.analytics?.courses }}
+          </p>
         </div>
       </div>
 
@@ -48,7 +29,9 @@ onMounted(() => {
         <i class="pi pi-bookmark text-4xl text-green-500" />
         <div>
           <h3 class="text-lg text-gray-700 dark:text-white">Total Subjects</h3>
-          <p class="text-gray-500 dark:text-gray-300 text-2xl font-medium">{{ totalSubjects }}</p>
+          <p class="text-gray-500 dark:text-gray-300 text-2xl font-medium">
+            {{ store.analytics?.subjects }}
+          </p>
         </div>
       </div>
 
@@ -56,7 +39,9 @@ onMounted(() => {
         <i class="pi pi-server text-4xl text-red-500" />
         <div>
           <h3 class="text-lg text-gray-700 dark:text-white">Total Curriculum</h3>
-          <p class="text-gray-500 dark:text-gray-300 text-2xl font-medium">{{ totalCurriculum }}</p>
+          <p class="text-gray-500 dark:text-gray-300 text-2xl font-medium">
+            {{ store.analytics?.curriculums }}
+          </p>
         </div>
       </div>
 
@@ -64,7 +49,9 @@ onMounted(() => {
         <i class="pi pi-users text-4xl text-black" />
         <div>
           <h3 class="text-lg text-gray-700 dark:text-white">Total Students</h3>
-          <p class="text-gray-500 dark:text-gray-300 text-2xl font-medium">{{ totalStudents }}</p>
+          <p class="text-gray-500 dark:text-gray-300 text-2xl font-medium">
+            {{ store.analytics?.students }}
+          </p>
         </div>
       </div>
     </div>
@@ -78,7 +65,9 @@ onMounted(() => {
           <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">Student Statistics</h3>
           <p class="text-gray-500 dark:text-gray-300 mt-3 text-lg">
             Total Students:
-            <span class="font-semibold text-gray-900 dark:text-white">{{ totalStudents }}</span>
+            <span class="font-semibold text-gray-900 dark:text-white">{{
+              store.analytics?.students
+            }}</span>
           </p>
           <p class="text-gray-500 dark:text-gray-300 text-lg">
             Acceptance Rate: <span class="font-semibold text-green-600">0%</span>

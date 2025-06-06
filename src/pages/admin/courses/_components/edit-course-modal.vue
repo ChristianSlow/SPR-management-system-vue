@@ -82,7 +82,7 @@ async function onSave() {
           :key="index"
           class="flex items-center justify-between bg-white px-3 rounded-md shadow-sm mb-2"
         >
-          <span>{{ major }}</span>
+          <span>{{ major.name }}</span>
           <Button
             icon="pi pi-trash"
             severity="danger"
