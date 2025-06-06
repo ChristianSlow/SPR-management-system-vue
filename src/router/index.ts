@@ -5,10 +5,11 @@ import { getCurrentUser } from 'vuefire'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    { path: '/', redirect: '/auth' },
     {
-      path: '/',
+      path: '/auth',
       name: 'auth',
-      component: Homepage,
+      component: () => import('@/pages/auth/index.vue'),
     },
     {
       path: '/admin',
