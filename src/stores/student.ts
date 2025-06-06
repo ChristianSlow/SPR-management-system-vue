@@ -73,10 +73,12 @@ export const useStudentStore = defineStore('student', () => {
   async function editStudent(uid: string, file: File, file2: File, student: Student) {
     isLoading.value = true
     const formData = new FormData()
+    formData.append('userId', uid)
     formData.append('file', file)
     formData.append('file2', file2)
     formData.append('student', JSON.stringify(student))
-    const response = await StudentRepository.updateStudent(uid, formData)
+    const response = await StudentRepository.updateStudent(formData)
+    console.log(response)
     if (response?.statusCode == 200) {
       await getStudents()
       return {

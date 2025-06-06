@@ -29,12 +29,7 @@ const fourthYear = reactive<Year>({
 
 const toast = useToast()
 
-const curriculum = ref<Curriculum>({
-  firstYear,
-  secondYear,
-  thirdYear,
-  fourthYear,
-})
+const curriculum = ref({ courseId: '', name: '', majorId: '' })
 
 function onClose() {
   dialogRef.value.close()
@@ -57,14 +52,11 @@ onMounted(() => {
   subjectStore.getSubjects()
 })
 
-const filteredMajor = computed(() => {
-  return courseStore.courses.find((item: any) => item.abbreviation == curriculum.value.course)
-})
-
 watch(
-  () => curriculum.value.course,
+  () => curriculum.value.courseId,
   (val) => {
     console.log(val)
+    courseStore.getCourse(val)
     subjectStore.getFilteredSubject(val as string)
   },
 )
@@ -89,10 +81,10 @@ watchEffect(() => console.log(firstYear.first, firstYear.second))
           <label for="course" class="block text-gray-700 dark:text-white"> Course </label>
           <Select
             option-label="name"
-            v-model="curriculum.course"
+            v-model="curriculum.courseId"
             editable
             :options="courseStore.courses"
-            optionValue="abbreviation"
+            optionValue="id"
             placeholder="Select a course"
             class="w-full"
             :loading="courseStore.isLoading"
@@ -101,11 +93,12 @@ watchEffect(() => console.log(firstYear.first, firstYear.second))
         <div class="flex-1">
           <label for="course" class="block text-gray-700 dark:text-white"> Major </label>
           <Select
-            v-model="curriculum.major"
+            v-model="curriculum.majorId"
             editable
-            :options="filteredMajor?.majors"
+            :options="courseStore.course?.majors"
             placeholder="Select a major"
             optionLabel="name"
+            optionValue="id"
             class="w-full"
             :loading="courseStore.isLoading"
           />

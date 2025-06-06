@@ -1,24 +1,32 @@
+import { useFetch } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { User } from '@/types/user'
-import { UserRepository } from '@/repositories/userRepository'
+
+const API_URL = import.meta.env.VITE_API_URL
 
 export const useUserStore = defineStore('user', () => {
-  const users = ref<User[]>()
-  const user = ref<User>({})
   const isLoading = ref(false)
+  const user = ref({
+    id: '',
+    student: {
+      id: '',
+      firstName: '',
+      middleName: '',
+      lastName: '',
+    },
+  })
 
   async function getUser(id: string) {
     isLoading.value = true
-    const response = await UserRepository.fetchUser(id)
-    user.value = response?.data ?? {}
+    const { data, error } = await useFetch(`${API_URL}/users/${id}`).json()
+    user.value = data.value.data
+    console.log(user.value)
     isLoading.value = false
   }
 
   return {
-    users,
-    user,
     isLoading,
+    user,
     getUser,
   }
 })

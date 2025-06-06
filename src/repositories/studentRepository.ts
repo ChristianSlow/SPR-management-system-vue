@@ -51,9 +51,9 @@ export const StudentRepository = {
     }
   },
 
-  async updateStudent(id: string, payload: FormData) {
+  async updateStudent(payload: FormData) {
     try {
-      const { data, error } = await useFetch(`${API_URL}/students/${id}`, {
+      const { data, error } = await useFetch(`${API_URL}/students`, {
         method: 'POST',
         body: payload,
       }).json<H3Response>()

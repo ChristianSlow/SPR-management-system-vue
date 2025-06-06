@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { useCourseStore } from '@/stores/course'
 import { useStudentStore } from '@/stores/student'
+import { useUserStore } from '@/stores/user'
 import type { Student } from '@/types/student'
 import { useToast } from 'primevue'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const courseStore = useCourseStore()
 const studentStore = useStudentStore()
+const userStore = useUserStore()
 const router = useRouter()
 const toast = useToast()
 const route = useRoute()
@@ -24,13 +26,9 @@ function onFile2Selected(event: any) {
   fileBack.value = event?.files?.[0] || null
 }
 
-const filteredMajor = computed(() => {
-  return courseStore.courses.find((item: any) => item.abbreviation === student.value.course)
-})
-
 async function onSubmit(payload: Student) {
   const res = await studentStore.editStudent(
-    'id',
+    userStore.user.id,
     fileFront.value as File,
     fileBack.value as File,
     { ...payload } as Student,
@@ -41,15 +39,22 @@ async function onSubmit(payload: Student) {
     detail: res.message,
     life: 3000,
   })
-  router.push('/student')
+  // router.push('/student')
 }
 
 onMounted(() => {
-  // await getCurrentUser()
-  // courseStore.getCourses()
-  // studentStore.getStudent(route.params.id as String)
-  console.log(route.params.id)
+  courseStore.getCourses()
+  userStore.getUser(route.params.id as string)
 })
+
+watch(
+  () => student.value.course,
+  (newCourse) => {
+    if (newCourse) {
+      courseStore.getCourse(newCourse)
+    }
+  },
+)
 </script>
 
 <template>
@@ -71,15 +76,15 @@ onMounted(() => {
           <div class="flex flex-col md:flex-row gap-2">
             <div class="flex flex-col gap-2 flex-1">
               <label>First Name</label>
-              <InputText required v-model="student.firstName" />
+              <InputText required v-model="userStore.user.student.firstName" disabled />
             </div>
             <div class="flex flex-col gap-2 flex-1">
               <label>Middle Name</label>
-              <InputText required v-model="student.middleName" />
+              <InputText required v-model="userStore.user.student.middleName" disabled />
             </div>
             <div class="flex flex-col gap-2 flex-1">
               <label>Last Name</label>
-              <InputText required v-model="student.lastName" />
+              <InputText required v-model="userStore.user.student.lastName" disabled />
             </div>
           </div>
 
@@ -161,7 +166,13 @@ onMounted(() => {
             </div>
             <div class="flex flex-1 flex-col gap-2">
               <label>Major</label>
-              <Select required v-model="student.major" :options="courseStore.courses as any" />
+              <Select
+                required
+                v-model="student.major"
+                :options="courseStore.course?.majors"
+                option-label="name"
+                option-value="id"
+              />
             </div>
           </div>
 
