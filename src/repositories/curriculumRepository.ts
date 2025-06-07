@@ -73,7 +73,6 @@ export const CurriculumRepository = {
     try {
       const { data, error } = await useFetch(`${API_URL}/curriculums/${id}`, {
         method: 'DELETE',
-        body: id,
       }).json<H3Response>()
 
       if (error.value) {

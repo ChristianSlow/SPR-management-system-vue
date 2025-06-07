@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useCourseStore } from '@/stores/course'
 import { useDialog } from 'primevue'
-import { defineAsyncComponent, onMounted, watch } from 'vue'
+import { defineAsyncComponent, onMounted } from 'vue'
 
 const addCourse = defineAsyncComponent(
   () => import('@/pages/admin/courses/_components/add-course-modal.vue'),
@@ -19,14 +19,13 @@ const dialog = useDialog()
 const store = useCourseStore()
 
 onMounted(() => store.getCourses())
-console.log(store.courses)
 </script>
 
 <template>
   <div class="card">
     <Toolbar class="mb-6">
       <template #start>
-        <InputText type="text" placeholder="Search..." />
+        <InputText type="text" placeholder="Search..." v-model="store.searchQuery" />
       </template>
       <template #end>
         <Button

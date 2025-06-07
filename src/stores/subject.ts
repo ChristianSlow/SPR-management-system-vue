@@ -25,11 +25,6 @@ export const useSubjectStore = defineStore('subject', () => {
     selectedCourse.value = courseAbbreviation
   }
 
-  const filteredSubjects = computed(() => {
-    if (!selectedCourse.value) return []
-    return subjects.value.filter((s) => s.courseIds?.includes(selectedCourse.value as string))
-  })
-
   async function addSubject(subject: Subject) {
     isLoading.value = true
     try {
@@ -107,7 +102,6 @@ export const useSubjectStore = defineStore('subject', () => {
   return {
     subjects,
     isLoading,
-    filteredSubjects,
     searchQuery,
     getSubjects,
     getFilteredSubject,

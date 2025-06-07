@@ -2,16 +2,19 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { Course } from '@/types/course'
 import { CourseRepository } from '@/repositories/courseRepository'
+import { watchDebounced } from '@vueuse/core'
 
 export const useCourseStore = defineStore('course', () => {
   const isLoading = ref(false)
   const courses = ref<Course[]>([])
   const course = ref<Course>()
   const searchQuery = ref('')
+  const page = ref(0)
+  const totalCourses = ref(0)
 
   async function getCourses() {
     isLoading.value = true
-    const response = await CourseRepository.fetchCourses({ q: searchQuery.value })
+    const response = await CourseRepository.fetchCourses({ search: searchQuery.value })
     courses.value = response?.data ?? []
     isLoading.value = false
   }
@@ -90,10 +93,21 @@ export const useCourseStore = defineStore('course', () => {
     }
   }
 
+  watchDebounced(
+    [searchQuery],
+    (newQuery) => {
+      getCourses()
+    },
+    { debounce: 300 },
+  )
+
   return {
     courses,
     course,
     isLoading,
+    page,
+    totalCourses,
+    searchQuery,
     getCourse,
     getCourses,
     addCourse,

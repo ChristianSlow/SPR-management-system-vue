@@ -61,11 +61,14 @@ onMounted(() => {
           </template>
           <Column header="Fullname" style="min-width: 16rem">
             <template #body="slotProps">
-              <span>{{ slotProps.data.firstName }} {{ slotProps.data.lastName }}</span>
+              <span
+                >{{ slotProps.data.lastName }}, {{ slotProps.data.firstName }}
+                {{ slotProps.data.middleName }}</span
+              >
             </template>
           </Column>
-          <Column field="sex" header="Gender" style="min-width: 10rem"></Column>
-          <Column field="address" header="Address" style="min-width: 10rem"></Column>
+          <Column field="course" header="Course" style="min-width: 10rem"></Column>
+          <Column field="year" header="Year" style="min-width: 10rem"></Column>
           <Column :exportable="false" header="Actions">
             <template #body="slotProps">
               <div class="flex gap-1">

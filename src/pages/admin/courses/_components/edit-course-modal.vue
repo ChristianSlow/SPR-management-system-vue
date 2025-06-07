@@ -20,9 +20,8 @@ function onClose() {
 }
 
 function addMajor() {
-  course.majors?.push(major.value.toLowerCase().trim())
+  course.majors?.push({ name: major.value.toLowerCase().trim() })
   major.value = ''
-  console.log(course.majors)
 }
 
 function removeMajor(index: number) {

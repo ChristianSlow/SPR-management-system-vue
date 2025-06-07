@@ -115,7 +115,6 @@ watchEffect(() => console.log(firstYear.first, firstYear.second))
               display="chip"
               :maxSelectedLabels="2"
               filter
-              :options="subjectStore.filteredSubjects"
               optionLabel="code"
               placeholder="Select a subjects"
               class="w-full"
@@ -130,7 +129,6 @@ watchEffect(() => console.log(firstYear.first, firstYear.second))
               :maxSelectedLabels="2"
               filter
               editable
-              :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
               class="w-full"
             />
@@ -149,7 +147,6 @@ watchEffect(() => console.log(firstYear.first, firstYear.second))
               filter
               v-model="secondYear.first"
               editable
-              :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
               class="w-full"
             />
@@ -163,7 +160,6 @@ watchEffect(() => console.log(firstYear.first, firstYear.second))
               v-model="secondYear.second"
               filter
               editable
-              :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
               class="w-full"
             />
@@ -182,7 +178,6 @@ watchEffect(() => console.log(firstYear.first, firstYear.second))
               v-model="thirdYear.first"
               filter
               editable
-              :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
               class="w-full"
             />
@@ -196,7 +191,6 @@ watchEffect(() => console.log(firstYear.first, firstYear.second))
               v-model="thirdYear.second"
               filter
               editable
-              :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
               class="w-full"
             />
@@ -215,7 +209,6 @@ watchEffect(() => console.log(firstYear.first, firstYear.second))
               v-model="fourthYear.first"
               filter
               editable
-              :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
               class="w-full"
             />
@@ -229,7 +222,6 @@ watchEffect(() => console.log(firstYear.first, firstYear.second))
               v-model="fourthYear.second"
               filter
               editable
-              :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
               class="w-full"
             />

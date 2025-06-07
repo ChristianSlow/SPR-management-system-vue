@@ -3,6 +3,7 @@ import { useCourseStore } from '@/stores/course'
 import { useCurriculumStore } from '@/stores/curriculum'
 import { useSubjectStore } from '@/stores/subject'
 import type { Curriculum, Year } from '@/types/curriculum'
+import type { Major } from '@/types/major'
 import { useToast } from 'primevue'
 import { computed, inject, onMounted, reactive, ref, watch, watchEffect } from 'vue'
 
@@ -18,6 +19,10 @@ const fourthYear = reactive<Year>({ ...dialogRef.value.data.fourthYear })
 
 const curriculum = ref<Curriculum>({
   ...dialogRef.value.data,
+})
+
+const major = ref<Major>({
+  ...dialogRef.value.data.major,
 })
 
 function onClose() {
@@ -38,10 +43,6 @@ async function onSave() {
 onMounted(() => {
   courseStore.getCourses()
   subjectStore.getSubjects()
-})
-
-const filteredMajor = computed(() => {
-  return courseStore.courses.find((item:any) => item.abbreviation == curriculum.value.course)
 })
 
 watchEffect(() => {
@@ -66,26 +67,24 @@ watchEffect(() => console.log(firstYear))
       <div class="flex gap-4 w-full">
         <div class="flex-1">
           <label for="course" class="block text-gray-700 dark:text-white"> Course </label>
-          <Select
+          <InputText
             option-label="name"
-            v-model="curriculum.course"
-            editable
-            :options="courseStore.courses"
-            optionValue="abbreviation"
+            v-model="curriculum.course.name"
             placeholder="Select a course"
             class="w-full"
             :loading="courseStore.isLoading"
+            disabled
           />
         </div>
         <div class="flex-1">
           <label for="course" class="block text-gray-700 dark:text-white"> Major </label>
-          <Select
-            v-model="curriculum.major"
+          <InputText
+            v-model="major.name"
             editable
-            :options="filteredMajor?.majors"
-            placeholder="Select a major"
+            placeholder="No majors associated"
             class="w-full"
             :loading="courseStore.isLoading"
+            disabled
           />
         </div>
       </div>
@@ -96,7 +95,6 @@ watchEffect(() => console.log(firstYear))
             <label class="block text-gray-700 dark:text-white"> First semester </label>
             <MultiSelect
               v-model="firstYear.first"
-              :options="subjectStore.filteredSubjects"
               :loading="subjectStore.isLoading"
               optionLabel="code"
               optionValue="uid"
@@ -110,7 +108,6 @@ watchEffect(() => console.log(firstYear))
               v-model="firstYear.second"
               optionLabel="code"
               optionValue="uid"
-              :options="subjectStore.filteredSubjects"
               :loading="subjectStore.isLoading"
               placeholder="Select a subjects"
               class="w-full"
@@ -127,7 +124,6 @@ watchEffect(() => console.log(firstYear))
               option-label="code"
               v-model="secondYear.first"
               editable
-              :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
               class="w-full"
             />
@@ -138,7 +134,6 @@ watchEffect(() => console.log(firstYear))
               option-label="code"
               v-model="secondYear.second"
               editable
-              :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
               class="w-full"
             />
@@ -154,7 +149,6 @@ watchEffect(() => console.log(firstYear))
               option-label="code"
               v-model="thirdYear.first"
               editable
-              :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
               class="w-full"
             />
@@ -165,7 +159,6 @@ watchEffect(() => console.log(firstYear))
               option-label="code"
               v-model="thirdYear.second"
               editable
-              :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
               class="w-full"
             />
@@ -181,7 +174,6 @@ watchEffect(() => console.log(firstYear))
               option-label="code"
               v-model="fourthYear.first"
               editable
-              :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
               class="w-full"
             />
@@ -192,7 +184,6 @@ watchEffect(() => console.log(firstYear))
               option-label="code"
               v-model="fourthYear.second"
               editable
-              :options="subjectStore.filteredSubjects"
               placeholder="Select a subjects"
               class="w-full"
             />
