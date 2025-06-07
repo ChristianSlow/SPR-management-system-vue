@@ -5,4 +5,5 @@ export interface Course {
   abbreviation?: string
   majors?: any[]
   createdAt?: any
+  curriculums?: any[]
 }

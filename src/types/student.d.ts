@@ -1,4 +1,5 @@
 import type { Curriculum } from './curriculum'
+import type { Enrollment } from './enrollment'
 
 export interface Student {
   uid?: string
@@ -26,4 +27,5 @@ export interface Student {
   status?: string
   createdAt?: any
   isEnrolled?: boolean
+  enrollment?: Enrollment
 }
