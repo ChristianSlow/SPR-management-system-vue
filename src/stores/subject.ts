@@ -10,14 +10,16 @@ export const useSubjectStore = defineStore('subject', () => {
   const totalSubjects = ref(0)
   const selectedCourse = ref<string | null>(null)
   const searchQuery = ref('')
+  const page = ref(0)
 
   async function getSubjects() {
     isLoading.value = true
     const response = await SubjectRepository.fetchSubjects({
       search: searchQuery.value,
+      page: page.value,
     })
     subjects.value = response?.data || []
-    totalSubjects.value = response?.total || 0
+    totalSubjects.value = response?.meta?.total || 0
     isLoading.value = false
   }
 
@@ -92,7 +94,7 @@ export const useSubjectStore = defineStore('subject', () => {
   }
 
   watchDebounced(
-    [searchQuery],
+    [searchQuery, page],
     (newQuery) => {
       getSubjects()
     },
@@ -103,6 +105,8 @@ export const useSubjectStore = defineStore('subject', () => {
     subjects,
     isLoading,
     searchQuery,
+    page,
+    totalSubjects,
     getSubjects,
     getFilteredSubject,
     addSubject,

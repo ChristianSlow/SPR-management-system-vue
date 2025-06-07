@@ -179,20 +179,12 @@ watch(
           <!-- Year & Semester -->
           <div class="flex flex-col md:flex-row gap-2">
             <div class="flex flex-1 flex-col gap-2">
-              <label>Year</label>
-              <Select
-                required
-                v-model="student.year"
-                :options="['First Year', 'Second Year', 'Third Year', 'Fourth Year']"
-              />
+              <label>Year Level</label>
+              <Select required v-model="student.year" :options="[1, 2, 3, 4]" />
             </div>
             <div class="flex flex-1 flex-col gap-2">
               <label>Semester</label>
-              <Select
-                required
-                v-model="student.semester"
-                :options="['First Semester', 'Second Semester']"
-              />
+              <Select required v-model="student.semester" :options="[1, 2]" />
             </div>
           </div>
 

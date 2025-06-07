@@ -1,5 +1,6 @@
 import type { Course } from './course'
 import type { Major } from './major'
+import type { Subject } from './subject'
 
 export interface Curriculum {
   id?: string

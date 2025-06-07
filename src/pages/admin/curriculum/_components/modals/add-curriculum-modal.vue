@@ -1,31 +1,13 @@
 <script setup lang="ts">
 import { useCourseStore } from '@/stores/course'
 import { useCurriculumStore } from '@/stores/curriculum'
-import { useSubjectStore } from '@/stores/subject'
-import type { Curriculum, Year } from '@/types/curriculum'
+import { useSubjectOfferedStore } from '@/stores/subjectOffered'
 import { useToast } from 'primevue'
-import { computed, inject, onMounted, reactive, ref, watch, watchEffect } from 'vue'
+import { inject, onMounted, ref, watch } from 'vue'
 
 const courseStore = useCourseStore()
-const subjectStore = useSubjectStore()
 const curriculumStore = useCurriculumStore()
 const dialogRef = inject<any>('dialogRef')
-const firstYear = reactive<Year>({
-  first: [],
-  second: [],
-})
-const secondYear = reactive<Year>({
-  first: [],
-  second: [],
-})
-const thirdYear = reactive<Year>({
-  first: [],
-  second: [],
-})
-const fourthYear = reactive<Year>({
-  first: [],
-  second: [],
-})
 
 const toast = useToast()
 
@@ -47,187 +29,77 @@ async function onSave() {
   onClose()
 }
 
-onMounted(() => {
-  courseStore.getCourses()
-  subjectStore.getSubjects()
-})
-
 watch(
   () => curriculum.value.courseId,
   (val) => {
-    console.log(val)
     courseStore.getCourse(val)
-    subjectStore.getFilteredSubject(val as string)
   },
 )
 
-watchEffect(() => console.log(firstYear.first, firstYear.second))
+onMounted(() => {
+  courseStore.getCourses()
+})
 </script>
 
 <template>
   <div class="grid gap-4 text-base md:text-lg">
     <!-- Course Name -->
-    <div class="flex flex-col gap-4">
-      <label for="course" class="block text-gray-700 dark:text-white"> Name </label>
-      <InputText
-        id="course"
-        v-model="curriculum.name"
-        required
-        autofocus
-        class="w-full rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
-      />
-      <div class="flex gap-4 w-full">
-        <div class="flex-1">
-          <label for="course" class="block text-gray-700 dark:text-white"> Course </label>
-          <Select
-            option-label="name"
-            v-model="curriculum.courseId"
-            editable
-            :options="courseStore.courses"
-            optionValue="id"
-            placeholder="Select a course"
-            class="w-full"
-            :loading="courseStore.isLoading"
-          />
+    <div class="flex flex-col gap-4 pt-2">
+      <FloatLabel class="w-full" variant="on">
+        <InputText id="on_label" v-model="curriculum.name" class="w-full" />
+        <label for="on_label">Curriculum Name</label>
+      </FloatLabel>
+      <FloatLabel class="flex-1" variant="on">
+        <Select
+          id="on_label"
+          v-model="curriculum.courseId"
+          :options="courseStore.courses"
+          :loading="courseStore.isLoading"
+          optionLabel="abbreviation"
+          optionValue="id"
+          class="w-full"
+        />
+        <label for="on_label">Course</label>
+      </FloatLabel>
+      <FloatLabel class="flex-1" variant="on">
+        <Select
+          id="on_label"
+          v-model="curriculum.majorId"
+          :options="courseStore.course?.majors"
+          :loading="courseStore.isLoading"
+          optionLabel="name"
+          optionValue="id"
+          class="w-full"
+        />
+        <label for="on_label">Major</label>
+      </FloatLabel>
+      <!-- <div class="flex flex-col gap-2">
+        <label class="block bg-red-800 text-white px-2"> Subjects Offered</label>
+        <div class="flex flex-col gap-2">
+          <FloatLabel class="w-full" variant="on">
+            <MultiSelect
+              id="on_label"
+              optionLabel="name"
+              filter
+              :maxSelectedLabels="3"
+              class="w-full"
+            />
+            <label for="on_label">Subjects</label>
+          </FloatLabel>
+
+          <div class="flex gap-2">
+            <FloatLabel class="w-full" variant="on">
+              <Select id="on_label" :options="[1, 2, 3, 4]" class="w-full" />
+              <label for="on_label">Year level</label>
+            </FloatLabel>
+            <FloatLabel class="w-full" variant="on">
+              <Select id="on_label" :options="[1, 2]" class="w-full" />
+              <label for="on_label">Semester</label>
+            </FloatLabel>
+          </div>
+          <Button label="Add" icon="pi pi-plus" class="p-button-md" severity="secondary" />
         </div>
-        <div class="flex-1">
-          <label for="course" class="block text-gray-700 dark:text-white"> Major </label>
-          <Select
-            v-model="curriculum.majorId"
-            editable
-            :options="courseStore.course?.majors"
-            placeholder="Select a major"
-            optionLabel="name"
-            optionValue="id"
-            class="w-full"
-            :loading="courseStore.isLoading"
-          />
-        </div>
-      </div>
-      <div>
-        <label class="block bg-red-800 text-white px-2"> First year </label>
-        <div class="flex gap-4">
-          <div class="flex-1">
-            <label class="block text-gray-700 dark:text-white"> First semester </label>
-            <MultiSelect
-              v-model="firstYear.first"
-              editable
-              display="chip"
-              :maxSelectedLabels="2"
-              filter
-              optionLabel="code"
-              placeholder="Select a subjects"
-              class="w-full"
-            />
-          </div>
-          <div class="flex-1">
-            <label class="block text-gray-700 dark:text-white"> Second semester </label>
-            <MultiSelect
-              v-model="firstYear.second"
-              optionLabel="code"
-              display="chip"
-              :maxSelectedLabels="2"
-              filter
-              editable
-              placeholder="Select a subjects"
-              class="w-full"
-            />
-          </div>
-        </div>
-      </div>
-      <div>
-        <label class="block bg-red-800 text-white px-2"> Second year </label>
-        <div class="flex gap-4">
-          <div class="flex-1">
-            <label class="block text-gray-700 dark:text-white"> First semester </label>
-            <MultiSelect
-              option-label="code"
-              display="chip"
-              :maxSelectedLabels="2"
-              filter
-              v-model="secondYear.first"
-              editable
-              placeholder="Select a subjects"
-              class="w-full"
-            />
-          </div>
-          <div class="flex-1">
-            <label class="block text-gray-700 dark:text-white"> Second semester </label>
-            <MultiSelect
-              option-label="code"
-              display="chip"
-              :maxSelectedLabels="2"
-              v-model="secondYear.second"
-              filter
-              editable
-              placeholder="Select a subjects"
-              class="w-full"
-            />
-          </div>
-        </div>
-      </div>
-      <div>
-        <label class="block bg-red-800 text-white px-2"> Third year </label>
-        <div class="flex gap-4">
-          <div class="flex-1">
-            <label class="block text-gray-700 dark:text-white"> First semester </label>
-            <MultiSelect
-              option-label="code"
-              display="chip"
-              :maxSelectedLabels="2"
-              v-model="thirdYear.first"
-              filter
-              editable
-              placeholder="Select a subjects"
-              class="w-full"
-            />
-          </div>
-          <div class="flex-1">
-            <label class="block text-gray-700 dark:text-white"> Second semester </label>
-            <MultiSelect
-              option-label="code"
-              display="chip"
-              :maxSelectedLabels="2"
-              v-model="thirdYear.second"
-              filter
-              editable
-              placeholder="Select a subjects"
-              class="w-full"
-            />
-          </div>
-        </div>
-      </div>
-      <div>
-        <label class="block bg-red-800 text-white px-2"> Fourth year </label>
-        <div class="flex gap-4">
-          <div class="flex-1">
-            <label class="block text-gray-700 dark:text-white"> First semester </label>
-            <MultiSelect
-              option-label="code"
-              display="chip"
-              :maxSelectedLabels="2"
-              v-model="fourthYear.first"
-              filter
-              editable
-              placeholder="Select a subjects"
-              class="w-full"
-            />
-          </div>
-          <div class="flex-1">
-            <label class="block text-gray-700 dark:text-white"> Second semester </label>
-            <MultiSelect
-              option-label="code"
-              display="chip"
-              :maxSelectedLabels="2"
-              v-model="fourthYear.second"
-              filter
-              editable
-              placeholder="Select a subjects"
-              class="w-full"
-            />
-          </div>
-        </div>
-      </div>
+      </div> -->
     </div>
   </div>
 

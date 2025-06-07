@@ -50,7 +50,7 @@ export const CurriculumRepository = {
     }
   },
 
-  async updateCurriculum(id: string, payload: Curriculum) {
+  async updateCurriculum(id: string, payload: any) {
     try {
       const { data } = await useFetch(`${API_URL}/curriculums/${id}`, {
         method: 'PUT',

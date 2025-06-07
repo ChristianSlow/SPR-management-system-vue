@@ -17,7 +17,7 @@ function onClose() {
 }
 
 async function onSubmit(payload: Student) {
-  await studentStore.editStudent(payload)
+  // await studentStore.editStudent(payload)
   toast.add({
     severity: 'success',
     summary: 'Success',
@@ -178,7 +178,7 @@ watchEffect(() => {
           </div>
         </div>
       </div>
-      <div>
+      <!-- <div>
         <div class="border p-2 mt-2">
           <span>First Semester</span>
           <GradesTable
@@ -195,7 +195,7 @@ watchEffect(() => {
             @update="handleSubjectUpdate"
           />
         </div>
-      </div>
+      </div> -->
     </div>
 
     <div class="flex w-full gap-2 justify-end mt-4">

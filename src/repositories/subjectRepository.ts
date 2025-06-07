@@ -1,22 +1,6 @@
 import type { Subject } from '@/types/subject'
 import { useFetch } from '@vueuse/core'
 import type { H3Response } from '@/types/h3response'
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  Timestamp,
-  updateDoc,
-  where,
-} from 'firebase/firestore'
-import { useFirestore } from 'vuefire'
-
-const db = useFirestore()
-const subjectsRef = collection(db, 'subjects')
 
 const API_URL = import.meta.env.VITE_API_URL
 

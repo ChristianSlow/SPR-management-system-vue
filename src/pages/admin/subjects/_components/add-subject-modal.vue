@@ -1,18 +1,19 @@
 <script setup lang="ts">
-import { useCourseStore } from '@/stores/course'
+import { useCurriculumStore } from '@/stores/curriculum'
 import { useSubjectStore } from '@/stores/subject'
 import type { Subject } from '@/types/subject'
 import { useToast } from 'primevue'
 import { inject, onMounted, reactive } from 'vue'
 
 const dialogRef = inject<any>('dialogRef')
-const subject = reactive<Subject>({
+const subject = reactive({
   name: '',
   code: '',
   unit: 0,
+  curriculumIds: null,
 })
-const store = useSubjectStore()
-const courseStore = useCourseStore()
+const subjectStore = useSubjectStore()
+const curriculumStore = useCurriculumStore()
 const toast = useToast()
 
 function onClose() {
@@ -20,7 +21,7 @@ function onClose() {
 }
 
 async function onSubmit(payload: Subject) {
-  const res = await store.addSubject(payload)
+  const res = await subjectStore.addSubject(payload)
   toast.add({
     severity: res.status,
     summary: res.statusMessage,
@@ -29,10 +30,22 @@ async function onSubmit(payload: Subject) {
   })
   onClose()
 }
+
+onMounted(() => curriculumStore.getCurriculums())
 </script>
 
 <template>
   <form class="flex flex-col gap-4" @submit.prevent="onSubmit(subject)">
+    <div class="flex flex-col gap-2">
+      <label>Curriculum</label>
+      <MultiSelect
+        required
+        v-model="subject.curriculumIds"
+        :options="curriculumStore.curriculums"
+        optionLabel="name"
+        optionValue="id"
+      />
+    </div>
     <div class="flex flex-col gap-2">
       <label>Subject Code</label>
       <InputText required v-model="subject.code" />
@@ -49,7 +62,12 @@ async function onSubmit(payload: Subject) {
 
     <div class="flex w-full gap-2 justify-end mt-4">
       <Button label="Cancel" severity="danger" class="p-button-text" @click="onClose" />
-      <Button label="Save" class="p-button-primary" type="submit" :loading="store.isLoading" />
+      <Button
+        label="Save"
+        class="p-button-primary"
+        type="submit"
+        :loading="subjectStore.isLoading"
+      />
     </div>
   </form>
 </template>

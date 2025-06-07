@@ -43,13 +43,14 @@ export const useCurriculumStore = defineStore('curriculum', () => {
     }
   }
 
-  async function editCurriculum(curriculum: Curriculum) {
+  async function editCurriculum(curriculum: any) {
     isLoading.value = true
+    console.log(curriculum)
     try {
-      const response = await CurriculumRepository.updateCurriculum(curriculum.id as string, {
-        course: curriculum.course?.toLowerCase(),
-        name: curriculum.name?.toLowerCase(),
-      })
+      const response = await CurriculumRepository.updateCurriculum(
+        curriculum.id as string,
+        curriculum,
+      )
       await getCurriculums()
       return {
         status: 'success',
