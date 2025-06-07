@@ -2,9 +2,6 @@
 import { useSubjectStore } from '@/stores/subject'
 import { useDialog } from 'primevue'
 import StudentTable from './_components/student-table.vue'
-
-const dialog = useDialog()
-const store = useSubjectStore()
 </script>
 
 <template>

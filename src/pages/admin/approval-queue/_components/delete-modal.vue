@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { inject } from 'vue'
-import { useStudentStore } from '@/stores/student'
-import type { Student } from '@/types/student'
 import { useToast } from 'primevue'
+import { useQueueStore } from '@/stores/queue'
 
 const dialogRef = inject<any>('dialogRef')
 const student = dialogRef.value.data
-const store = useStudentStore()
+const store = useQueueStore()
 const toast = useToast()
 
 function onClose() {
@@ -14,11 +13,11 @@ function onClose() {
 }
 
 async function onSubmit() {
-  await store.deleteStudent(student.uid)
+  await store.editQueue(student.id, 'REJECTED')
   toast.add({
     severity: 'success',
     summary: 'Success',
-    detail: 'Succesfully denied student!',
+    detail: 'Succesfully rejected student!',
     life: 3000,
   })
   onClose()
@@ -29,7 +28,7 @@ async function onSubmit() {
     <div class="text-center">
       <i class="pi pi-exclamation-triangle mr-3 text-xl text-red-500" />
       <span
-        >Are you sure you want to decline
+        >Are you sure you want to reject
         <span class="font-semibold capitalize"
           >{{ student.firstName }} {{ student.middleName }} {{ student.lastName }}</span
         >?</span

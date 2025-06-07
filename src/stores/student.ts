@@ -13,6 +13,7 @@ export const useStudentStore = defineStore('student', () => {
   const totalStudents = ref(0)
   const searchQuery = ref('')
   const page = ref(0)
+  const status = ref('APPROVED')
 
   const offset = computed(() => page.value * 10)
 
@@ -20,10 +21,11 @@ export const useStudentStore = defineStore('student', () => {
     isLoading.value = true
     const response = await StudentRepository.fetchStudents({
       search: searchQuery.value,
+      status: status.value,
     })
 
     students.value = response?.data || []
-    totalStudents.value = response?.total || 0
+    totalStudents.value = response?.meta?.total || 0
     isLoading.value = false
     console.log(students.value)
   }
@@ -103,7 +105,7 @@ export const useStudentStore = defineStore('student', () => {
   }
 
   watchDebounced(
-    [searchQuery],
+    [searchQuery, status],
     (newQuery) => {
       getStudents()
     },
@@ -117,6 +119,7 @@ export const useStudentStore = defineStore('student', () => {
     page,
     isLoading,
     searchQuery,
+    status,
     addStudent,
     getStudents,
     editStudent,

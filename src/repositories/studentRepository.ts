@@ -8,7 +8,7 @@ export const StudentRepository = {
   async fetchStudents(params: Record<string, any>) {
     const queryString = new URLSearchParams(params).toString()
     const url = `${API_URL}/students${queryString ? '?' + queryString : ''}`
-
+    console.log(url)
     try {
       const { data: response } = await useFetch(url).json<H3Response<Student[]>>()
       return response.value
@@ -76,7 +76,6 @@ export const StudentRepository = {
     try {
       const { data, error } = await useFetch(`${API_URL}/students/${id}`, {
         method: 'DELETE',
-        body: id,
       }).json<H3Response>()
 
       if (error.value) {

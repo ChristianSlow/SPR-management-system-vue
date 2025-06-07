@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { useToast } from 'primevue/usetoast'
 import { useDialog } from 'primevue'
 import { defineAsyncComponent } from 'vue'
-import { useStudentStore } from '@/stores/student'
 import ViewImage from './view-image.vue'
+import { useQueueStore } from '@/stores/queue'
 
 const AcceptQueue = defineAsyncComponent(
   () => import('@/pages/admin/approval-queue/_components/accept-modal.vue'),
@@ -14,37 +13,12 @@ const DeleteQueue = defineAsyncComponent(
   () => import('@/pages/admin/approval-queue/_components/delete-modal.vue'),
 )
 
-const store = useStudentStore()
+const store = useQueueStore()
 const dialog = useDialog()
-const toast = useToast()
 const dt = ref()
 
-const statusQuery = ref('pending')
-
-const filteredStudents = computed(() => {
-  if (!statusQuery.value) return store.students
-  return store.students.filter(
-    (student: any) => student.status.toLowerCase() === statusQuery.value.toLowerCase(),
-  )
-  // return store.students.filter((student) => {
-  //   const fullName =
-  //     `${student.firstName} ${student.middleName ?? ''} ${student.lastName}`.toLowerCase()
-  //   const course = student.course?.toLowerCase() ?? ''
-  //   const major = student.major?.toLowerCase() ?? ''
-  //   const query = searchQuery.value.toLowerCase()
-
-  //   const matchesSearch =
-  //     fullName.includes(query) || course.includes(query) || major.includes(query)
-  //   const matchesStatus = statusQuery.value ? student.status === statusQuery.value : true
-
-  //   return matchesSearch && matchesStatus
-  // })
-})
-
-console.log(filteredStudents.value)
-
 onMounted(() => {
-  store.getStudents()
+  store.getQueues()
 })
 </script>
 
@@ -53,21 +27,19 @@ onMounted(() => {
     <div class="card">
       <Toolbar class="mb-6">
         <template #start>
-          <InputText
-            v-model="store.searchQuery"
-            type="text"
-            placeholder="Search by Name, Course, or Major..."
-          />
+          <InputText v-model="store.search" type="text" placeholder="Search by Name" />
         </template>
         <template #end>
-          <!-- Dropdown for selecting the status filter -->
-          <Select
-            v-model="statusQuery"
-            :options="['Pending', 'Accepted', 'Denied']"
-            defaultValue="Pending"
-            placeholder="Select status"
-            class="w-full md:w-56"
-          />
+          <div class="flex gap-2">
+            <Button label="Export" />
+            <Select
+              v-model="store.status"
+              :options="['PENDING', 'REJECTED']"
+              defaultValue="PENDING"
+              placeholder="Select status"
+              class="w-full md:w-56"
+            />
+          </div>
         </template>
       </Toolbar>
 
@@ -75,7 +47,7 @@ onMounted(() => {
         <DataTable
           ref="dt"
           size="small"
-          :value="filteredStudents"
+          :value="store.students"
           dataKey="id"
           :rows="10"
           :loading="store.isLoading"

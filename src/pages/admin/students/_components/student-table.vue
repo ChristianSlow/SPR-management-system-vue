@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { useToast } from 'primevue/usetoast'
 import { useDialog } from 'primevue'
 import { defineAsyncComponent } from 'vue'
 import { useStudentStore } from '@/stores/student'
@@ -28,10 +27,6 @@ const dt = ref()
 onMounted(() => {
   store.getStudents()
 })
-
-const filteredStudents = computed(() => {
-  return store.students.filter((student: any) => student.status === 'accepted')
-})
 </script>
 
 <template>
@@ -41,7 +36,8 @@ const filteredStudents = computed(() => {
         <DataTable
           ref="dt"
           size="small"
-          :value="filteredStudents"
+          :loading="store.isLoading"
+          :value="store.students"
           dataKey="id"
           :paginator="true"
           :rows="10"
@@ -56,7 +52,7 @@ const filteredStudents = computed(() => {
                 <InputIcon>
                   <i class="pi pi-search" />
                 </InputIcon>
-                <InputText placeholder="Search..." />
+                <InputText placeholder="Search..." v-model="store.searchQuery" />
               </IconField>
             </div>
           </template>
