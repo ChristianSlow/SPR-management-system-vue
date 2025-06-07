@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import StudentLayout from '@/layouts/student-layout.vue'
 import { useCourseStore } from '@/stores/course'
 import { useStudentStore } from '@/stores/student'
 import type { Student } from '@/types/student'
-import { Message, useToast } from 'primevue'
+import { useToast } from 'primevue'
 import { computed, inject, onMounted, reactive, watchEffect, toRaw } from 'vue'
 import GradesTable from '../grades-table.vue'
 import type { Subject } from '@/types/subject'
-import type { Curriculum } from '@/types/curriculum'
 
 const dialogRef = inject<any>('dialogRef')
 const studentStore = useStudentStore()
