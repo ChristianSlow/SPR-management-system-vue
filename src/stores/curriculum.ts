@@ -2,23 +2,26 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { CurriculumRepository } from '@/repositories/curriculumRepository'
 import type { Curriculum } from '@/types/curriculum'
+import { watchDebounced } from '@vueuse/core'
 
 export const useCurriculumStore = defineStore('curriculum', () => {
   const isLoading = ref(false)
   const curriculums = ref<Curriculum[]>([])
   const curriculum = ref<Curriculum>()
   const searchQuery = ref('')
+  const page = ref(0)
+  const totalCurriculums = ref(0)
 
   async function getCurriculums() {
     isLoading.value = true
-    const response = await CurriculumRepository.fetchCurriculums({ searchQuery: searchQuery.value })
+    const response = await CurriculumRepository.fetchCurriculums({ search: searchQuery.value })
     curriculums.value = response?.data || []
+    totalCurriculums.value = response?.meta?.total || 0
+    page.value = response?.meta?.page || 0
     isLoading.value = false
-    console.log(curriculums.value)
   }
 
   async function addCurriculum(curriculum: Curriculum) {
-    console.log(curriculum)
     isLoading.value = true
     try {
       const response = await CurriculumRepository.createCurriculum(curriculum)
@@ -87,10 +90,21 @@ export const useCurriculumStore = defineStore('curriculum', () => {
     }
   }
 
+  watchDebounced(
+    [searchQuery, page],
+    (newQuery) => {
+      getCurriculums()
+    },
+    { debounce: 300 },
+  )
+
   return {
     curriculums,
     curriculum,
     isLoading,
+    searchQuery,
+    page,
+    totalCurriculums,
     getCurriculums,
     addCurriculum,
     deleteCurriculum,

@@ -6,6 +6,7 @@ export interface Curriculum {
   subjects?: any
   enrollments?: any
   createdAt?: string
+  majorId?: string
 }
 
 export interface Year {

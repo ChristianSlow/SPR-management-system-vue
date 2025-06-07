@@ -15,6 +15,17 @@ export const MajorRepository = {
       console.log(error)
     }
   },
+  async fetchMajor(id: string) {
+    try {
+      const { data, error } = await useFetch(`${API_URL}/majors/${id}`).get().json()
+      if (error.value) {
+        throw new Error(error.value.message)
+      }
+      return data.value
+    } catch (error) {
+      console.log(error)
+    }
+  },
   async createMajor(payload: FormData) {
     try {
       const { data, error } = await useFetch(`${API_URL}/students`, {

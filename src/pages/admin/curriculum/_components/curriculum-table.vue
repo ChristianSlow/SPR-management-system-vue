@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useToast } from 'primevue/usetoast'
+import { onMounted } from 'vue'
+
 import { useDialog } from 'primevue'
 import { defineAsyncComponent } from 'vue'
 import { useCurriculumStore } from '@/stores/curriculum'
+import { useMajorStore } from '@/stores/major'
 
 const addCurriculum = defineAsyncComponent(
   () => import('@/pages/admin/curriculum/_components/modals/add-curriculum-modal.vue'),
@@ -22,9 +23,12 @@ const viewCurriculum = defineAsyncComponent(
 )
 
 const dialog = useDialog()
-const store = useCurriculumStore()
+const curriculumStore = useCurriculumStore()
+const majorStore = useMajorStore()
 
-onMounted(() => store.getCurriculums())
+onMounted(() => {
+  curriculumStore.getCurriculums(), majorStore.getMajor(curriculumStore.curriculum?.majorId ?? '')
+})
 </script>
 
 <template>
@@ -32,7 +36,7 @@ onMounted(() => store.getCurriculums())
     <div class="card">
       <Toolbar class="mb-6">
         <template #start>
-          <InputText type="text" placeholder="Search..." />
+          <InputText type="text" placeholder="Search..." v-model="curriculumStore.searchQuery" />
         </template>
         <template #end>
           <Button
@@ -54,9 +58,15 @@ onMounted(() => store.getCurriculums())
           />
         </template>
       </Toolbar>
-      <span class="text-gray-600 text-semibold">Total Curriculum: 0</span>
+      <span class="text-gray-600 text-semibold">
+        Total Curriculum: {{ curriculumStore.totalCurriculums }}
+      </span>
       <div class="border rounded-sm">
-        <DataTable :loading="store.isLoading" :value="store.curriculums" size="small">
+        <DataTable
+          :loading="curriculumStore.isLoading"
+          :value="curriculumStore.curriculums"
+          size="small"
+        >
           <template #empty>
             <div class="flex items-center justify-center p-4">No curriculum found.</div>
           </template>
@@ -70,12 +80,10 @@ onMounted(() => store.getCurriculums())
           </Column>
           <Column header="Majors" style="min-width: 12rem">
             <template #body="slotProps">
-              <label v-for="major in slotProps.data.course.majors" :key="major" class="capitalize">
-                {{ major.name }}
+              <label v-if="slotProps.data.major" class="capitalize">
+                {{ slotProps.data.major.name }}
               </label>
-              <label v-if="slotProps.data.course.majors.length == 0" class="text-gray-500">
-                No majors associated
-              </label>
+              <label v-else class="text-gray-500"> No majors associated </label>
             </template>
           </Column>
           <Column :exportable="false" header="Actions">

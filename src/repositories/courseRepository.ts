@@ -74,7 +74,6 @@ export const CourseRepository = {
     try {
       const { data, error } = await useFetch(`${API_URL}/courses/${id}`, {
         method: 'DELETE',
-        body: id,
       }).json<H3Response>()
 
       if (error.value) {

@@ -5,11 +5,19 @@ import { ref } from 'vue'
 export const useMajorStore = defineStore('major', () => {
   const isLoading = ref(false)
   const majors = ref([])
+  const major = ref()
 
   async function getMajors() {
-    isLoading.value
+    isLoading.value = true
     const response = await MajorRepository.fetchMajors()
     majors.value = response.data
+    isLoading.value = false
+  }
+
+  async function getMajor(id: string) {
+    isLoading.value = true
+    const response = await MajorRepository.fetchMajor(id)
+    major.value = response.data
     isLoading.value = false
   }
 
@@ -37,7 +45,9 @@ export const useMajorStore = defineStore('major', () => {
 
   return {
     majors,
+    isLoading,
     getMajors,
+    getMajor,
     addMajor,
   }
 })
