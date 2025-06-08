@@ -6,6 +6,12 @@ export interface H3Response<T = any> {
   statusMessage?: StatusMessage
   data?: T
   total?: number
+  meta?: {
+    total: number
+    page: number
+    limit: number
+    totalPages: number
+  }
 }
 
 type StatusMessage =

@@ -1,4 +1,5 @@
 import type { Curriculum } from './curriculum'
+import type { Enrollment } from './enrollment'
 
 export interface Student {
   uid?: string
@@ -10,7 +11,7 @@ export interface Student {
   lastName?: string
   sex?: string
   civilStatus?: string
-  studentMobileNumber?: any
+  mobileNumber?: any
   birthPlace?: string
   birthDate?: any
   parentName?: string
@@ -21,11 +22,10 @@ export interface Student {
   year?: string
   major?: string
   curriculum?: Curriculum
+  generalAverage?: string
+  gwaUrl?: string
   status?: string
   createdAt?: any
-  status?: any
-  gwa?: string
-  gwaUrl?: string
-  file1?: any
-  file2?: any
+  isEnrolled?: boolean
+  enrollment?: Enrollment
 }

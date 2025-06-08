@@ -14,9 +14,7 @@ function onClose() {
 }
 
 function onSubmit() {
-  if (!student.value || !student.value.uid) return
-
-  store.deleteStudent(student.value.uid)
+  store.deleteStudent(student.value.id ?? '')
   toast.add({
     severity: 'success',
     summary: 'Success',

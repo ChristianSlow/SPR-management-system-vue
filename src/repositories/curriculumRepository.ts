@@ -1,101 +1,90 @@
+import { useFetch } from '@vueuse/core'
+import type { H3Response } from '@/types/h3response'
 import type { Curriculum } from '@/types/curriculum'
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  getFirestore,
-  query,
-  updateDoc,
-  where,
-} from 'firebase/firestore'
 
-const db = getFirestore()
-const curriculumsRef = collection(db, 'curriculums')
+const API_URL = import.meta.env.VITE_API_URL
 
 export const CurriculumRepository = {
-  async fetchCurriculums() {
+  async fetchCurriculums(params: Record<string, any>) {
+    const queryString = new URLSearchParams(params).toString()
+    const url = `${API_URL}/curriculums${queryString ? '?' + queryString : ''}`
+
     try {
-      const querySnapshot = await getDocs(curriculumsRef)
-
-      const curriculums = querySnapshot.docs.map<Curriculum>((doc) => ({
-        ...doc.data(),
-        uid: doc.id,
-      }))
-
-      return { data: curriculums, total: 0 }
+      const { data: response } = await useFetch(url).json<H3Response<Curriculum[]>>()
+      return response.value
     } catch (error) {
       console.error('Error fetching curriculums:', error)
       return { data: [], total: 0 }
     }
   },
 
-  async fetchCurriculum(course: string, major: string) {
+  async fetchCurriculum(uid: string) {
     try {
-      let curriculumDoc
-      if (major) {
-        curriculumDoc = await getDocs(
-          query(
-            collection(db, 'curriculums'),
-            where('course', '==', course),
-            where('major', '==', major),
-          ),
-        )
-      } else {
-        curriculumDoc = await getDocs(
-          query(collection(db, 'curriculums'), where('course', '==', course)),
-        )
-      }
-
-      const doc = curriculumDoc.docs[0]
-
-      if (doc) {
-        return {
-          ...doc.data(),
-          uid: doc.id,
-        } as Curriculum
-      } else {
-        return {} as Curriculum
-      }
+      const { data: response } = await useFetch(`${API_URL}/curriculums/${uid}`).json<
+        H3Response<Curriculum>
+      >()
+      return response.value
     } catch (error) {
       console.error('Error fetching curriculum:', error)
-      return {}
+      return { data: {} }
     }
   },
 
   async createCurriculum(payload: Curriculum) {
     try {
-      const snapshot = await addDoc(curriculumsRef, {
-        ...payload,
-      })
+      const { data } = await useFetch(`${API_URL}/curriculums`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      }).json<H3Response>()
 
-      return { message: 'Successfully added curriculums!', data: snapshot.id }
-    } catch {
-      return { message: 'Error adding curriculums' }
-    }
-  },
-
-  async updateCurriculum(uid: string, payload: Partial<Curriculum>) {
-    try {
-      const CurriculumDoc = doc(db, 'curriculums', uid)
-      await updateDoc(CurriculumDoc, payload)
-
-      return { message: 'Successfully updated Curriculum!' }
+      return data.value
     } catch (error) {
-      console.error('Error updating Curriculum:', error)
-      return { message: 'Error updating Curriculum' }
+      console.error('Error adding curriculum:', error)
+      return {
+        statusCode: 500,
+        message: error instanceof Error ? error.message : 'Failed to add curriculum',
+      }
     }
   },
 
-  async destroyCurriculum(uid: string) {
+  async updateCurriculum(id: string, payload: any) {
     try {
-      const snapshot = await deleteDoc(doc(db, 'curriculums', uid))
+      const { data } = await useFetch(`${API_URL}/curriculums/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      }).json<H3Response>()
 
-      return { message: 'Successfully added curriculums!', data: snapshot }
-    } catch {
-      return { message: 'Error adding curriculums' }
+      return data.value
+    } catch (error) {
+      return {
+        statusCode: 500,
+        message: error instanceof Error ? error.message : 'Failed to update curriculum',
+      }
+    }
+  },
+
+  async destroyCurriculum(id: string) {
+    try {
+      const { data, error } = await useFetch(`${API_URL}/curriculums/${id}`, {
+        method: 'DELETE',
+      }).json<H3Response>()
+
+      if (error.value) {
+        throw new Error(error.value.message || 'Network error')
+      }
+
+      return data.value
+    } catch (error) {
+      return {
+        statusCode: 500,
+        message: error instanceof Error ? error.message : 'Failed to delete curriculum',
+      }
     }
   },
 }

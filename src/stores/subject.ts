@@ -2,16 +2,24 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { Subject } from '@/types/subject'
 import { SubjectRepository } from '@/repositories/subjectRepository'
+import { watchDebounced } from '@vueuse/core'
 
 export const useSubjectStore = defineStore('subject', () => {
   const isLoading = ref(false)
   const subjects = ref<Subject[]>([])
+  const totalSubjects = ref(0)
   const selectedCourse = ref<string | null>(null)
+  const searchQuery = ref('')
+  const page = ref(0)
 
   async function getSubjects() {
     isLoading.value = true
-    const response = await SubjectRepository.fetchSubjects()
-    subjects.value = response.data
+    const response = await SubjectRepository.fetchSubjects({
+      search: searchQuery.value,
+      page: page.value,
+    })
+    subjects.value = response?.data || []
+    totalSubjects.value = response?.meta?.total || 0
     isLoading.value = false
   }
 
@@ -19,45 +27,86 @@ export const useSubjectStore = defineStore('subject', () => {
     selectedCourse.value = courseAbbreviation
   }
 
-  const filteredSubjects = computed(() => {
-    if (!selectedCourse.value) return []
-    return subjects.value.filter((s) => s.courseIds?.includes(selectedCourse.value as string))
-  })
-
   async function addSubject(subject: Subject) {
     isLoading.value = true
-    await SubjectRepository.createSubject({
-      courseIds: subject.courseIds,
-      name: subject.name?.toLowerCase(),
-      code: subject.code?.toLowerCase(),
-      unit: subject.unit,
-    })
-    await getSubjects()
-    isLoading.value = false
+    try {
+      const response = await SubjectRepository.createSubject(subject)
+      await getSubjects()
+      return {
+        status: 'success',
+        message: response?.message,
+        statusMessage: response?.statusMessage ?? '',
+      }
+    } catch (error) {
+      console.error('Error adding subject:', error)
+      return {
+        status: 'error',
+        message: 'Failed to add subject',
+        statusMessage: 'error',
+      }
+    } finally {
+      isLoading.value = false
+    }
   }
 
-  async function editSubject(subject: Subject) {
+  async function editSubject(uid: string, subject: Subject) {
     isLoading.value = true
-    await SubjectRepository.updateSubject(subject.uid as string, {
-      name: subject.name?.toLowerCase(),
-      code: subject.code?.toLowerCase(),
-      unit: subject.unit,
-    })
-    getSubjects()
-    isLoading.value = false
+    try {
+      const response = await SubjectRepository.updateSubject(uid, subject)
+      await getSubjects()
+      return {
+        status: 'success',
+        message: response?.message,
+        statusMessage: response?.statusMessage ?? '',
+      }
+    } catch (error) {
+      console.error('Error updating subject:', error)
+      return {
+        status: 'error',
+        message: 'Failed to update subject',
+        statusMessage: 'error',
+      }
+    } finally {
+      isLoading.value = false
+    }
   }
 
   async function deleteSubject(uid: string) {
     isLoading.value = true
-    await SubjectRepository.destroySubject(uid)
-    getSubjects()
-    isLoading.value = false
+    try {
+      const response = await SubjectRepository.destroySubject(uid)
+      await getSubjects()
+      return {
+        status: 'success',
+        message: response?.message,
+        statusMessage: response?.statusMessage ?? '',
+      }
+    } catch (error) {
+      console.error('Error deleting subject:', error)
+      return {
+        status: 'error',
+        message: 'Failed to delete subject',
+        statusMessage: 'error',
+      }
+    } finally {
+      isLoading.value = false
+    }
   }
+
+  watchDebounced(
+    [searchQuery, page],
+    (newQuery) => {
+      getSubjects()
+    },
+    { debounce: 300 },
+  )
 
   return {
     subjects,
     isLoading,
-    filteredSubjects,
+    searchQuery,
+    page,
+    totalSubjects,
     getSubjects,
     getFilteredSubject,
     addSubject,

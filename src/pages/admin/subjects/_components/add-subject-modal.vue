@@ -1,62 +1,58 @@
 <script setup lang="ts">
-import { useCourseStore } from '@/stores/course'
+import { useCurriculumStore } from '@/stores/curriculum'
 import { useSubjectStore } from '@/stores/subject'
 import type { Subject } from '@/types/subject'
 import { useToast } from 'primevue'
 import { inject, onMounted, reactive } from 'vue'
 
 const dialogRef = inject<any>('dialogRef')
-const subject = reactive<Subject>({
-  courseIds: [],
+const subject = reactive({
   name: '',
   code: '',
-  unit: '',
+  unit: 0,
+  curriculumIds: null,
 })
-const store = useSubjectStore()
-const courseStore = useCourseStore()
+const subjectStore = useSubjectStore()
+const curriculumStore = useCurriculumStore()
 const toast = useToast()
 
 function onClose() {
   dialogRef.value.close()
 }
 
-function onSubmit(payload: Subject) {
-  store.addSubject(payload)
+async function onSubmit(payload: Subject) {
+  const res = await subjectStore.addSubject(payload)
   toast.add({
-    severity: 'success',
-    summary: 'Success',
-    detail: 'Succesfully added subject!',
+    severity: res.status,
+    summary: res.statusMessage,
+    detail: res.message,
     life: 3000,
   })
   onClose()
 }
 
-onMounted(() => courseStore.getCourses())
+onMounted(() => curriculumStore.getCurriculums())
 </script>
 
 <template>
   <form class="flex flex-col gap-4" @submit.prevent="onSubmit(subject)">
     <div class="flex flex-col gap-2">
-      <label>Course</label>
+      <label>Curriculum</label>
       <MultiSelect
-        v-model="subject.courseIds"
-        :options="courseStore.courses"
-        optionLabel="abbreviation"
-        optionValue="abbreviation"
-        placeholder="Select course"
-        class="w-full"
+        required
+        v-model="subject.curriculumIds"
+        :options="curriculumStore.curriculums"
+        optionLabel="name"
+        optionValue="id"
       />
     </div>
-
-    <div class="flex gap-4">
-      <div class="flex flex-1 flex-col gap-2">
-        <label>Subject Code</label>
-        <InputText required v-model="subject.code" />
-      </div>
-      <div class="flex flex-1 flex-col gap-2">
-        <label>Units</label>
-        <InputText required v-model="subject.unit" />
-      </div>
+    <div class="flex flex-col gap-2">
+      <label>Subject Code</label>
+      <InputText required v-model="subject.code" />
+    </div>
+    <div class="flex flex-col gap-2">
+      <label>Units</label>
+      <InputNumber required v-model="subject.unit" />
     </div>
 
     <div class="flex flex-col gap-2">
@@ -66,7 +62,12 @@ onMounted(() => courseStore.getCourses())
 
     <div class="flex w-full gap-2 justify-end mt-4">
       <Button label="Cancel" severity="danger" class="p-button-text" @click="onClose" />
-      <Button label="Save" class="p-button-primary" type="submit" :loading="store.isLoading" />
+      <Button
+        label="Save"
+        class="p-button-primary"
+        type="submit"
+        :loading="subjectStore.isLoading"
+      />
     </div>
   </form>
 </template>

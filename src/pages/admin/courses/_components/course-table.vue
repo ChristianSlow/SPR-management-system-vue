@@ -25,7 +25,7 @@ onMounted(() => store.getCourses())
   <div class="card">
     <Toolbar class="mb-6">
       <template #start>
-        <InputText type="text" placeholder="Search..." />
+        <InputText type="text" placeholder="Search..." v-model="store.searchQuery" />
       </template>
       <template #end>
         <Button
@@ -77,7 +77,10 @@ onMounted(() => store.getCourses())
           <template #body="sloProps">
             <ul class="bg-gray-100 p-2 rounded-sm max-h-80 overflow-y-scroll">
               <li v-for="major in sloProps.data.majors" :key="major" class="capitalize">
-                {{ major }}
+                {{ major.name }}
+              </li>
+              <li v-if="sloProps.data.majors.length === 0" class="text-gray-500">
+                No majors associated
               </li>
             </ul>
           </template></Column

@@ -2,10 +2,11 @@
 import { inject, reactive, ref } from 'vue'
 import { useCourseStore } from '@/stores/course'
 import type { Course } from '@/types/course'
+import { useToast } from 'primevue'
 
 const dialogRef = inject<any>('dialogRef')
 const store = useCourseStore()
-
+const toast = useToast()
 const props = dialogRef.value.data
 
 const major = ref('')
@@ -19,17 +20,23 @@ function onClose() {
 }
 
 function addMajor() {
-  course.majors?.push(major.value.toLowerCase().trim())
+  course.majors?.push({ name: major.value.toLowerCase().trim() })
   major.value = ''
-  console.log(course.majors)
 }
 
 function removeMajor(index: number) {
   course.majors?.splice(index, 1)
 }
 
-function onSave() {
-  store.editCourse(course)
+async function onSave() {
+  const res = await store.editCourse(course.id as string, course)
+  console.log(res)
+  toast.add({
+    severity: res.status,
+    summary: res.statusMessage,
+    detail: res.message,
+    life: 3000,
+  })
   onClose()
 }
 </script>
@@ -74,7 +81,7 @@ function onSave() {
           :key="index"
           class="flex items-center justify-between bg-white px-3 rounded-md shadow-sm mb-2"
         >
-          <span>{{ major }}</span>
+          <span>{{ major.name }}</span>
           <Button
             icon="pi pi-trash"
             severity="danger"

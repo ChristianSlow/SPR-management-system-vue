@@ -1,52 +1,76 @@
 <script setup lang="ts">
 import { useCourseStore } from '@/stores/course'
 import { useCurriculumStore } from '@/stores/curriculum'
-import { useSubjectStore } from '@/stores/subject'
+import { useSubjectOfferedStore } from '@/stores/subjectOffered'
 import type { Curriculum, Year } from '@/types/curriculum'
-import { computed, inject, onMounted, reactive, ref, watch, watchEffect } from 'vue'
+import type { Major } from '@/types/major'
+import { useToast } from 'primevue'
+import { inject, onMounted, ref } from 'vue'
 
+const toast = useToast()
 const courseStore = useCourseStore()
-const subjectStore = useSubjectStore()
 const curriculumStore = useCurriculumStore()
+const subjectOfferedStore = useSubjectOfferedStore()
 const dialogRef = inject<any>('dialogRef')
-const firstYear = reactive<Year>({ ...dialogRef.value.data.firstYear })
-const secondYear = reactive<Year>({ ...dialogRef.value.data.secondYear })
-const thirdYear = reactive<Year>({ ...dialogRef.value.data.thirdYear })
-const fourthYear = reactive<Year>({ ...dialogRef.value.data.fourthYear })
 
 const curriculum = ref<Curriculum>({
   ...dialogRef.value.data,
+  subjects: [],
+})
+
+const major = ref<Major>({
+  ...dialogRef.value.data.major,
+})
+
+const subjectOffers = ref<{
+  year: number | null
+  semester: number | null
+  subjectIds: any[] | null
+}>({
+  year: null,
+  semester: null,
+  subjectIds: null,
 })
 
 function onClose() {
   dialogRef.value.close()
 }
 
-function onSave() {
-  curriculumStore.addCurriculum(curriculum.value)
+function addSubject() {
+  if (!subjectOffers.value.subjectIds?.length) return
+
+  const addedSubjects = subjectOffers.value.subjectIds.map((s: any) => ({
+    ...s,
+    year: subjectOffers.value.year,
+    semester: subjectOffers.value.semester,
+  }))
+
+  curriculum.value.subjects?.push(...addedSubjects)
+
+  // Reset inputs
+  subjectOffers.value = { year: null, semester: null, subjectIds: null }
+}
+
+async function onSave() {
+  const res = await curriculumStore.editCurriculum(curriculum.value)
+  toast.add({
+    severity: res.status,
+    summary: res.statusMessage,
+    detail: res.message,
+    life: 3000,
+  })
   onClose()
 }
 
 onMounted(() => {
   courseStore.getCourses()
-  subjectStore.getSubjects()
+  subjectOfferedStore.getSubjectOffereds(curriculum.value.id ?? '')
 })
-
-const filteredMajor = computed(() => {
-  return courseStore.courses.find((item) => item.abbreviation == curriculum.value.course)
-})
-
-watchEffect(() => {
-  subjectStore.getFilteredSubject(curriculum.value.course as string)
-})
-
-watchEffect(() => console.log(firstYear))
 </script>
 
 <template>
   <div class="grid gap-4 text-base md:text-lg">
-    <!-- Course Name -->
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-2">
       <label for="course" class="block text-gray-700 dark:text-white"> Name </label>
       <InputText
         id="course"
@@ -55,140 +79,95 @@ watchEffect(() => console.log(firstYear))
         autofocus
         class="w-full rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
       />
-      <div class="flex gap-4 w-full">
+      <div class="flex gap-2 w-full">
         <div class="flex-1">
           <label for="course" class="block text-gray-700 dark:text-white"> Course </label>
-          <Select
+          <InputText
             option-label="name"
-            v-model="curriculum.course"
-            editable
-            :options="courseStore.courses"
-            optionValue="abbreviation"
+            v-model="curriculum.course.name"
             placeholder="Select a course"
             class="w-full"
             :loading="courseStore.isLoading"
+            disabled
           />
         </div>
         <div class="flex-1">
           <label for="course" class="block text-gray-700 dark:text-white"> Major </label>
-          <Select
-            v-model="curriculum.major"
+          <InputText
+            v-model="major.name"
             editable
-            :options="filteredMajor?.majors"
-            placeholder="Select a major"
+            placeholder="No majors associated"
             class="w-full"
             :loading="courseStore.isLoading"
+            disabled
           />
         </div>
       </div>
-      <div>
-        <label class="block bg-red-800 text-white px-2"> First year </label>
-        <div class="flex gap-4">
-          <div class="flex-1">
-            <label class="block text-gray-700 dark:text-white"> First semester </label>
-            <MultiSelect
-              v-model="firstYear.first"
-              :options="subjectStore.filteredSubjects"
-              :loading="subjectStore.isLoading"
-              optionLabel="code"
-              optionValue="uid"
-              placeholder="Select a subjects"
-              class="w-full"
-            />
-          </div>
-          <div class="flex-1">
-            <label class="block text-gray-700 dark:text-white"> Second semester </label>
-            <MultiSelect
-              v-model="firstYear.second"
-              optionLabel="code"
-              optionValue="uid"
-              :options="subjectStore.filteredSubjects"
-              :loading="subjectStore.isLoading"
-              placeholder="Select a subjects"
-              class="w-full"
+      <div class="flex flex-col gap-2">
+        <label class="block bg-red-800 text-white px-2"> Subjects Offered</label>
+        <div v-if="curriculum.subjects.length" class="grid gap-2">
+          <div
+            v-for="(subject, index) in curriculum.subjects"
+            :key="subject.id + '-' + subject.year + '-' + subject.semester"
+            class="flex items-center justify-between bg-gray-100 dark:bg-gray-800 p-2 rounded"
+          >
+            <div>
+              <span class="font-semibold text-gray-800 dark:text-white">{{ subject.name }}</span>
+              <span class="ml-2 text-sm text-gray-600 dark:text-gray-300">
+                — Year {{ subject.year }}, Semester {{ subject.semester }}
+              </span>
+            </div>
+            <Button
+              icon="pi pi-trash"
+              severity="danger"
+              text
+              @click="curriculum.subjects.splice(index, 1)"
             />
           </div>
         </div>
-      </div>
-      <div>
-        <label class="block bg-red-800 text-white px-2"> Second year </label>
-        <div class="flex gap-4">
-          <div class="flex-1">
-            <label class="block text-gray-700 dark:text-white"> First semester </label>
+        <div v-else class="text-sm text-gray-500 italic">No subjects added yet.</div>
+        <div class="flex flex-col gap-2">
+          <FloatLabel class="w-full" variant="on">
             <MultiSelect
-              option-label="code"
-              v-model="secondYear.first"
-              editable
-              :options="subjectStore.filteredSubjects"
-              placeholder="Select a subjects"
+              id="on_label"
+              :options="subjectOfferedStore.subjects"
+              optionLabel="name"
+              filter
+              :maxSelectedLabels="2"
+              :loading="subjectOfferedStore.isLoading"
               class="w-full"
+              v-model="subjectOffers.subjectIds"
             />
+            <label for="on_label">Subjects</label>
+          </FloatLabel>
+
+          <div class="flex gap-2">
+            <FloatLabel class="w-full" variant="on">
+              <Select
+                id="on_label"
+                :options="[1, 2, 3, 4]"
+                class="w-full"
+                v-model="subjectOffers.year"
+              />
+              <label for="on_label">Year level</label>
+            </FloatLabel>
+            <FloatLabel class="w-full" variant="on">
+              <Select
+                id="on_label"
+                :options="[1, 2]"
+                class="w-full"
+                v-model="subjectOffers.semester"
+              />
+              <label for="on_label">Semester</label>
+            </FloatLabel>
           </div>
-          <div class="flex-1">
-            <label class="block text-gray-700 dark:text-white"> Second semester </label>
-            <MultiSelect
-              option-label="code"
-              v-model="secondYear.second"
-              editable
-              :options="subjectStore.filteredSubjects"
-              placeholder="Select a subjects"
-              class="w-full"
-            />
-          </div>
-        </div>
-      </div>
-      <div>
-        <label class="block bg-red-800 text-white px-2"> Third year </label>
-        <div class="flex gap-4">
-          <div class="flex-1">
-            <label class="block text-gray-700 dark:text-white"> First semester </label>
-            <MultiSelect
-              option-label="code"
-              v-model="thirdYear.first"
-              editable
-              :options="subjectStore.filteredSubjects"
-              placeholder="Select a subjects"
-              class="w-full"
-            />
-          </div>
-          <div class="flex-1">
-            <label class="block text-gray-700 dark:text-white"> Second semester </label>
-            <MultiSelect
-              option-label="code"
-              v-model="thirdYear.second"
-              editable
-              :options="subjectStore.filteredSubjects"
-              placeholder="Select a subjects"
-              class="w-full"
-            />
-          </div>
-        </div>
-      </div>
-      <div>
-        <label class="block bg-red-800 text-white px-2"> Fourth year </label>
-        <div class="flex gap-4">
-          <div class="flex-1">
-            <label class="block text-gray-700 dark:text-white"> First semester </label>
-            <MultiSelect
-              option-label="code"
-              v-model="fourthYear.first"
-              editable
-              :options="subjectStore.filteredSubjects"
-              placeholder="Select a subjects"
-              class="w-full"
-            />
-          </div>
-          <div class="flex-1">
-            <label class="block text-gray-700 dark:text-white"> Second semester </label>
-            <MultiSelect
-              option-label="code"
-              v-model="fourthYear.second"
-              editable
-              :options="subjectStore.filteredSubjects"
-              placeholder="Select a subjects"
-              class="w-full"
-            />
-          </div>
+          <Button
+            label="Add"
+            icon="pi pi-plus"
+            class="p-button-md"
+            severity="secondary"
+            @click="addSubject"
+          />
         </div>
       </div>
     </div>

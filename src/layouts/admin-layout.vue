@@ -60,7 +60,7 @@ const toggle = (event: any) => {
 }
 </script>
 <template>
-  <main class="h-full flex flex-col">
+  <main class="h-[100vh] flex flex-col overflow-hidden">
     <nav class="p-4 border-b">
       <div class="max-w-screen-xl flex items-center justify-between mx-auto">
         <a href="#" class="flex items-center space-x-3">
@@ -126,7 +126,7 @@ const toggle = (event: any) => {
         </ul>
       </div>
 
-      <div class="w-full p-4 bg-gray-50">
+      <div class="w-full p-4 bg-gray-50 h-[calc(100vh-77px)] overflow-y-auto">
         <slot></slot>
       </div>
     </div>

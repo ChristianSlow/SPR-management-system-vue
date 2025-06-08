@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useToast } from 'primevue/usetoast'
+import { nextTick, onMounted, ref } from 'vue'
+
 import { useDialog } from 'primevue'
 import { defineAsyncComponent } from 'vue'
 import { useCurriculumStore } from '@/stores/curriculum'
+import { useMajorStore } from '@/stores/major'
+import type { Curriculum } from '@/types/curriculum'
 
 const addCurriculum = defineAsyncComponent(
   () => import('@/pages/admin/curriculum/_components/modals/add-curriculum-modal.vue'),
@@ -22,117 +24,169 @@ const viewCurriculum = defineAsyncComponent(
 )
 
 const dialog = useDialog()
-const toast = useToast()
-const dt = ref()
-const products = ref()
-const store = useCurriculumStore()
+const curriculumStore = useCurriculumStore()
+const majorStore = useMajorStore()
+const selectedCurriculum = ref()
+const op = ref()
+function onToggled(event: Event, curriculum: Curriculum) {
+  op.value.hide()
 
-onMounted(() => store.getCurriculums())
+  if (selectedCurriculum.value?.id === curriculum.id) {
+    selectedCurriculum.value = null
+  } else {
+    selectedCurriculum.value = curriculum
+
+    nextTick(() => {
+      op.value.show(event)
+    })
+  }
+}
+
+function hidePopover() {
+  op.value.hide()
+}
+
+onMounted(() => {
+  curriculumStore.getCurriculums(), majorStore.getMajor(curriculumStore.curriculum?.majorId ?? '')
+})
 </script>
 
 <template>
-  <div>
-    <div class="card">
-      <Toolbar class="mb-6">
-        <template #start>
-          <InputText type="text" placeholder="Search..." />
+  <div class="card">
+    <Toolbar class="mb-6">
+      <template #start>
+        <InputText type="text" placeholder="Search..." v-model="curriculumStore.searchQuery" />
+      </template>
+      <template #end>
+        <Button
+          label="Add Curriculum"
+          icon="pi pi-plus"
+          @click="
+            () => {
+              dialog.open(addCurriculum, {
+                props: {
+                  header: 'Add Curriculum',
+                  style: { width: '50vw' },
+                  breakpoints: { '960px': '75vw', '640px': '90vw' },
+                  modal: true,
+                },
+              })
+            }
+          "
+        />
+      </template>
+    </Toolbar>
+    <span class="text-gray-600 text-semibold">
+      Total Curriculum: {{ curriculumStore.totalCurriculums }}
+    </span>
+    <div class="border rounded-sm">
+      <DataTable
+        :loading="curriculumStore.isLoading"
+        :value="curriculumStore.curriculums"
+        size="small"
+      >
+        <template #empty>
+          <div class="flex items-center justify-center p-4">No curriculum found.</div>
         </template>
-        <template #end>
-          <Button
-            label="New"
-            icon="pi pi-plus"
-            class="mr-2"
-            @click="
-              () => {
-                dialog.open(addCurriculum, {
-                  props: {
-                    header: 'Add Curriculum',
-                    style: { width: '50vw' },
-                    breakpoints: { '960px': '75vw', '640px': '90vw' },
-                    modal: true,
-                  },
-                })
-              }
-            "
-          />
-        </template>
-      </Toolbar>
-      <span class="text-gray-600 text-semibold">Total Curriculum: 0</span>
-      <div class="border rounded-sm">
-        <DataTable :loading="store.isLoading" :value="store.curriculums" size="small">
-          <template #empty>
-            <div class="flex items-center justify-center p-4">No curriculum found.</div>
+        <Column field="name" header="Name" class="uppercase" style="min-width: 12rem"></Column>
+        <Column field="course" header="Course" style="min-width: 12rem">
+          <template #body="slotProps">
+            <label class="capitalize">
+              {{ slotProps.data.course.name }}
+            </label>
           </template>
-          <Column field="name" header="Name" style="min-width: 12rem"></Column>
-          <Column field="course" header="Course" style="min-width: 12rem"></Column>
-          <Column field="major" header="Major" style="min-width: 12rem"></Column>
-          <Column :exportable="false" header="Actions">
-            <template #body="slotProps">
-              <div class="flex gap-1">
-                <Button
-                  label="View"
-                  size="small"
-                  icon="pi pi-eye"
-                  class="mr-2"
-                  @click="
-                    () => {
-                      dialog.open(viewCurriculum, {
-                        props: {
-                          header: 'Curriculum Details',
-                          style: { width: '50vw' },
-                          breakpoints: { '960px': '75vw', '640px': '90vw' },
-                          modal: true,
-                        },
-                        data: slotProps.data,
-                      })
-                    }
-                  "
-                />
-                <Button
-                  label="Edit"
-                  size="small"
-                  icon="pi pi-pencil"
-                  class="mr-2"
-                  @click="
-                    () => {
-                      dialog.open(editCurriculum, {
-                        props: {
-                          header: 'Edit Curriculum',
-                          style: { width: '50vw' },
-                          breakpoints: { '960px': '75vw', '640px': '90vw' },
-                          modal: true,
-                        },
-                        data: slotProps.data,
-                      })
-                    }
-                  "
-                />
-                <Button
-                  label="Delete"
-                  outlined
-                  severity="danger"
-                  size="small"
-                  icon="pi pi-trash"
-                  class="mr-2"
-                  @click="
-                    () => {
-                      dialog.open(deleteCurriculum, {
-                        props: {
-                          header: 'Confirm Delete',
-                          style: { width: '50vw' },
-                          breakpoints: { '960px': '75vw', '640px': '90vw' },
-                          modal: true,
-                        },
-                        data: slotProps.data,
-                      })
-                    }
-                  "
-                />
-              </div>
-            </template>
-          </Column>
-        </DataTable>
-      </div>
+        </Column>
+        <Column header="Majors" style="min-width: 12rem">
+          <template #body="slotProps">
+            <label v-if="slotProps.data.major" class="capitalize">
+              {{ slotProps.data.major.name }}
+            </label>
+            <label v-else class="text-gray-500"> No majors associated </label>
+          </template>
+        </Column>
+        <Column header="Actions">
+          <template #body="slotProps">
+            <Button
+              type="button"
+              severity="secondary"
+              class="w-full"
+              icon="pi pi-ellipsis-v"
+              @click="onToggled($event, slotProps.data)"
+              variant="text"
+            />
+          </template>
+        </Column>
+      </DataTable>
     </div>
   </div>
+  <Popover ref="op">
+    <div class="flex flex-col items-start">
+      <Button
+        text
+        icon="pi pi-eye"
+        severity="secondary"
+        class="w-full"
+        label="View"
+        size="small"
+        @click="
+          () => {
+            dialog.open(viewCurriculum, {
+              props: {
+                header: 'Curriculum Details',
+                style: { width: '50vw' },
+                breakpoints: { '960px': '75vw', '640px': '90vw' },
+                modal: true,
+              },
+              data: selectedCurriculum,
+            })
+            hidePopover()
+          }
+        "
+      />
+      <Button
+        text
+        icon="pi pi-pencil"
+        severity="secondary"
+        class="w-full"
+        label="Edit"
+        size="small"
+        @click="
+          () => {
+            dialog.open(editCurriculum, {
+              props: {
+                header: 'Edit Curriculum',
+                style: { width: '50vw' },
+                breakpoints: { '960px': '75vw', '640px': '90vw' },
+                modal: true,
+              },
+              data: selectedCurriculum,
+            })
+            hidePopover()
+          }
+        "
+      />
+      <Button
+        icon="pi pi-trash"
+        severity="danger"
+        label="delete"
+        size="small"
+        text
+        @click="
+          () => {
+            dialog.open(deleteCurriculum, {
+              props: {
+                header: 'Confirm Delete',
+                style: { width: '50vw' },
+                breakpoints: { '960px': '75vw', '640px': '90vw' },
+                modal: true,
+              },
+
+              data: selectedCurriculum?.id,
+            })
+            hidePopover()
+          }
+        "
+      />
+    </div>
+  </Popover>
 </template>

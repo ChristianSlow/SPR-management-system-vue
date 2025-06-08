@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import StudentLayout from '@/layouts/student-layout.vue'
 import { useCourseStore } from '@/stores/course'
 import { useStudentStore } from '@/stores/student'
 import type { Student } from '@/types/student'
-import { Message, useToast } from 'primevue'
+import { useToast } from 'primevue'
 import { computed, inject, onMounted, reactive, watchEffect, toRaw } from 'vue'
 import GradesTable from '../grades-table.vue'
 import type { Subject } from '@/types/subject'
-import type { Curriculum } from '@/types/curriculum'
 
 const dialogRef = inject<any>('dialogRef')
 const studentStore = useStudentStore()
@@ -19,7 +17,7 @@ function onClose() {
 }
 
 async function onSubmit(payload: Student) {
-  await studentStore.editStudent(payload)
+  // await studentStore.editStudent(payload)
   toast.add({
     severity: 'success',
     summary: 'Success',
@@ -83,7 +81,7 @@ watchEffect(() => {
           <label for="mobile">Student Mobile Number</label>
           <InputText
             id="mobile"
-            v-model="studentStore.student.studentMobileNumber"
+            v-model="studentStore.student.mobileNumber"
             type="tel"
             maxlength="11"
             pattern="[0-9]{11}"
@@ -180,7 +178,7 @@ watchEffect(() => {
           </div>
         </div>
       </div>
-      <div>
+      <!-- <div>
         <div class="border p-2 mt-2">
           <span>First Semester</span>
           <GradesTable
@@ -197,7 +195,7 @@ watchEffect(() => {
             @update="handleSubjectUpdate"
           />
         </div>
-      </div>
+      </div> -->
     </div>
 
     <div class="flex w-full gap-2 justify-end mt-4">

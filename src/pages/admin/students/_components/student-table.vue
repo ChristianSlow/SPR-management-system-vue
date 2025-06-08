@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { useToast } from 'primevue/usetoast'
 import { useDialog } from 'primevue'
 import { defineAsyncComponent } from 'vue'
 import { useStudentStore } from '@/stores/student'
@@ -23,16 +22,10 @@ const viewStudent = defineAsyncComponent(
 
 const store = useStudentStore()
 const dialog = useDialog()
-const toast = useToast()
 const dt = ref()
-const products = ref()
 
 onMounted(() => {
   store.getStudents()
-})
-
-const filteredStudents = computed(() => {
-  return store.students.filter((student) => student.status === 'accepted')
 })
 </script>
 
@@ -43,7 +36,8 @@ const filteredStudents = computed(() => {
         <DataTable
           ref="dt"
           size="small"
-          :value="filteredStudents"
+          :loading="store.isLoading"
+          :value="store.students"
           dataKey="id"
           :paginator="true"
           :rows="10"
@@ -58,7 +52,7 @@ const filteredStudents = computed(() => {
                 <InputIcon>
                   <i class="pi pi-search" />
                 </InputIcon>
-                <InputText placeholder="Search..." />
+                <InputText placeholder="Search..." v-model="store.searchQuery" />
               </IconField>
             </div>
           </template>
@@ -67,11 +61,14 @@ const filteredStudents = computed(() => {
           </template>
           <Column header="Fullname" style="min-width: 16rem">
             <template #body="slotProps">
-              <span>{{ slotProps.data.firstName }} {{ slotProps.data.lastName }}</span>
+              <span
+                >{{ slotProps.data.lastName }}, {{ slotProps.data.firstName }}
+                {{ slotProps.data.middleName }}</span
+              >
             </template>
           </Column>
-          <Column field="sex" header="Gender" style="min-width: 10rem"></Column>
-          <Column field="address" header="Address" style="min-width: 10rem"></Column>
+          <Column field="course" header="Course" style="min-width: 10rem"></Column>
+          <Column field="year" header="Year" style="min-width: 10rem"></Column>
           <Column :exportable="false" header="Actions">
             <template #body="slotProps">
               <div class="flex gap-1">

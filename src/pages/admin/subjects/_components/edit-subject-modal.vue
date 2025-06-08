@@ -14,12 +14,12 @@ function onClose() {
   dialogRef.value.close()
 }
 
-function onSubmit(payload: Subject) {
-  store.editSubject(payload)
+async function onSubmit(payload: Subject) {
+  const res = await store.editSubject(subject.id as string, payload)
   toast.add({
-    severity: 'success',
-    summary: 'Success',
-    detail: 'Successfully updated subject!',
+    severity: res.status,
+    summary: res.statusMessage,
+    detail: res.message,
     life: 3000,
   })
   onClose()
@@ -35,7 +35,7 @@ function onSubmit(payload: Subject) {
       </div>
       <div class="flex flex-1 flex-col gap-2">
         <label>Units</label>
-        <InputText required v-model="subject.unit" />
+        <InputNumber required v-model="subject.unit" />
       </div>
     </div>
     <div class="flex flex-col gap-2">

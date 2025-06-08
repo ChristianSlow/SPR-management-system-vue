@@ -1,0 +1,140 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("NITRO_DATABASE_URL")
+  directUrl = env("NITRO_DIRECT_URL")
+}
+
+enum Role {
+  ADMIN
+  STUDENT
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id        String   @id
+  name      String
+  email     String   @unique
+  role      Role     @default(STUDENT)
+  createdAt DateTime @default(now())
+
+  student Student?
+}
+
+model Student {
+  id                 String         @id @default(uuid())
+  userId             String         @unique
+  isEnrolled         Boolean        @default(false)
+  firstName          String
+  middleName         String
+  lastName           String
+  sex                String?
+  civilStatus        String?
+  mobileNumber       String?
+  birthPlace         String?
+  birthDate          DateTime?
+  parentName         String?
+  parentMobileNumber String?
+  address            String?
+  status             ApprovalStatus @default(PENDING)
+  createdAt          DateTime       @default(now())
+
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  enrollment Enrollment?
+}
+
+model Course {
+  id           String   @id @default(uuid())
+  name         String
+  abbreviation String
+  createdAt    DateTime @default(now())
+
+  curriculums Curriculum[]
+  majors      Major[]
+}
+
+model Major {
+  id       String @id @default(uuid())
+  name     String
+  courseId String
+
+  course      Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  enrollments Enrollment[]
+  Curriculums Curriculum[]
+}
+
+model Curriculum {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  courseId    String
+  majorId     String?
+  createdAt   DateTime @default(now())
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  major  Major? @relation(fields: [majorId], references: [id])
+
+  enrollments Enrollment[]
+  subjects    SubjectOffering[]
+
+  @@unique([courseId, majorId])
+}
+
+model Subject {
+  id        String   @id @default(uuid())
+  code      String   @unique
+  name      String
+  unit      Int
+  createdAt DateTime @default(now())
+
+  grades    Grade[]
+  offerings SubjectOffering[]
+}
+
+model SubjectOffering {
+  id           String @id @default(uuid())
+  subjectId    String
+  curriculumId String
+  yearLevel    Int?
+  semester     Int?
+
+  subject    Subject    @relation(fields: [subjectId], references: [id])
+  curriculum Curriculum @relation(fields: [curriculumId], references: [id])
+}
+
+model Enrollment {
+  id             String   @id @default(uuid())
+  studentId      String   @unique
+  curriculumId   String?
+  majorId        String?
+  academicYear   String
+  semester       String
+  generalAverage String?
+  gwaUrl1        String?
+  gwaUrl2        String?
+  createdAt      DateTime @default(now())
+
+  student    Student     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  curriculum Curriculum? @relation(fields: [curriculumId], references: [id], onDelete: SetNull)
+  major      Major?      @relation(fields: [majorId], references: [id])
+  grades     Grade[]
+}
+
+model Grade {
+  id           String  @id @default(uuid())
+  enrollmentId String
+  subjectId    String
+  grade        String?
+  remarks      String?
+
+  enrollment Enrollment @relation(fields: [enrollmentId], references: [id])
+  subject    Subject    @relation(fields: [subjectId], references: [id])
+}

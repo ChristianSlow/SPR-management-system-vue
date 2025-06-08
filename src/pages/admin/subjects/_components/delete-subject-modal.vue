@@ -13,14 +13,14 @@ function onClose() {
   dialogRef.value.close()
 }
 
-function onSubmit() {
-  if (!subject.value || !subject.value.uid) return
+async function onSubmit() {
+  if (!subject.value || !subject.value.id) return
 
-  store.deleteSubject(subject.value.uid)
+  const res = await store.deleteSubject(subject.value.id)
   toast.add({
-    severity: 'success',
-    summary: 'Success',
-    detail: 'Successfully deleted subject!',
+    severity: res.status,
+    summary: res.statusMessage,
+    detail: res.message,
     life: 3000,
   })
   onClose()
