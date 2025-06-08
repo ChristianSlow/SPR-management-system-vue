@@ -6,10 +6,9 @@ const API_URL = import.meta.env.VITE_API_URL
 export const EnrollmentRepository = {
   async createEnrollment(payload: FormData) {
     try {
-      const { data, error } = await useFetch(`${API_URL}/enrollment`, {
-        method: 'POST',
-        body: payload,
-      }).json<H3Response>()
+      const { data, error } = await useFetch(`${API_URL}/enrollments`)
+        .post(payload)
+        .json<H3Response>()
 
       if (error.value) {
         throw new Error(error.value.message || 'Network error')

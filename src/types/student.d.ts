@@ -11,7 +11,7 @@ export interface Student {
   lastName?: string
   sex?: string
   civilStatus?: string
-  studentMobileNumber?: any
+  mobileNumber?: any
   birthPlace?: string
   birthDate?: any
   parentName?: string
@@ -22,7 +22,7 @@ export interface Student {
   year?: string
   major?: string
   curriculum?: Curriculum
-  generalAvg?: string
+  generalAverage?: string
   gwaUrl?: string
   status?: string
   createdAt?: any

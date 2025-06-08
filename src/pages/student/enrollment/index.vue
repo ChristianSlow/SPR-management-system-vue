@@ -1,20 +1,41 @@
 <script setup lang="ts">
 import { useCourseStore } from '@/stores/course'
-import { useStudentStore } from '@/stores/student'
+import { useEnrollmentStore } from '@/stores/enrollment'
 import { useUserStore } from '@/stores/user'
+import type { Curriculum } from '@/types/curriculum'
+import type { Enrollment } from '@/types/enrollment'
 import type { Student } from '@/types/student'
 import { useToast } from 'primevue'
-import { computed, onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const courseStore = useCourseStore()
-const studentStore = useStudentStore()
 const userStore = useUserStore()
+const enrollmentStore = useEnrollmentStore()
 const router = useRouter()
 const toast = useToast()
 const route = useRoute()
 
-const student = ref<Student>({})
+const student = ref<Student>({
+  birthDate: '',
+  sex: '',
+  mobileNumber: '',
+  birthPlace: '',
+  civilStatus: '',
+  address: '',
+  parentName: '',
+  parentMobileNumber: '',
+})
+
+const curriculum = ref<Curriculum>({
+  courseId: '',
+  majorId: '',
+})
+const enrollment = ref<Enrollment>({
+  generalAverage: '',
+  academicYear: '',
+  semester: '',
+})
 
 const fileFront = ref<File | null>(null)
 const fileBack = ref<File | null>(null)
@@ -26,12 +47,16 @@ function onFile2Selected(event: any) {
   fileBack.value = event?.files?.[0] || null
 }
 
-async function onSubmit(payload: Student) {
-  const res = await studentStore.editStudent(
-    userStore.user.id,
+async function onSubmit(student: Student, curriculum: Curriculum, enrollment: Enrollment) {
+  const res = await enrollmentStore.addEnrollment(
     fileFront.value as File,
     fileBack.value as File,
-    { ...payload } as Student,
+    {
+      id: userStore.user.student.id,
+      ...student,
+      enrollment: { ...enrollment },
+      curriculum: { ...curriculum },
+    } as Student,
   )
   toast.add({
     severity: res.status,
@@ -39,7 +64,7 @@ async function onSubmit(payload: Student) {
     detail: res.message,
     life: 3000,
   })
-  // router.push('/student')
+  router.push('/student/home')
 }
 
 onMounted(() => {
@@ -48,10 +73,10 @@ onMounted(() => {
 })
 
 watch(
-  () => student.value.course,
-  (newCourse) => {
-    if (newCourse) {
-      courseStore.getCourse(newCourse)
+  () => curriculum.value.courseId,
+  (val) => {
+    if (val) {
+      courseStore.getCourse(val)
     }
   },
 )
@@ -71,8 +96,10 @@ watch(
         </div>
 
         <!-- Student Information -->
-        <form class="flex flex-col gap-4" @submit.prevent="onSubmit(student)">
-          <!-- Name Fields -->
+        <form
+          class="flex flex-col gap-4"
+          @submit.prevent="onSubmit(student, curriculum, enrollment)"
+        >
           <div class="flex flex-col md:flex-row gap-2">
             <div class="flex flex-col gap-2 flex-1">
               <label>First Name</label>
@@ -88,7 +115,6 @@ watch(
             </div>
           </div>
 
-          <!-- Birth Info -->
           <div class="flex flex-col md:flex-row gap-2">
             <div class="flex flex-1 flex-col gap-2">
               <label>Date of Birth</label>
@@ -116,7 +142,7 @@ watch(
               <label for="mobile">Mobile Number</label>
               <InputText
                 id="mobile"
-                v-model="student.studentMobileNumber"
+                v-model="student.mobileNumber"
                 type="tel"
                 maxlength="11"
                 pattern="[0-9]{11}"
@@ -125,16 +151,37 @@ watch(
             </div>
           </div>
 
-          <!-- Place of Birth -->
+          <div class="flex flex-col md:flex-row gap-2">
+            <div class="flex flex-1 flex-col gap-2">
+              <label>Place of Birth</label>
+              <InputText required v-model="student.birthPlace" />
+            </div>
+            <div class="flex flex-1 flex-col gap-2">
+              <label>Parent Name</label>
+              <InputText required v-model="student.parentName" />
+            </div>
+            <div class="flex flex-1 flex-col gap-2">
+              <label for="parent-mobile">Parent Mobile Number</label>
+              <InputText
+                id="parent-mobile"
+                v-model="student.parentMobileNumber"
+                type="tel"
+                maxlength="11"
+                pattern="[0-9]{11}"
+                required
+              />
+            </div>
+          </div>
+
           <div class="flex flex-col gap-2">
-            <label>Place of Birth</label>
-            <InputText required v-model="student.birthPlace" />
+            <label> Address</label>
+            <InputText required v-model="student.address" />
           </div>
 
           <div class="flex flex-col">
             <div class="flex flex-col gap-2 flex-1">
               <label>General Average</label>
-              <InputText required v-model="student.generalAvg" />
+              <InputText required v-model="enrollment.generalAverage" />
             </div>
             <div class="flex flex-col gap-2 flex-1 p-2">
               <label>Card</label>
@@ -157,7 +204,7 @@ watch(
               <label>Course</label>
               <Select
                 required
-                v-model="student.course"
+                v-model="curriculum.courseId"
                 :options="courseStore.courses"
                 :loading="courseStore.isLoading"
                 option-label="name"
@@ -168,8 +215,9 @@ watch(
               <label>Major</label>
               <Select
                 required
-                v-model="student.major"
+                v-model="curriculum.majorId"
                 :options="courseStore.course?.majors"
+                :loading="courseStore.isLoading"
                 option-label="name"
                 option-value="id"
               />
@@ -180,42 +228,17 @@ watch(
           <div class="flex flex-col md:flex-row gap-2">
             <div class="flex flex-1 flex-col gap-2">
               <label>Year Level</label>
-              <Select required v-model="student.year" :options="[1, 2, 3, 4]" />
+              <Select required v-model="enrollment.academicYear" :options="['1', '2', '3', '4']" />
             </div>
             <div class="flex flex-1 flex-col gap-2">
               <label>Semester</label>
-              <Select required v-model="student.semester" :options="[1, 2]" />
+              <Select required v-model="enrollment.semester" :options="['1', '2']" />
             </div>
-          </div>
-
-          <!-- Parent Info -->
-          <div class="flex flex-col md:flex-row gap-2">
-            <div class="flex flex-1 flex-col gap-2">
-              <label>Parent Name</label>
-              <InputText required v-model="student.parentName" />
-            </div>
-            <div class="flex flex-1 flex-col gap-2">
-              <label for="parent-mobile">Parent Mobile Number</label>
-              <InputText
-                id="parent-mobile"
-                v-model="student.parentMobileNumber"
-                type="tel"
-                maxlength="11"
-                pattern="[0-9]{11}"
-                required
-              />
-            </div>
-          </div>
-
-          <!-- Parent Address -->
-          <div class="flex flex-col gap-2">
-            <label>Parent Address</label>
-            <InputText required v-model="student.address" />
           </div>
 
           <div>
             <Button
-              :loading="studentStore.isLoading"
+              :loading="enrollmentStore.isLoading"
               label="Submit"
               severity="danger"
               type="submit"

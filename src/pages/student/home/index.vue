@@ -46,7 +46,7 @@ onMounted(async () => {
         <h2 class="text-lg font-semibold text-gray-900">Major: {{ store.student.major }}</h2>
       </div>
 
-      <div class="flex gap-4 items-start w-full">
+      <!-- <div class="flex gap-4 items-start w-full">
         <div class="border p-2 rounded-md flex-1">
           <span>First Semester</span>
           <DataTable :value="store.student.curriculum?.firstYear?.first" :loading="store.isLoading">
@@ -77,7 +77,7 @@ onMounted(async () => {
         <div class="text-right font-semibold text-md mt-6 p-4 bg-gray-200 rounded-lg">
           Total Units: <span class="text-blue-600">Total Units</span>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 
@@ -88,8 +88,7 @@ onMounted(async () => {
       class="p-button-sm p-button-danger transition-transform hover:scale-105"
     />
   </div>
-  -->
-  <!-- Logout Button (Now Below the Content) -->
+
   <div class="flex justify-center mt-6">
     <Button
       label="Logout"
