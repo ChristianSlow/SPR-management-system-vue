@@ -1,3 +1,4 @@
+import type { User } from '@/types/user'
 import { useFetch } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
@@ -6,7 +7,7 @@ const API_URL = import.meta.env.VITE_API_URL
 
 export const useUserStore = defineStore('user', () => {
   const isLoading = ref(false)
-  const user = ref({
+  const user = ref<User>({
     id: '',
     student: {
       id: '',

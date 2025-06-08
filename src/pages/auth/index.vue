@@ -28,7 +28,13 @@ const isLoading = ref(false)
 const isLogin = ref(true)
 const rememberMe = ref(true)
 
-const credentials = ref<User>({})
+const credentials = ref({
+  email: '',
+  password: '',
+  firstName: '',
+  lastName: '',
+  middleName: '',
+})
 
 async function onFormSubmit() {
   isLoading.value = true
@@ -46,7 +52,7 @@ async function onFormSubmit() {
     return
   }
 
-  if (password?.length < 6) {
+  if ((password?.length ?? 0) < 6) {
     loginError.value = 'Password must be at least 6 characters.'
     toast.add({ severity: 'error', summary: 'Weak Password', detail: loginError.value, life: 3000 })
     isLoggingIn.value = false
@@ -64,7 +70,9 @@ async function onFormSubmit() {
 
       if (user.uid != '6u9UryEQwOQmdfJ56DSlgDV9YuR2') {
         await userStore.getUser(user.uid)
-        router.push(userStore.user.isEnroled ? '/student' : `/student/enrollment/${user.uid}`)
+        router.push(
+          userStore.user.student.isEnrolled ? '/student' : `/student/enrollment/${user.uid}`,
+        )
       } else {
         router.push('/admin')
       }

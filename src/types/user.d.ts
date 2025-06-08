@@ -1,3 +1,5 @@
+import type { Student } from './student'
+
 export interface User {
   uid?: string
   id?: string
@@ -6,6 +8,6 @@ export interface User {
   lastName?: string
   email?: string
   password?: string
-  isEnroled?: boolean
+  student: Student
   createdAt?: any
 }
