@@ -20,9 +20,7 @@ export const StudentRepository = {
 
   async fetchStudent(id: string) {
     try {
-      const { data: response } = await useFetch(`${API_URL}/students/${id}`).json<
-        H3Response<Student>
-      >()
+      const { data: response } = await useFetch(`${API_URL}/students/${id}`).json<H3Response>()
       return response.value
     } catch (error) {
       console.error('Error fetching student:', error)

@@ -71,7 +71,7 @@ async function onFormSubmit() {
       if (user.uid != '6u9UryEQwOQmdfJ56DSlgDV9YuR2') {
         await userStore.getUser(user.uid)
         router.push(
-          userStore.user.student.isEnrolled ? '/student' : `/student/enrollment/${user.uid}`,
+          userStore.user.student?.isEnrolled ? '/student' : `/student/enrollment/${user.uid}`,
         )
       } else {
         router.push('/admin')

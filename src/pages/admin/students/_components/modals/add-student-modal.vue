@@ -15,7 +15,7 @@ function onClose() {
 }
 
 function onSubmit(payload: Student) {
-  store.addStudent(payload)
+  // store.addStudent(payload)
   toast.add({
     severity: 'success',
     summary: 'Success',
@@ -80,7 +80,7 @@ function onSubmit(payload: Student) {
       <label>Parent Address</label>
       <InputText required v-model="student.address" />
     </div>
-    
+
     <div class="flex w-full gap-2 justify-end mt-4">
       <Button label="Cancel" class="p-button-text" @click="onClose" />
       <Button label="Save" class="p-button-primary" type="submit" :loading="store.isLoading" />

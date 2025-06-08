@@ -1,4 +1,5 @@
 import type { Curriculum } from './curriculum'
+import type { Major } from './major'
 
 export interface Enrollment {
   id?: string
@@ -12,4 +13,5 @@ export interface Enrollment {
   gwaUrl2?: string
   createdAt?: string
   curriculum?: Curriculum
+  major?: Major
 }

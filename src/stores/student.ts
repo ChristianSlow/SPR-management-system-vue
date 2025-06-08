@@ -5,6 +5,7 @@ import { StudentRepository } from '@/repositories/studentRepository'
 import { CurriculumRepository } from '@/repositories/curriculumRepository'
 import type { Curriculum } from '@/types/curriculum'
 import { watchDebounced } from '@vueuse/core'
+import type { User } from '@/types/user'
 
 export const useStudentStore = defineStore('student', () => {
   const isLoading = ref(false)

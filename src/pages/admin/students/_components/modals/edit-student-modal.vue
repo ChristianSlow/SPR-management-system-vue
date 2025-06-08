@@ -81,7 +81,7 @@ watchEffect(() => {
           <label for="mobile">Student Mobile Number</label>
           <InputText
             id="mobile"
-            v-model="studentStore.student.studentMobileNumber"
+            v-model="studentStore.student.mobileNumber"
             type="tel"
             maxlength="11"
             pattern="[0-9]{11}"

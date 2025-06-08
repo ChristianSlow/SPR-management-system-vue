@@ -52,7 +52,7 @@ async function onSubmit(student: Student, curriculum: Curriculum, enrollment: En
     fileFront.value as File,
     fileBack.value as File,
     {
-      id: userStore.user.student.id,
+      id: userStore.user.student?.id,
       ...student,
       enrollment: { ...enrollment },
       curriculum: { ...curriculum },
@@ -64,7 +64,7 @@ async function onSubmit(student: Student, curriculum: Curriculum, enrollment: En
     detail: res.message,
     life: 3000,
   })
-  router.push('/student/home')
+  router.push('/student')
 }
 
 onMounted(() => {

@@ -2,17 +2,16 @@
 import { useLogout } from '@/composables/useLogout'
 import type { Auth } from 'firebase/auth'
 import { useStudentStore } from '@/stores/student'
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
 import { getCurrentUser, useFirebaseAuth } from 'vuefire'
 
-const products = ref()
 const store = useStudentStore()
 const auth = useFirebaseAuth()
 const out = useLogout()
 
 onMounted(async () => {
-  const user = await getCurrentUser()
-  await store.getStudent(user?.uid ?? '')
+  const creds = await getCurrentUser()
+  store.getStudent(creds?.uid ?? '')
   console.log(store.student)
 })
 </script>
@@ -21,9 +20,10 @@ onMounted(async () => {
     <div class="rounded-lg p-1 w-full mx-auto">
       <div class="flex justify-end items-center mb-4">
         <Button
-          label="Download"
-          icon="pi pi-download"
-          class="p-button-sm custom-download-button transition-transform hover:scale-105"
+          label="Logout"
+          icon="pi pi-sign-out"
+          class="p-button-sm p-button-danger transition-transform hover:scale-105"
+          @click="out.logout(auth as Auth)"
         />
       </div>
 
@@ -36,14 +36,19 @@ onMounted(async () => {
 
       <div class="flex justify-between px-5 mb-4">
         <h2 class="text-lg font-bold text-black">
-          Name: {{ store.student.firstName }} {{ store.student.middleName }}
-          {{ store.student.lastName }}
+          Name: {{ store.student?.firstName ?? '' }}
+          {{ store.student?.middleName ?? '' }}
+          {{ store.student?.lastName ?? '' }}
         </h2>
-        <h2 class="text-lg font-bold text-black">Year: {{ store.student.year }}</h2>
+        <h2 class="text-lg font-bold text-black">
+          Year: {{ store.student.enrollment?.academicYear }}
+        </h2>
       </div>
       <div class="flex justify-between px-5 mb-4">
-        <h2 class="text-xl font-bold text-gray-900">Course: {{ store.student.course }}</h2>
-        <h2 class="text-lg font-semibold text-gray-900">Major: {{ store.student.major }}</h2>
+        <h2 class="text-xl font-bold text-gray-900">
+          Course: {{ store.student.enrollment?.curriculum?.course.name }} -
+          {{ store.student.enrollment?.major?.name ?? 'No major associated' }}
+        </h2>
       </div>
 
       <!-- <div class="flex gap-4 items-start w-full">
@@ -81,20 +86,19 @@ onMounted(async () => {
     </div>
   </div>
 
-  <div class="flex justify-center mt-6">
+  <!-- <div class="flex justify-center mt-6">
     <Button
       label="Enroll"
       icon="pi pi-sign-out"
       class="p-button-sm p-button-danger transition-transform hover:scale-105"
     />
-  </div>
+  </div> -->
 
-  <div class="flex justify-center mt-6">
+  <div class="flex justify-center items-center mt-6">
     <Button
-      label="Logout"
-      icon="pi pi-sign-out"
-      class="p-button-sm p-button-danger transition-transform hover:scale-105"
-      @click="out.logout(auth as Auth)"
+      label="Download"
+      icon="pi pi-download"
+      class="p-button-sm custom-download-button transition-transform hover:scale-105"
     />
   </div>
 </template>
