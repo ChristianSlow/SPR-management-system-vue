@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { Toast } from 'primevue'
 import {
   createUserWithEmailAndPassword,
@@ -7,7 +7,7 @@ import {
   setPersistence,
   browserLocalPersistence,
 } from 'firebase/auth'
-import { useFirebaseAuth, useFirestore } from 'vuefire'
+import { getCurrentUser, useFirebaseAuth, useFirestore } from 'vuefire'
 import { useToast } from 'primevue/usetoast'
 import { useRouter } from 'vue-router'
 import type { User } from '@/types/user'
@@ -171,6 +171,18 @@ const infoSections = ref([
     description: 'Service, Integrity, Honesty, Pro Nature, Pro Environment, and God-centered.',
   },
 ])
+
+onMounted(async () => {
+  const user = await getCurrentUser()
+
+  if (user?.uid == '6u9UryEQwOQmdfJ56DSlgDV9YuR2') {
+    router.replace('/admin')
+  }
+
+  if (user) {
+    router.replace('/student')
+  }
+})
 </script>
 
 <template>

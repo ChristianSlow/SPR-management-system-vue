@@ -6,5 +6,4 @@ import DynamicDialog from 'primevue/dynamicdialog'
 <template>
   <RouterView />
   <DynamicDialog />
-  <Toast />
 </template>
