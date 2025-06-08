@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Homepage from '@/pages/index.vue'
+import Auth from '@/pages/auth/index.vue'
 import { getCurrentUser } from 'vuefire'
 
 const router = createRouter({
@@ -9,7 +9,8 @@ const router = createRouter({
     {
       path: '/auth',
       name: 'auth',
-      component: () => import('@/pages/auth/index.vue'),
+      component: Auth,
+      meta: { requiresGuest: true },
     },
     {
       path: '/admin',
@@ -87,34 +88,34 @@ const router = createRouter({
 
 const ADMIN_USER_ID = '6u9UryEQwOQmdfJ56DSlgDV9YuR2'
 
-// router.beforeEach(async (to, _unused, next) => {
-//   const user = await getCurrentUser()
-//   const isAuthenticated = !!user
-//   const isAdmin = user?.uid === ADMIN_USER_ID
+router.beforeEach(async (to, _unused, next) => {
+  const user = await getCurrentUser()
+  const isAuthenticated = !!user
+  const isAdmin = user?.uid === ADMIN_USER_ID
 
-//   if (isAuthenticated && to.meta.requiresStudent) {
-//     const target = isAdmin ? 'admin-dashboard' : 'student-page'
-//     if (to.name !== target) {
-//       return next({ name: target })
-//     }
-//     return next()
-//   }
+  if (isAuthenticated && to.meta.requiresStudent) {
+    const target = isAdmin ? 'admin-dashboard' : 'student-home'
+    if (to.name !== target) {
+      return next({ name: target })
+    }
+    return next()
+  }
 
-//   if (!isAuthenticated && to.meta.requiresAuth) {
-//     if (to.name !== 'auth') {
-//       return next({ name: 'auth' })
-//     }
-//     return next()
-//   }
+  if (!isAuthenticated && to.meta.requiresAuth) {
+    if (to.name !== 'auth') {
+      return next({ name: 'auth' })
+    }
+    return next()
+  }
 
-//   if (to.meta.requiresAdmin && isAuthenticated && !isAdmin) {
-//     if (to.name !== 'student-page') {
-//       return next({ name: 'student-page' })
-//     }
-//     return next()
-//   }
+  if (to.meta.requiresAdmin && isAuthenticated && !isAdmin) {
+    if (to.name !== 'student-home') {
+      return next({ name: 'student-home' })
+    }
+    return next()
+  }
 
-//   next()
-// })
+  next()
+})
 
 export default router

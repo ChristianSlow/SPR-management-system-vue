@@ -4,9 +4,9 @@ import { useRouter } from 'vue-router'
 export function useLogout() {
   const router = useRouter()
 
-  function logout(auth: Auth) {
-    signOut(auth)
-    router.replace('/')
+  async function logout(auth: Auth) {
+    await signOut(auth)
+    router.replace('/auth')
   }
 
   return {
